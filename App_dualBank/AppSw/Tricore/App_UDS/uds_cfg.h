@@ -9,35 +9,35 @@
  * \file    uds_cfg.h
  * \brief
  * \version V1.0.0
- * \date    2022Äê2ÔÂ10ÈÕ
+ * \date    2022ï¿½ï¿½2ï¿½ï¿½10ï¿½ï¿½
  * \author  Administrator
  *********************************************************************************************************************/
 #ifndef UDSDIAGNOSTIC_UDS_CFG_H_
 #define UDSDIAGNOSTIC_UDS_CFG_H_
 #include "uds_common.h"
 
-//ÒÔÏÂÁ½¸öÄ£Ê½Ö»ÄÜ´ò¿ªÒ»¸ö
-//#define DIAGNOSTIC_MODE_FOR_APP				//APPÕï¶ÏÄ£Ê½
-#define DIAGNOSTIC_MODE_FOR_BOOTLOADER	//BOOTLOADERÕï¶ÏÄ£Ê½
+//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä£Ê½Ö»ï¿½Ü´ï¿½Ò»ï¿½ï¿½
+#define DIAGNOSTIC_MODE_FOR_APP				//APPÄ£Ê½
+//#define DIAGNOSTIC_MODE_FOR_BOOTLOADER	//BOOTLOADERÄ£Ê½
 
 /*****************************************************************************/
 
 
 /*****************************************************************************/
-/* DTC ÅäÖÃ */
+/* DTC ï¿½ï¿½ï¿½ï¿½ */
 #define DTC_CODE_MAX_NUM (8u)
 //#define DTC_FORMAT_15031                  (0x00)
 //#define DTC_FORMAT_14229                  (0x01)
 #define DTC_AVAILABILITY_STATUS_MASK      (0x7F)
 
-#define DTC_DID_MAX_NUM					(8u)		// Ö§³ÖµÄDTC DIDÊýÁ¿
-#define SANP_EEPROM_BASE_ADDR			(0xA000u)	// ¿ìÕÕÊý¾ÝµÄ¿ªÊ¼µØÖ·
-#define SANP_RECORD_MAX_NUM				(4u)		// Ã¿¸ödtc did×î¶à´æ´¢¶àÉÙÌõ¿ìÕÕ
-#define SANP_DATA_DID_NUM				(8u)		// Ã¿Ìõ¿ìÕÕ´æ´¢µÄÊý¾ÝÊýÁ¿
-#define SANP_DATA_PER_SIZE				(SANP_DATA_DID_NUM * 4)		// Ã¿¸ö¿ìÕÕµÄÊý¾Ý³¤¶È=Êý¾ÝÊýÁ¿ * 4(4±íÊ¾did + data¹²32Î»)
-#define VIN_F190						"W0L00043MB541326"	// ³µÉíVINºÅ
-#define BSID_F180						"1.2.3.4"			// Èí¼þ°æ±¾ºÅ
-// ¹ÊÕÏÂë
+#define DTC_DID_MAX_NUM					(8u)		// Ö§ï¿½Öµï¿½DTC DIDï¿½ï¿½ï¿½ï¿½
+#define SANP_EEPROM_BASE_ADDR			(0xA000u)	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÝµÄ¿ï¿½Ê¼ï¿½ï¿½Ö·
+#define SANP_RECORD_MAX_NUM				(4u)		// Ã¿ï¿½ï¿½dtc didï¿½ï¿½ï¿½æ´¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+#define SANP_DATA_DID_NUM				(8u)		// Ã¿ï¿½ï¿½ï¿½ï¿½ï¿½Õ´æ´¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+#define SANP_DATA_PER_SIZE				(SANP_DATA_DID_NUM * 4)		// Ã¿ï¿½ï¿½ï¿½ï¿½ï¿½Õµï¿½ï¿½ï¿½ï¿½Ý³ï¿½ï¿½ï¿½=ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ * 4(4ï¿½ï¿½Ê¾did + dataï¿½ï¿½32Î»)
+#define VIN_F190						"W0L00043MB541326"	// ï¿½ï¿½ï¿½ï¿½VINï¿½ï¿½
+#define BSID_F180						"1.2.3.4"			// ï¿½ï¿½ï¿½ï¿½ï¿½æ±¾ï¿½ï¿½
+// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 typedef enum
 {
 	P150019 = 0x00150019u,
@@ -45,7 +45,7 @@ typedef enum
 	P150201 = 0x00150201u,
 	P150417 = 0x00150417u
 }dtc_did_name;
-// ¿ìÕÕID
+// ï¿½ï¿½ï¿½ï¿½ID
 typedef enum
 {
 	B001 = 0xB001u,
@@ -58,18 +58,18 @@ typedef enum
 	B008 = 0xB008u
 }snap_did_name;
 
-/* 22·þÎñµÄ¶ÁÐ´DID */
+/* 22ï¿½ï¿½ï¿½ï¿½Ä¶ï¿½Ð´DID */
 typedef enum
 {
-	F15A = 0xF15Au,	//´ú±í¶ÁÐ´Ö¸ÎÆÐÅÏ¢
-	F14A = 0xF14Au,	//´ú±íbootloader°æ±¾ºÅ
-	F187 = 0xF187u,	//´ú±íÁã²¿¼þºÅ
-	F18A = 0xF18Au,	//´ú±í¹©Ó¦ÉÌ´úºÅ
-	F197 = 0xF197u,	//´ú±í¿ØÖÆÆ÷ÐÍºÅ
-	F193 = 0xF193u,	//´ú±íECUÓ²¼þ°æ±¾ºÅ
-	F195 = 0xF195u,	//´ú±íECUÈí¼þ°æ±¾ºÅ
-	F18C = 0xF18Cu,	//´ú±í¿ØÖÆÆ÷³ö³§±àºÅ
-	F190 = 0xF190u, //³µÉíVIN
+	F15A = 0xF15Au,	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð´Ö¸ï¿½ï¿½ï¿½ï¿½Ï¢
+	F14A = 0xF14Au,	//ï¿½ï¿½ï¿½ï¿½bootloaderï¿½æ±¾ï¿½ï¿½
+	F187 = 0xF187u,	//ï¿½ï¿½ï¿½ï¿½ï¿½ã²¿ï¿½ï¿½ï¿½ï¿½
+	F18A = 0xF18Au,	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¦ï¿½Ì´ï¿½ï¿½ï¿½
+	F197 = 0xF197u,	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Íºï¿½
+	F193 = 0xF193u,	//ï¿½ï¿½ï¿½ï¿½ECUÓ²ï¿½ï¿½ï¿½æ±¾ï¿½ï¿½
+	F195 = 0xF195u,	//ï¿½ï¿½ï¿½ï¿½ECUï¿½ï¿½ï¿½ï¿½ï¿½æ±¾ï¿½ï¿½
+	F18C = 0xF18Cu,	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	F190 = 0xF190u, //ï¿½ï¿½ï¿½ï¿½VIN
 }rw_data_did;
 
 

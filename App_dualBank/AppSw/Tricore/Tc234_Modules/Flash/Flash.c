@@ -44,11 +44,11 @@ uint32 gPageData[8];
 
 /*
  ** ============================================================================
- ** @Function    £º
- ** @Description £º      ²Á³ýÒ»¸öÉÈÇø      ÔÚPSPRÖÐÔËÐÐ
- ** @Parameters  £º
- ** @Returns     £º
- ** @Date        £º
+ ** @Function    ï¿½ï¿½
+ ** @Description ï¿½ï¿½      ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½      ï¿½ï¿½PSPRï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+ ** @Parameters  ï¿½ï¿½
+ ** @Returns     ï¿½ï¿½
+ ** @Date        ï¿½ï¿½
  ** ============================================================================
  */
 void Flash_erasePFLASH(uint32 sectorAddr)
@@ -68,11 +68,11 @@ void Flash_erasePFLASH(uint32 sectorAddr)
 }
 /*
  ** ============================================================================
- ** @Function    £º
- ** @Description £º
- ** @Parameters  £º
- ** @Returns     £º
- ** @Date        £º
+ ** @Function    ï¿½ï¿½
+ ** @Description ï¿½ï¿½
+ ** @Parameters  ï¿½ï¿½
+ ** @Returns     ï¿½ï¿½
+ ** @Date        ï¿½ï¿½
  ** ============================================================================
  */
 void Flash_writePFlashPage(uint32 startingAddr, uint32 *data, uint32 byteLength)
@@ -117,11 +117,11 @@ void Flash_writePFlashPage(uint32 startingAddr, uint32 *data, uint32 byteLength)
 
 /*
  ** ============================================================================
- ** @Function    £º
- ** @Description £º       example
- ** @Parameters  £º
- ** @Returns     £º
- ** @Date        £º
+ ** @Function    ï¿½ï¿½
+ ** @Description ï¿½ï¿½       example
+ ** @Parameters  ï¿½ï¿½
+ ** @Returns     ï¿½ï¿½
+ ** @Date        ï¿½ï¿½
  ** ============================================================================
  */
 #if 0
@@ -166,11 +166,11 @@ void writePFlashPage(uint32 startingAddr, uint32 *data, uint32 byteLength)
 
 /*
  ** ============================================================================
- ** @Function    £º
- ** @Description £º
- ** @Parameters  £º          refresh bl
- ** @Returns     £º
- ** @Date        £º
+ ** @Function    ï¿½ï¿½
+ ** @Description ï¿½ï¿½
+ ** @Parameters  ï¿½ï¿½          refresh bl
+ ** @Returns     ï¿½ï¿½
+ ** @Date        ï¿½ï¿½
  ** ============================================================================
  */
 
@@ -198,16 +198,16 @@ int     Flash_writePFlashPage_main(uint32 addr,  uint32 length,  uint32 *data)
 
 /*
  ** ============================================================================
- ** @Function    £º
- ** @Description £º
+ ** @Function    ï¿½ï¿½
+ ** @Description ï¿½ï¿½
  *              D-Flash
  *              LOGIC sector=8kb=0x2000b
  *              1 page = 8 bytes
- ** @Parameters  £º
+ ** @Parameters  ï¿½ï¿½
  **             addr
  **
- ** @Returns     £º
- ** @Date        £º
+ ** @Returns     ï¿½ï¿½
+ ** @Date        ï¿½ï¿½
  ** ============================================================================
  */
 void  Flash_writeDataFlashPage(uint32 pageaddr,   uint32 *data)
@@ -246,11 +246,11 @@ void  Flash_writeDataFlashPage(uint32 pageaddr,   uint32 *data)
 
 /*
  ** ============================================================================
- ** @Function    £º
- ** @Description £º
- ** @Parameters  £º      length : unit :bytes
- ** @Returns     £º
- ** @Date        £º
+ ** @Function    ï¿½ï¿½
+ ** @Description ï¿½ï¿½
+ ** @Parameters  ï¿½ï¿½      length : unit :bytes
+ ** @Returns     ï¿½ï¿½
+ ** @Date        ï¿½ï¿½
  ** ============================================================================
  */
 void Flash_verifyFlashData(uint32 flashAddr,  uint32 *data ,  uint32 length)
@@ -278,16 +278,16 @@ void Flash_verifyFlashData(uint32 flashAddr,  uint32 *data ,  uint32 length)
 
 /*
  ** ============================================================================
- ** @Function    £ºÕâ¸öº¯Êý½«²Á³ýºÍ³ÌÐòÀý³Ì¸´ÖÆµ½CPU0µÄprogram scratche - pad SRAM (PSPR)ÖÐ£¬²¢½«º¯ÊýÖ¸Õë¸³¸øËüÃÇ¡£
- ** @Description £º
+ ** @Function    ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì¸ï¿½ï¿½Æµï¿½CPU0ï¿½ï¿½program scratche - pad SRAM (PSPR)ï¿½Ð£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¸ï¿½ë¸³ï¿½ï¿½ï¿½ï¿½ï¿½Ç¡ï¿½
+ ** @Description ï¿½ï¿½
  **          This function copies the erase and program routines to the Program Scratch-Pad SRAM (PSPR) of the CPU0 and assigns
  * function pointers to them.
- ** @Parameters  £º
- ** @Returns     £º
- ** @Date        £º
+ ** @Parameters  ï¿½ï¿½
+ ** @Returns     ï¿½ï¿½
+ ** @Date        ï¿½ï¿½
  ** ============================================================================
  */
-// Õâ¶Îº¯ÊýµÄ¹¦ÄÜÊÇ°ÑÏà¹Øº¯ÊýµÄ³ÌÐòÊý¾Ý¿½±´µ½CPU0µÄprogram scratche-pad SRAM (PSPR)ÖÐ£¬ÁÙÊ±´æ´¢³ÌÐò£¬ÒÔ±ãºóÆÚ¿ÉÒÔ¿ìËÙµÄµ÷ÓÃÔËÐÐ£¬Ôø¾ü20220725
+// ï¿½ï¿½Îºï¿½ï¿½ï¿½ï¿½Ä¹ï¿½ï¿½ï¿½ï¿½Ç°ï¿½ï¿½ï¿½Øºï¿½ï¿½ï¿½ï¿½Ä³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý¿ï¿½ï¿½ï¿½ï¿½ï¿½CPU0ï¿½ï¿½program scratche-pad SRAM (PSPR)ï¿½Ð£ï¿½ï¿½ï¿½Ê±ï¿½æ´¢ï¿½ï¿½ï¿½ï¿½ï¿½Ô±ï¿½ï¿½ï¿½Ú¿ï¿½ï¿½Ô¿ï¿½ï¿½ÙµÄµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð£ï¿½ï¿½ï¿½ï¿½ï¿½20220725
 void Flash_copyFunctionsToPSPR(void)
 {
 	/* Copy the IfxFlash_eraseMultipleSectors() routine and assign it to a function pointer */
@@ -325,11 +325,11 @@ void Flash_copyFunctionsToPSPR(void)
 
 /*
  ** ============================================================================
- ** @Function    £º³õÊ¼»¯Flash
- ** @Description £º
- ** @Parameters  £º
- ** @Returns     £º
- ** @Date        £º
+ ** @Function    ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½Flash
+ ** @Description ï¿½ï¿½
+ ** @Parameters  ï¿½ï¿½
+ ** @Returns     ï¿½ï¿½
+ ** @Date        ï¿½ï¿½
  ** ============================================================================
  */
 void Flash_init(void)
@@ -341,11 +341,11 @@ void Flash_init(void)
 
 /*
  ** ============================================================================
- ** @Function    £º
- ** @Description £º
- ** @Parameters  £º
- ** @Returns     £º
- ** @Date        £º
+ ** @Function    ï¿½ï¿½
+ ** @Description ï¿½ï¿½
+ ** @Parameters  ï¿½ï¿½
+ ** @Returns     ï¿½ï¿½
+ ** @Date        ï¿½ï¿½
  ** ============================================================================
  */
 int Flash_erasePFlash_port(uint32 flashAddr)
@@ -355,17 +355,22 @@ int Flash_erasePFlash_port(uint32 flashAddr)
     g_commandFromPSPR.eraseFlash(flashAddr);
     IfxCpu_restoreInterrupts(interruptState);            /* Restore the interrupts state                            */
 
+    /* Check PFlash erase error flags: EVER (erase verify), OPER (operation), SQER (sequence), PROER (protection) */
+    if (FLASH0_FSR.B.EVER || FLASH0_FSR.B.OPER || FLASH0_FSR.B.SQER || FLASH0_FSR.B.PROER)
+    {
+        return -1;  /* Erase error detected */
+    }
     return 0;
 }
 
 /*
  ** ============================================================================
- ** @Function    £ºÍùPFLASH½øÐÐÊý¾ÝÐ´Èë
- ** @Description £º
- **                 Ã¿´ÎÐ´1page=32bytes
- ** @Parameters  £º
- ** @Returns     £º
- ** @Date        £º
+ ** @Function    ï¿½ï¿½ï¿½ï¿½PFLASHï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð´ï¿½ï¿½
+ ** @Description ï¿½ï¿½
+ **                 Ã¿ï¿½ï¿½Ð´1page=32bytes
+ ** @Parameters  ï¿½ï¿½
+ ** @Returns     ï¿½ï¿½
+ ** @Date        ï¿½ï¿½
  ** ============================================================================
  */
 int  Flash_writePFlash_port(uint32 flashAddr, uint32 *data, uint32 bytelength)
@@ -379,7 +384,13 @@ int  Flash_writePFlash_port(uint32 flashAddr, uint32 *data, uint32 bytelength)
     IfxCpu_restoreInterrupts(interruptState);            /* Restore the interrupts state                            */
 
     IfxPort_setPinState(LED2, IfxPort_State_low);
-    return  0;
+
+    /* Check PFlash program error flags: PVER (program verify), OPER, SQER, PROER */
+    if (FLASH0_FSR.B.PVER || FLASH0_FSR.B.OPER || FLASH0_FSR.B.SQER || FLASH0_FSR.B.PROER)
+    {
+        return -1;  /* Write error detected */
+    }
+    return 0;
 }
 
 uint32 min(uint32 var1,uint32 var2)
@@ -389,79 +400,79 @@ uint32 min(uint32 var1,uint32 var2)
 	else
 		return var2;
 }
-uint8 s_remainBuffer[32] = {0};  // ÔÝ´æ²»×ã32×Ö½ÚµÄÊý¾Ý
-uint32 s_remainAddr = 0;   // ÔÝ´æÊý¾ÝµÄÆðÊ¼µØÖ·
-uint32 s_remainSize = 0;   // µ±Ç°ÔÝ´æµÄÊý¾Ý³¤¶È
-void Flash_ForceWriteRemaining(void)//²»×ã32Î»µÄÖ±½ÓÐ´Èë£¬±£´æµÄÊý×éµÄÊý¾Ý
+uint8 s_remainBuffer[32] = {0};  // ï¿½Ý´æ²»ï¿½ï¿½32ï¿½Ö½Úµï¿½ï¿½ï¿½ï¿½ï¿½
+uint32 s_remainAddr = 0;   // ï¿½Ý´ï¿½ï¿½ï¿½ï¿½Ýµï¿½ï¿½ï¿½Ê¼ï¿½ï¿½Ö·
+uint32 s_remainSize = 0;   // ï¿½ï¿½Ç°ï¿½Ý´ï¿½ï¿½ï¿½ï¿½ï¿½Ý³ï¿½ï¿½ï¿½
+void Flash_ForceWriteRemaining(void)//ï¿½ï¿½ï¿½ï¿½32Î»ï¿½ï¿½Ö±ï¿½ï¿½Ð´ï¿½ë£¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 {
 //	static uint32 s_remainBuffer32[8] = {0};
     if (s_remainSize > 0)
     {
-        // Ìî³äÊ£Óà²¿·ÖÎª0xFF
-        memset(s_remainBuffer + s_remainSize, 0x00, 32 - s_remainSize);//²»Âú32Î»µÄ£¬Ã»Êý¾ÝµÄ¶¼ÌîÐ´0£¬²»È»»áÂÒÈëÒ»Ð©Êý¾Ý
+        // ï¿½ï¿½ï¿½Ê£ï¿½à²¿ï¿½ï¿½Îª0xFF
+        memset(s_remainBuffer + s_remainSize, 0x00, 32 - s_remainSize);//ï¿½ï¿½ï¿½ï¿½32Î»ï¿½Ä£ï¿½Ã»ï¿½ï¿½ï¿½ÝµÄ¶ï¿½ï¿½ï¿½Ð´0ï¿½ï¿½ï¿½ï¿½È»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»Ð©ï¿½ï¿½ï¿½ï¿½
 
-        // Ð´ÈëÍêÕûµÄ32×Ö½Ú¿é
+        // Ð´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½32ï¿½Ö½Ú¿ï¿½
         g_commandFromPSPR.writeFlash(s_remainAddr, s_remainBuffer, 32);
 
-        // ÖØÖÃ×´Ì¬
+        // ï¿½ï¿½ï¿½ï¿½×´Ì¬
         s_remainSize = 0;
     }
 }
 
-int Flash_writePFlash_portex(uint32 flashAddr, uint8 *data, uint32 byteLength)//°´32Î»½øÐÐÐ´Èë
+int Flash_writePFlash_portex(uint32 flashAddr, uint8 *data, uint32 byteLength)//ï¿½ï¿½32Î»ï¿½ï¿½ï¿½ï¿½Ð´ï¿½ï¿½
 {
     uint32 offset = 0;
     uint32 currentAddr = flashAddr;//0xa0020040+126=0xa00200be
 
-    // 1. ¼ì²éÊÇ·ñÐèÒªÓëÔÝ´æÊý¾ÝÆ´½Ó
+    // 1. ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½Ý´ï¿½ï¿½ï¿½ï¿½ï¿½Æ´ï¿½ï¿½
     if (s_remainSize > 0)
     {
-    	//¼ì²éµØÖ·ÊÇ·ñÓë»º´æ¿éÁ¬Ðø
-		if (currentAddr == (s_remainAddr + s_remainSize))//Á¬Ðø³¬128³¤¶ÈµÄÊý¾Ý->0xa00200be=0xa00200a0+30
+    	//ï¿½ï¿½ï¿½ï¿½Ö·ï¿½Ç·ï¿½ï¿½ë»ºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		if (currentAddr == (s_remainAddr + s_remainSize))//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½128ï¿½ï¿½ï¿½Èµï¿½ï¿½ï¿½ï¿½ï¿½->0xa00200be=0xa00200a0+30
     	{
-            uint32 needed = 32 - s_remainSize;  // ÐèÒª²¹³äµÄ×Ö½ÚÊý
+            uint32 needed = 32 - s_remainSize;  // ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö½ï¿½ï¿½ï¿½
             uint32 copySize = min(needed, byteLength);
 
-            // ×éºÏ³ÉÍêÕûµÄ32×Ö½Ú¿é
-            memcpy(s_remainBuffer + s_remainSize, data, copySize);//(0xa00200be,Ç°Á½¸öÊý¾Ý£¬2)
+            // ï¿½ï¿½Ï³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½32ï¿½Ö½Ú¿ï¿½
+            memcpy(s_remainBuffer + s_remainSize, data, copySize);//(0xa00200be,Ç°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý£ï¿½2)
 
-            // Á¢¼´Ð´ÈëÍêÕûÒ³£¨Ê¹ÓÃ»º´æµØÖ·£©
-			g_commandFromPSPR.writeFlash(s_remainAddr, s_remainBuffer, 32);//(0xa00200a0,32¸öÊý¾Ý£¬32)
+            // ï¿½ï¿½ï¿½ï¿½Ð´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò³ï¿½ï¿½Ê¹ï¿½Ã»ï¿½ï¿½ï¿½ï¿½Ö·ï¿½ï¿½
+			g_commandFromPSPR.writeFlash(s_remainAddr, s_remainBuffer, 32);//(0xa00200a0,32ï¿½ï¿½ï¿½ï¿½ï¿½Ý£ï¿½32)
 
 			offset += copySize;//offset->0+2=2
 			currentAddr += copySize;//0xa00200be+2=0xa00200c0
 			s_remainSize = 0;
         }
-		else//·ÇÁ¬ÐøµÄÊý¾Ý
+		else//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         {
 			if((s_remainAddr + 32) < currentAddr)
 			{
-				// µØÖ·²»Á¬Ðø£¬Ç¿ÖÆÐ´Èë¾É»º´æ
+				// ï¿½ï¿½Ö·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç¿ï¿½ï¿½Ð´ï¿½ï¿½É»ï¿½ï¿½ï¿½
 				Flash_ForceWriteRemaining();
 			}
 			else //if((s_remainAddr + 32) > currentAddr)
 			{
-				//¼ÙÉèÖ®Ç°ÏÂÔØµÄµØÖ·Îª£ºs_remainAddr£º0x800451E0 + 0x20£¨³¤¶È£© = 0x80045200 > 0x800451F4
-				//Ö®Ç°ÓàÏÂµÄÊý¾Ý×Ö½ÚÊýÖ»ÓÐ£ºs_remainSize£º10£¬Òò´ËÉÏÒ»´ÎÏÂÔØÍêºóµÄµØÖ·Îª£º0x800451E0 + 0xA = 0x800451EA
-				//¶øÐÂµØÖ·Îª0x800451F4£¬ÄÇÃ´0x80045200 - 0x800451F4 =  0xC£¬¼´ÎªneedBetysLength
-				//(s_remainBuffer + 32 - needBetysLength) = 0x800451E0 + 0x20 -0xC = 0x800451F4£¬ÐÂ¿½±´µÄÊý¾Ý´Ó0x800451F4¿ªÊ¼
-				//¼ÙÉèÐÂ¿½±´Êý¾ÝÖ»ÓÐ4¸ö£¬¼´byteLength£¬ÄÇÃ´¿ÕÓà×Ö½Ú»¹Ó¦Óà8¸ö£¬ÒÑÕ¼ÓÃµÄ×Ö½ÚÓ¦ÊÇ32-8=24,
-				//ÄÇÃ´32 - (needBetysLength - byteLength) = 24·ûºÏÉÏÃæÍÆ¶Ï£¬Ó¦ÊÇÕýÈ·µÄ£¬Ôø¾ü20250717
+				//ï¿½ï¿½ï¿½ï¿½Ö®Ç°ï¿½ï¿½ï¿½ØµÄµï¿½Ö·Îªï¿½ï¿½s_remainAddrï¿½ï¿½0x800451E0 + 0x20ï¿½ï¿½ï¿½ï¿½ï¿½È£ï¿½ = 0x80045200 > 0x800451F4
+				//Ö®Ç°ï¿½ï¿½ï¿½Âµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö½ï¿½ï¿½ï¿½Ö»ï¿½Ð£ï¿½s_remainSizeï¿½ï¿½10ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Äµï¿½Ö·Îªï¿½ï¿½0x800451E0 + 0xA = 0x800451EA
+				//ï¿½ï¿½ï¿½Âµï¿½Ö·Îª0x800451F4ï¿½ï¿½ï¿½ï¿½Ã´0x80045200 - 0x800451F4 =  0xCï¿½ï¿½ï¿½ï¿½ÎªneedBetysLength
+				//(s_remainBuffer + 32 - needBetysLength) = 0x800451E0 + 0x20 -0xC = 0x800451F4ï¿½ï¿½ï¿½Â¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý´ï¿½0x800451F4ï¿½ï¿½Ê¼
+				//ï¿½ï¿½ï¿½ï¿½ï¿½Â¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö»ï¿½ï¿½4ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½byteLengthï¿½ï¿½ï¿½ï¿½Ã´ï¿½ï¿½ï¿½ï¿½ï¿½Ö½Ú»ï¿½Ó¦ï¿½ï¿½8ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Õ¼ï¿½Ãµï¿½ï¿½Ö½ï¿½Ó¦ï¿½ï¿½32-8=24,
+				//ï¿½ï¿½Ã´32 - (needBetysLength - byteLength) = 24ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ¶Ï£ï¿½Ó¦ï¿½ï¿½ï¿½ï¿½È·ï¿½Ä£ï¿½ï¿½ï¿½ï¿½ï¿½20250717
 				uint32 needBetysLength = s_remainAddr + 32 - currentAddr;
 				// 0x80045200 + 0x20 = 0x80045220 - 0x80045208 = 24
-				uint32 copySize2 = min(needBetysLength, byteLength);	// ¼ÙÉè byteLength = 4£¬¶øneedBetysLength = 12
+				uint32 copySize2 = min(needBetysLength, byteLength);	// ï¿½ï¿½ï¿½ï¿½ byteLength = 4ï¿½ï¿½ï¿½ï¿½needBetysLength = 12
 				if((32 - needBetysLength) > s_remainSize)
 				{
 					memcpy((s_remainBuffer + 32 - needBetysLength), data, copySize2);
 					//(s_remainBuffer + 32 - needBetysLength)
 					if(needBetysLength <= byteLength)
 					{
-						g_commandFromPSPR.writeFlash(s_remainAddr, s_remainBuffer, 32);//(0xa00200a0,32¸öÊý¾Ý£¬32)
+						g_commandFromPSPR.writeFlash(s_remainAddr, s_remainBuffer, 32);//(0xa00200a0,32ï¿½ï¿½ï¿½ï¿½ï¿½Ý£ï¿½32)
 						offset += copySize2;//offset->0+2=2
 						currentAddr += copySize2;//0xa00200be+2=0xa00200c0
 						s_remainSize = 0;
 					}
-					else // ÒòÎª²»¹»Ò»Ò³£¬µÈ´ýÏÂÒ»¸öÑ­»·
+					else // ï¿½ï¿½Îªï¿½ï¿½ï¿½ï¿½Ò»Ò³ï¿½ï¿½ï¿½È´ï¿½ï¿½ï¿½Ò»ï¿½ï¿½Ñ­ï¿½ï¿½
 					{
 						s_remainSize = 32 - (needBetysLength - byteLength);	//
 					}
@@ -474,46 +485,53 @@ int Flash_writePFlash_portex(uint32 flashAddr, uint8 *data, uint32 byteLength)//
     	}
     }
 
-    // 2. Ð´ÈëÍêÕûµÄ32×Ö½Ú¿é
-    //ÄÃ168¸ö³¤¶È½øÐÐ¾ÙÀý£¬
-    //µÚÒ»´Î0x36·¢ËÍµÄÊý¾Ý³¤¶ÈÊÇ126¸ö
-    //¢Ùa0020040->a0020060(32)->offset=(0->32)
-    //¢Úa0020060->a0020080(32)->offset=(32->64)
-	//¢Ûa0020080->a00200a0(32)->offset=(64->96)
-    //¢Üa00200a0->a00200c0(32)->offset=96+32<126¡Á²»Ö´ÐÐ£¬offset=96->ÔÚÉÏÃæµÄÆ´½Ó32Ð´ÈëÁË
-    //µÚ¶þ´Î0x36·¢ËÍµÄÊý¾Ý³¤¶ÈÊÇ42¸ö
-    //¢Ùa00200c0->a00200e0(32)->offset=(2->34)
-    //¢Úa00200e0->a00200f0(8)->offset=34+32=66<42¡Á£¬offset=34
+    // 2. Ð´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½32ï¿½Ö½Ú¿ï¿½
+    //ï¿½ï¿½168ï¿½ï¿½ï¿½ï¿½ï¿½È½ï¿½ï¿½Ð¾ï¿½ï¿½ï¿½ï¿½ï¿½
+    //ï¿½ï¿½Ò»ï¿½ï¿½0x36ï¿½ï¿½ï¿½Íµï¿½ï¿½ï¿½ï¿½Ý³ï¿½ï¿½ï¿½ï¿½ï¿½126ï¿½ï¿½
+    //ï¿½ï¿½a0020040->a0020060(32)->offset=(0->32)
+    //ï¿½ï¿½a0020060->a0020080(32)->offset=(32->64)
+	//ï¿½ï¿½a0020080->a00200a0(32)->offset=(64->96)
+    //ï¿½ï¿½a00200a0->a00200c0(32)->offset=96+32<126ï¿½ï¿½ï¿½ï¿½Ö´ï¿½Ð£ï¿½offset=96->ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ´ï¿½ï¿½32Ð´ï¿½ï¿½ï¿½ï¿½
+    //ï¿½Ú¶ï¿½ï¿½ï¿½0x36ï¿½ï¿½ï¿½Íµï¿½ï¿½ï¿½ï¿½Ý³ï¿½ï¿½ï¿½ï¿½ï¿½42ï¿½ï¿½
+    //ï¿½ï¿½a00200c0->a00200e0(32)->offset=(2->34)
+    //ï¿½ï¿½a00200e0->a00200f0(8)->offset=34+32=66<42ï¿½ï¿½ï¿½ï¿½offset=34
     while (offset + 32 <= byteLength) //126
     {
-        g_commandFromPSPR.writeFlash(currentAddr, data + offset, 32);//Ð´ÈëÒ»Ò³
+        g_commandFromPSPR.writeFlash(currentAddr, data + offset, 32);//Ð´ï¿½ï¿½Ò»Ò³
         offset += 32;
-        currentAddr += 32; // ¹Ø¼ü£ºÃ¿´ÎÐ´ÈëºóµÝÔö32
+        currentAddr += 32; // ï¿½Ø¼ï¿½ï¿½ï¿½Ã¿ï¿½ï¿½Ð´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½32
     }
 
-    // 3. ´¦ÀíÊ£Óà²»×ã32×Ö½ÚµÄÊý¾Ý
-    if ((offset < byteLength)&&(s_remainSize == 0)) //¢Ù96<126  ¢Ú66<42
+    // 3. ï¿½ï¿½ï¿½ï¿½Ê£ï¿½à²»ï¿½ï¿½32ï¿½Ö½Úµï¿½ï¿½ï¿½ï¿½ï¿½
+    if ((offset < byteLength)&&(s_remainSize == 0)) //ï¿½ï¿½96<126  ï¿½ï¿½66<42
     {
-		// ¼ÆËã¶ÔÆëµØÖ·£¨32×Ö½Ú±ß½ç£©
-		s_remainAddr = currentAddr;//¢Ù0xa00200a0  ¢Úa00200e0
-		// ´æ´¢Ê£ÓàÊý¾Ý
-		s_remainSize = byteLength - offset;//¢Ù126-96=30  ¢Ú42-2-32=8
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö·ï¿½ï¿½32ï¿½Ö½Ú±ß½ç£©
+		s_remainAddr = currentAddr;//ï¿½ï¿½0xa00200a0  ï¿½ï¿½a00200e0
+		// ï¿½æ´¢Ê£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		s_remainSize = byteLength - offset;//ï¿½ï¿½126-96=30  ï¿½ï¿½42-2-32=8
 		for(uint8 i = 0;i<32;i++)
 		{
 			s_remainBuffer[i]=0;
 		}
-		memcpy(s_remainBuffer, data + offset, s_remainSize);//¢Ù(s_remainBuffer,data+96,30)  ¢Ú(s_remainBuffer,data+34,8)
+		memcpy(s_remainBuffer, data + offset, s_remainSize);//ï¿½ï¿½(s_remainBuffer,data+96,30)  ï¿½ï¿½(s_remainBuffer,data+34,8)
+    }
+
+    /* Check PFlash program error flags after all write operations */
+    if (FLASH0_FSR.B.PVER || FLASH0_FSR.B.OPER || FLASH0_FSR.B.SQER || FLASH0_FSR.B.PROER)
+    {
+        s_remainSize = 0;  /* Clear buffer state on error */
+        return 0;          /* Write error detected */
     }
     return 1;
 }
 
 /*
  ** ============================================================================
- ** @Function    £º
- ** @Description £º
- ** @Parameters  £º
- ** @Returns     £º
- ** @Date        £º
+ ** @Function    ï¿½ï¿½
+ ** @Description ï¿½ï¿½
+ ** @Parameters  ï¿½ï¿½
+ ** @Returns     ï¿½ï¿½
+ ** @Date        ï¿½ï¿½
  ** ============================================================================
  */
 int Flash_eraseDFlash_port(uint32 flashAddr)
@@ -531,12 +549,12 @@ int Flash_eraseDFlash_port(uint32 flashAddr)
 
 /*
  ** ============================================================================
- ** @Function    £º
- ** @Description £º
- **                 Ã¿´ÎÐ´1page=8bytes
- ** @Parameters  £º
- ** @Returns     £º
- ** @Date        £º
+ ** @Function    ï¿½ï¿½
+ ** @Description ï¿½ï¿½
+ **                 Ã¿ï¿½ï¿½Ð´1page=8bytes
+ ** @Parameters  ï¿½ï¿½
+ ** @Returns     ï¿½ï¿½
+ ** @Date        ï¿½ï¿½
  ** ============================================================================
  */
 int  Flash_writeDFlash_port(uint32 flashAddr, uint32 *data, uint32 bytelength )

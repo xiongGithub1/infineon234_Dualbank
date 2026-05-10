@@ -253,7 +253,7 @@ void Boot_DualBank_Init(void)
         flags.main.flags           = 0u;
         flags.main.sequence        = FLAG_SEQUENCE_INIT;
         flags.main.crc32           = 0u;
-        flags.main.targetWriteBank = BANK_B;  /* Ä¬ÈÏÍÆ¼öË¢Ð´ Bank B */
+        flags.main.targetWriteBank = BANK_B;  /* Ä¬ï¿½ï¿½ï¿½Æ¼ï¿½Ë¢Ð´ Bank B */
 
         Boot_CopyMainToShadow(&flags.main, &flags.shadow);
         Boot_WriteFlagsToDFlash(&flags);
@@ -529,7 +529,7 @@ void Boot_DualBank_JumpToBank(uint32 bank)
     /* Disable interrupts before jumping */
     IfxCpu_disableInterrupts();
 
-    /* ========== ÐÂÔö£º¹Ø±Õ ECC Trap£¬·ÀÖ¹ App Flash ¿ÕÇøÓò´¥·¢ Trap ========== */
+    /* ========== ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ø±ï¿½ ECC Trapï¿½ï¿½ï¿½ï¿½Ö¹ App Flash ï¿½ï¿½ï¿½ï¿½ï¿½ò´¥·ï¿½ Trap ========== */
     {
         uint16 pwd = IfxScuWdt_getCpuWatchdogPassword();
         IfxScuWdt_clearCpuEndinit(pwd);
@@ -538,12 +538,12 @@ void Boot_DualBank_JumpToBank(uint32 bank)
         IfxScuWdt_setCpuEndinit(pwd);
     }
 
-    /* ========== ÐÞ¸´£ºÍ¬Ê±½ûÓÃ Data Cache ºÍ Program Cache ========== */
-    IfxCpu_setDataCache(0);      /* ½ûÓÃÊý¾Ý»º´æ */
-    IfxCpu_setProgramCache(0);   /* ½ûÓÃÖ¸Áî»º´æ£¨¹Ø¼üÐÞ¸´£© */
+    /* ========== ï¿½Þ¸ï¿½ï¿½ï¿½Í¬Ê±ï¿½ï¿½ï¿½ï¿½ Data Cache ï¿½ï¿½ Program Cache ========== */
+    IfxCpu_setDataCache(0);      /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý»ï¿½ï¿½ï¿½ */
+    IfxCpu_setProgramCache(0);   /* ï¿½ï¿½ï¿½ï¿½Ö¸ï¿½î»ºï¿½æ£¨ï¿½Ø¼ï¿½ï¿½Þ¸ï¿½ï¿½ï¿½ */
     
-    __dsync();                   /* Êý¾ÝÍ¬²½ÆÁÕÏ */
-    __isync();                   /* Ö¸ÁîÍ¬²½ÆÁÕÏ */
+    __dsync();                   /* ï¿½ï¿½ï¿½ï¿½Í¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+    __isync();                   /* Ö¸ï¿½ï¿½Í¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
 
     /* Jump to APP _START. APP's _Core0_start will reconfigure SP, BIV, BTV, etc. */
     appEntry();
@@ -586,9 +586,37 @@ void Boot_DualBank_SelectAndJump(void)
 
     if (targetStatus == BANK_STATUS_VALID)
     {
-        /* ... bootAttempts check ... */
-        Boot_DualBank_JumpToBank(targetBank);
-        return;
+        /* Increment boot attempts before jumping. If APP crashes before
+         * Boot_DualBank_ClearBootAttempts(), counter persists and on next
+         * boot we roll back after MAX_BOOT_ATTEMPTS consecutive failures. */
+        flags.main.bootAttempts++;
+        flags.main.sequence++;
+        Boot_DualBank_WriteFlags(&flags);
+
+        if (flags.main.bootAttempts >= MAX_BOOT_ATTEMPTS)
+        {
+            /* Too many consecutive boot failures: invalidate target and try fallback */
+            Boot_DualBank_InvalidateBank(targetBank);
+            fallbackStatus = Boot_DualBank_VerifyBank(fallbackBank);
+            if (fallbackStatus == BANK_STATUS_VALID)
+            {
+                flags.main.activeBank = fallbackBank;
+                flags.main.bootAttempts = 0u;
+                flags.main.sequence++;
+                Boot_DualBank_WriteFlags(&flags);
+                SW_Reset();
+            }
+            else
+            {
+                /* Both invalid: stay in bootloader */
+                return;
+            }
+        }
+        else
+        {
+            Boot_DualBank_JumpToBank(targetBank);
+            return;
+        }
     }
     else
     {

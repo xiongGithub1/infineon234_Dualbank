@@ -235,7 +235,7 @@ void RestartS3Server(void);
 void SetCurrentSession(const uint8 i_SerSessionMode);
 static uint16 StartErasePFlash(uint8 blockHigh, uint8 blockLow);
 static uint16 EraseFlashSector(uint8 blockHigh, uint8 blockLow);
-
+static void DoResetToBootloader(uint8 status);
 /*check routine control right?*/
 uint8 IsCheckRoutineControlRight( tCheckRoutineCtlInfo i_eCheckRoutineCtlId,  tUdsAppMsgInfo *m_pstPDUMsg);
 

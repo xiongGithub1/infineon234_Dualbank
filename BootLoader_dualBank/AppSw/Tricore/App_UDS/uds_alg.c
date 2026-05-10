@@ -160,8 +160,9 @@ uint8 UDS_ALG_HAL_DecryptData(const uint8 *i_pCipherText, const uint32 i_dataLen
  *END**************************************************************************/
 uint8 UDS_ALG_HAL_GetRandom(const uint32 i_needRandomDataLen, uint8 *o_pRandomDataBuf)
 {
+    uint32 index;
     uint32 random = uds_timer_GetTimerTickCnt();
-    random ^= IfxScuCcu_getCpuFrequency(IfxCpu_getCoreIndex());  // CPU 频率
+    random ^= (uint32)IfxScuCcu_getCpuFrequency(IfxCpu_getCoreIndex());  // CPU 频率
     random ^= (uint32)SCU_RSTSTAT.U;                              // 复位状态
     random ^= (gs_UDS_SWTimerTickCnt << 8);                       // 软件计数器
     

@@ -1,10 +1,10 @@
 /*
- * @ 锟斤拷锟斤拷: UDS_alg_hal.c
- * @ 锟斤拷锟斤拷:
- * @ 锟斤拷锟斤拷:
- * @ 锟斤拷锟斤拷: 2021锟斤拷2锟斤拷5锟斤拷
- * @ 锟芥本: V1.0
- * @ 锟斤拷史: V1.0 2021锟斤拷2锟斤拷5锟斤拷 Summary
+ * @ 閿熸枻鎷烽敓鏂ゆ嫹: UDS_alg_hal.c
+ * @ 閿熸枻鎷烽敓鏂ゆ嫹:
+ * @ 閿熸枻鎷烽敓鏂ゆ嫹:
+ * @ 閿熸枻鎷烽敓鏂ゆ嫹: 2021閿熸枻鎷�2閿熸枻鎷�5閿熸枻鎷�
+ * @ 閿熻姤鏈�: V1.0
+ * @ 閿熸枻鎷峰彶: V1.0 2021閿熸枻鎷�2閿熸枻鎷�5閿熸枻鎷� Summary
  *
  * MIT License. Copyright (c) 2021 SummerFalls.
  */
@@ -12,6 +12,8 @@
 #include <uds_timer.h>
 #include <uds_alg.h>
 #include "uds_app.h"
+#include "IfxScuCcu.h"
+
 /* Random value, seed is 0x12345678 */
 static uint32 uint32RandVal = 0x12345678U;
 
@@ -154,63 +156,24 @@ uint8 UDS_ALG_HAL_DecryptData(const uint8 *i_pCipherText, const uint32 i_dataLen
 /*FUNCTION**********************************************************************
  *
  * Function Name : UDS_ALG_HAL_GetRandom
- * Description   : This function is get random 锟斤拷取锟斤拷锟街�.
+ * Description   : This function is get random 閿熸枻鎷峰彇閿熸枻鎷烽敓琛楋拷.
  *
  * Implements : UDS_ALG_hal_Init_Activity
  *END**************************************************************************/
 uint8 UDS_ALG_HAL_GetRandom(const uint32 i_needRandomDataLen, uint8 *o_pRandomDataBuf)
 {
-    uint8 ret = TRUE;
-    uint8 index = 0u;
-    //uint8 *pRandomTmp = nullptr;
-    uint32 random = (uint32)&index;
-
-    if ((0u == i_needRandomDataLen) || (nullptr == o_pRandomDataBuf))
-    {
-        ret = FALSE;
-    }
-
-    random = uds_timer_GetTimerTickCnt();
-    random |= (gs_UDS_SWTimerTickCnt << 16u);
+    uint32 index;
+    uint32 random = uds_timer_GetTimerTickCnt();
+    random ^= (uint32)IfxScuCcu_getCpuFrequency(IfxCpu_getCoreIndex());  // CPU 棰戠巼
+    random ^= (uint32)SCU_RSTSTAT.U;                                     // 澶嶄綅鐘舵��
+    random ^= (gs_UDS_SWTimerTickCnt << 8);                              // 杞欢璁℃暟鍣�
+    
     for (index = 0; index < i_needRandomDataLen; index++)
     {
-        o_pRandomDataBuf[index] = (random >> (index * sizeof(uint8))) & 0xFF;
-        //random += 0x11u;
+        o_pRandomDataBuf[index] = (random >> (index * 8)) & 0xFF;
+        random = (random * 1103515245 + 12345) & 0xFFFFFFFF;      // LCG 杩唬
     }
-
-//#if defined (EN_AES_SA_ALGORITHM_SW) || defined (EN_ZLG_SA_ALGORITHM)
-//#if 1
-//    random = TIMER_HAL_GetTimerTickCnt();
-//    random |= (gs_UDS_SWTimerTickCnt << 16u);
-//    fsl_srand(random);
-//
-//    if (TRUE == ret)
-//    {
-//        pRandomTmp = (uint8 *)&random;
-//
-//        for (index = 0u; index < i_needRandomDataLen; index++)
-//        {
-//            if (((index & 0x03u) == 0x03u))
-//            {
-//                random = fsl_rand();
-//            }
-//
-//            o_pRandomDataBuf[index] = pRandomTmp[index & 0x03];
-//        }
-//    }
-//
-//#else
-//    random = 0u;
-//
-//    for (index = 0; index < i_needRandomDataLen; index++)
-//    {
-//        o_pRandomDataBuf[index] = random;
-//        random += 0x11u;
-//    }
-//
-//#endif
-//#endif
-    return ret;
+    return TRUE;
 }
 
 /* UDS software timer tick */

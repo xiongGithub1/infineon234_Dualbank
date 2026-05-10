@@ -108,6 +108,13 @@ static const tUDSService gs_astUDSService[] =
 			CommunicationControl0x28
 	},
 	{
+			0x22u,
+			DEFALUT_SESSION | PROGRAM_SESSION | EXTEND_SESSION,
+			SUPPORT_PHYSICAL_ADDR | SUPPORT_FUNCTION_ADDR,
+			NONE_SECURITY,
+			ReadDataByIdentifier0x22
+	},
+	{
 			0x23u,
 			DEFALUT_SESSION | EXTEND_SESSION,
 			SUPPORT_PHYSICAL_ADDR | SUPPORT_FUNCTION_ADDR,
@@ -382,6 +389,15 @@ void UDS_SystemTickCtl(void)
 	if (GetUdsSecurityReqLockTime())
 	{
 		SubUdsSecurityReqLockTime(1u);
+	}
+
+	/* S3 timeout: automatically return to default session and reset security level */
+	if ((0u == GetUdsS3ServerTime()) && (TRUE != IsCurDefaultSession()))
+	{
+		SetCurrentSession(DEFALUT_SESSION);
+		SetSecurityLevel(NONE_SECURITY);
+		Flash_InitDowloadInfo();
+		Flash_SetNextDownloadStep(FL_REQUEST_STEP);
 	}
 }
 
@@ -884,6 +900,28 @@ static void DoResetToBootloader(uint8 status)
 #endif
 
 
+/**
+ * @brief UDS Tx callback: perform hard reset after positive response sent.
+ */
+static void DoHardReset(uint8 status)
+{
+	if (TX_MSG_SUCCESSFUL == status)
+	{
+		HardReset();
+	}
+}
+
+/**
+ * @brief UDS Tx callback: perform soft reset after positive response sent.
+ */
+static void DoSoftReset(uint8 status)
+{
+	if (TX_MSG_SUCCESSFUL == status)
+	{
+		SW_Reset();
+	}
+}
+
 static void DoResetMCU0x11(struct UDSServiceInfo* i_pstUDSServiceInfo,
 	tUdsAppMsgInfo* m_pstPDUMsg)
 {
@@ -900,14 +938,10 @@ static void DoResetMCU0x11(struct UDSServiceInfo* i_pstUDSServiceInfo,
 		case RESET_NONE:
 			break;
 		case HARD_RESET:
-			{
-				HardReset();
-
-				break;
-			}
+			m_pstPDUMsg->pfUDSTxMsgServiceCallBack = &DoHardReset;
+			break;
 		case SOFT_RESET:
-
-			SW_Reset();
+			m_pstPDUMsg->pfUDSTxMsgServiceCallBack = &DoSoftReset;
 			break;
 		default:
 			SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_SUBFUNCTION_NOT_SUPPORTED, m_pstPDUMsg);
@@ -924,7 +958,16 @@ static void SecurityAccess0x27(struct UDSServiceInfo* i_pstUDSServiceInfo,
 
 	uint8 RequestSubfunction = m_pstPDUMsg->aDataBuf[1u];
 	static uint8 s_aSeedBuf[SA_ALGORITHM_SEED_LEN] = { 0u };
+	static uint8 s_securityAttemptCnt = 0u;
+	static const uint8 MAX_SECURITY_ATTEMPTS = 3u;
 	uint8 ret = FALSE;
+
+	/* Check if security access is currently locked */
+	if (GetUdsSecurityReqLockTime() > 0)
+	{
+		SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_REQUIRED_TIME_DELAY_NOT_EXPIRED, m_pstPDUMsg);
+		return;
+	}
 
 
 
@@ -954,11 +997,22 @@ static void SecurityAccess0x27(struct UDSServiceInfo* i_pstUDSServiceInfo,
 				m_pstPDUMsg->aDataBuf[0u] = i_pstUDSServiceInfo->SerNum + 0x40u;
 				m_pstPDUMsg->xDataLen = 2u;
 				fsl_memset(s_aSeedBuf, 0x1u, sizeof(s_aSeedBuf));
+				s_securityAttemptCnt = 0u;
 				SetSecurityLevel(SECURITY_LEVEL_1);
 			}
 			else
 			{
-				SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_INVALID_KEY, m_pstPDUMsg);
+				s_securityAttemptCnt++;
+				if (s_securityAttemptCnt >= MAX_SECURITY_ATTEMPTS)
+				{
+					gs_stUdsInfo.xSecurityReqLockTime = UdsAppTimeToCount(10000u);
+					s_securityAttemptCnt = 0u;
+					SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_EXCEEDED_NUMBER_OF_ATTEMPTS, m_pstPDUMsg);
+				}
+				else
+				{
+					SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_INVALID_KEY, m_pstPDUMsg);
+				}
 			}
 
 			break;
@@ -986,11 +1040,22 @@ static void SecurityAccess0x27(struct UDSServiceInfo* i_pstUDSServiceInfo,
 				m_pstPDUMsg->aDataBuf[0u] = i_pstUDSServiceInfo->SerNum + 0x40u;
 				m_pstPDUMsg->xDataLen = 2u;
 				fsl_memset(s_aSeedBuf, 0x1u, sizeof(s_aSeedBuf));
+				s_securityAttemptCnt = 0u;
 				SetSecurityLevel(SECURITY_LEVEL_2);
 			}
 			else
 			{
-				SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_INVALID_KEY, m_pstPDUMsg);
+				s_securityAttemptCnt++;
+				if (s_securityAttemptCnt >= MAX_SECURITY_ATTEMPTS)
+				{
+					gs_stUdsInfo.xSecurityReqLockTime = UdsAppTimeToCount(10000u);
+					s_securityAttemptCnt = 0u;
+					SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_EXCEEDED_NUMBER_OF_ATTEMPTS, m_pstPDUMsg);
+				}
+				else
+				{
+					SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_INVALID_KEY, m_pstPDUMsg);
+				}
 			}
 
 			break;
@@ -1007,6 +1072,12 @@ static void CommunicationControl0x28(struct UDSServiceInfo* i_pstUDSServiceInfo,
 	uint8 communicationType = 0u;
 	RequestSubfunction = m_pstPDUMsg->aDataBuf[1u];
 	communicationType = m_pstPDUMsg->aDataBuf[2u];
+
+	if (communicationType != 0x03u)
+	{
+		SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_REQUEST_OUT_OF_RANGE, m_pstPDUMsg);
+		return;
+	}
 
 	m_pstPDUMsg->aDataBuf[0u] = i_pstUDSServiceInfo->SerNum + 0x40u;
 	m_pstPDUMsg->aDataBuf[1u] = RequestSubfunction;
@@ -1046,38 +1117,49 @@ static void ReadDataByAddress0x23(struct UDSServiceInfo* i_pstUDSServiceInfo,
 	uint32 u32Addr = 0;
 	uint32 u32DataLength = 0;
 	uint8 u8AddrBytes, u8DataBytes;
-
 	uint8 Index = 0u;
 
-	u32DataLength = m_pstPDUMsg->aDataBuf[6u];
+	if (m_pstPDUMsg->xDataLen < 2)
+	{
+		SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_INVALID_MESSAGE_LENGTH_OR_FORMAT, m_pstPDUMsg);
+		return;
+	}
 
+	u8AddrBytes = m_pstPDUMsg->aDataBuf[1u] & 0x0Fu;
+	u8DataBytes = (m_pstPDUMsg->aDataBuf[1u] & 0xF0u) >> 4u;
 
+	if ((u8AddrBytes == 0u) || (u8AddrBytes > 4u) || (u8DataBytes == 0u) || (u8DataBytes > 4u))
+	{
+		SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_REQUEST_OUT_OF_RANGE, m_pstPDUMsg);
+		return;
+	}
 
+	if (m_pstPDUMsg->xDataLen < (2u + u8AddrBytes + u8DataBytes))
+	{
+		SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_INVALID_MESSAGE_LENGTH_OR_FORMAT, m_pstPDUMsg);
+		return;
+	}
 
-	for (Index = 0u; Index < DOWLOAD_DATA_ADDR_LEN; Index++)
+	for (Index = 0u; Index < u8AddrBytes; Index++)
 	{
 		u32Addr <<= 8u;
-
-
 		u32Addr |= m_pstPDUMsg->aDataBuf[Index + 2u];
 	}
 
-
-	u8AddrBytes = m_pstPDUMsg->aDataBuf[1] & 0x0F;
-	u8DataBytes = (m_pstPDUMsg->aDataBuf[1] & 0xF0) >> 4;
-
-
-
+	for (Index = 0u; Index < u8DataBytes; Index++)
+	{
+		u32DataLength <<= 8u;
+		u32DataLength |= m_pstPDUMsg->aDataBuf[Index + 2u + u8AddrBytes];
+	}
 
 	if (CAN_SSN_checkMemoryAddrAndSize(u32Addr, u32DataLength) != 0)
 	{
 		SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_REQUEST_OUT_OF_RANGE, m_pstPDUMsg);
+		return;
 	}
 
-
 	m_pstPDUMsg->aDataBuf[0] = i_pstUDSServiceInfo->SerNum + 0x40;
-	uint8* pu8DataPtr;
-	pu8DataPtr = (uint8*) u32Addr;
+	uint8* pu8DataPtr = (uint8*) u32Addr;
 
 	for (uint32 i = 0; i < u32DataLength; i++)
 	{
@@ -1088,6 +1170,52 @@ static void ReadDataByAddress0x23(struct UDSServiceInfo* i_pstUDSServiceInfo,
 	m_pstPDUMsg->xDataLen = (uint16) u32DataLength + 1;
 }
 
+
+
+static void ReadDataByIdentifier0x22(struct UDSServiceInfo* i_pstUDSServiceInfo,
+	tUdsAppMsgInfo* m_pstPDUMsg)
+{
+	uint16 did;
+	uint8 not_find_did = 0;
+	m_pstPDUMsg->aDataBuf[0u] = i_pstUDSServiceInfo->SerNum + 0x40u;
+	did = (m_pstPDUMsg->aDataBuf[1u] << 8) | m_pstPDUMsg->aDataBuf[2u];
+
+	if (m_pstPDUMsg->xDataLen < 3)
+	{
+		SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_INVALID_MESSAGE_LENGTH_OR_FORMAT, m_pstPDUMsg);
+		return;
+	}
+
+	for (int i = 0; i < sizeof(g_rwDataTable) / sizeof(g_rwDataTable[0]); i++)
+	{
+		if (g_rwDataTable[i].did == did)
+		{
+			uint8 dataLen = g_rwDataTable[i].dlc;
+			if (dataLen > g_rwDataTable[i].dlc_max)
+			{
+				dataLen = g_rwDataTable[i].dlc_max;
+			}
+			m_pstPDUMsg->aDataBuf[1u] = (did & 0xFF00) >> 8;
+			m_pstPDUMsg->aDataBuf[2u] = did & 0xFF;
+			for (uint8 j = 0; j < dataLen; j++)
+			{
+				m_pstPDUMsg->aDataBuf[3u + j] = *((uint8*)g_rwDataTable[i].p_entry + j);
+			}
+			m_pstPDUMsg->xDataLen = 3u + dataLen;
+			return;
+		}
+		not_find_did++;
+	}
+
+	if (not_find_did)
+	{
+		SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_REQUEST_OUT_OF_RANGE, m_pstPDUMsg);
+	}
+	else
+	{
+		SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_CONDITIONS_NOT_CORRECT, m_pstPDUMsg);
+	}
+}
 
 
 static void WriteDataByIdentifier0x2E(struct UDSServiceInfo* i_pstUDSServiceInfo,
@@ -1189,7 +1317,7 @@ static void ControlDTCSetting0x85(struct UDSServiceInfo* i_pstUDSServiceInfo, tU
 	uint8 flag = 0;
 	m_pstPDUMsg->aDataBuf[0u] = i_pstUDSServiceInfo->SerNum + 0x40u;
 	flag = m_pstPDUMsg->aDataBuf[1u];
-	if (m_pstPDUMsg->xDataLen > 2)
+	if (m_pstPDUMsg->xDataLen < 2)
 	{
 		SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_INVALID_MESSAGE_LENGTH_OR_FORMAT, m_pstPDUMsg);
 		return;
@@ -1286,32 +1414,12 @@ static void RequestDownload0x34(struct UDSServiceInfo* i_pstUDSServiceInfo,
 
 		if (Boot_DualBank_GetTargetWriteBank() == Boot_DualBank_GetActiveBank())
 		{
-			/* Allow re-flashing the active bank only if it has no valid APP
-			 * (e.g., first-time flash or the bank was invalidated).
-			 * If the active bank already contains a valid APP, reject to
-			 * prevent overwriting the currently running firmware.
-			 */
-			DualBankFlags_t flags;
-			boolean targetBankValid = FALSE;
-
-			if (Boot_DualBank_ReadFlags(&flags) == TRUE)
-			{
-				if (Boot_DualBank_GetTargetWriteBank() == BANK_A)
-				{
-					targetBankValid = (flags.main.bankA_valid == BANK_VALID_MAGIC);
-				}
-				else /* BANK_B */
-				{
-					targetBankValid = (flags.main.bankB_valid == BANK_VALID_MAGIC);
-				}
-			}
-			/* else: flags corrupted -> treat as first boot, targetBankValid stays FALSE */
-
-			if (targetBankValid)
-			{
-				SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_CONDITIONS_NOT_CORRECT, m_pstPDUMsg);
-				Ret = FALSE;
-			}
+			/* Never allow flashing the active bank, even if it appears invalid.
+			 * The dual-bank design always writes to the INACTIVE bank first,
+			 * then switches. This prevents overwriting the firmware we are
+			 * currently running from. */
+			SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_CONDITIONS_NOT_CORRECT, m_pstPDUMsg);
+			Ret = FALSE;
 		}
 
 
@@ -1372,7 +1480,26 @@ static void TransferData0x36(struct UDSServiceInfo* i_pstUDSServiceInfo, tUdsApp
 		SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_REQUEST_SEQUENCE_ERROR, m_pstPDUMsg);
 	}
 
-	gs_RxBlockNum++;
+	/* Verify sequence number (SN) per UDS specification */
+	{
+		uint8 rxSN = m_pstPDUMsg->aDataBuf[1u];
+		if (rxSN != gs_RxBlockNum)
+		{
+			Ret = FALSE;
+			SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_REQUEST_SEQUENCE_ERROR, m_pstPDUMsg);
+			Flash_InitDowloadInfo();
+			Flash_SetNextDownloadStep(FL_REQUEST_STEP);
+			gs_RxBlockNum = 0u;
+		}
+		else
+		{
+			gs_RxBlockNum++;
+			if (gs_RxBlockNum > 0xFFu)
+			{
+				gs_RxBlockNum = 0u;
+			}
+		}
+	}
 
 	uint8 actualDataLen = m_pstPDUMsg->xDataLen - 2;
 
@@ -1456,41 +1583,22 @@ static void RequestTransferExit0x37(struct UDSServiceInfo* i_pstUDSServiceInfo,
 }
 
 
-// ����������ľ���ʵ��?
+// ����������ľ���ʵ��?
 // ����ֵ: ��8λ = canFlash (1=��, 0=����), ��8λ = targetBank ('A' �� 'B')
 uint16 CheckProgrammingConditions(void) {
 	uint8 canFlash = 1;
-	uint8 targetBank;
-	uint32 targetWriteBank;
+	uint8 targetBankChar;
+	uint32 targetWriteBank = Boot_DualBank_GetTargetWriteBank();
 
-	/* 1. �� DFlash ��ȡ��λ��Ŀ��ˢд Bank */
-	targetWriteBank = Boot_DualBank_GetTargetWriteBank();
-
-	/* 2. ���δ��ʼ��������? activeBank �ƶϲ�д�� DFlash */
-	// if ((targetWriteBank != BANK_A) && (targetWriteBank != BANK_B))
-	// {
-	// 	uint32 activeBank = Boot_DualBank_GetActiveBank();
-	// 	if (activeBank == BANK_A)
-	// 	{
-	// 		targetWriteBank = BANK_B;
-	// 	}
-	// 	else
-	// 	{
-	// 		targetWriteBank = BANK_A;
-	// 	}
-	// 	Boot_DualBank_SetTargetWriteBank(targetWriteBank);
-	// }
-
-	Boot_DualBank_SetTargetWriteBank(BANK_A);
-	if (targetBank == BANK_B)
+	if (targetWriteBank == BANK_B)
 	{
-		targetBank = 0x0B;
+		targetBankChar = 0x0B;
 	}
 	else
 	{
-		targetBank = 0x0A;
+		targetBankChar = 0x0A;
 	}
-	return ((uint16) canFlash << 8) | (uint16) targetBank;
+	return ((uint16) canFlash << 8) | (uint16) targetBankChar;
 }
 
 static void RoutineControl0x31(struct UDSServiceInfo* i_pstUDSServiceInfo, tUdsAppMsgInfo* m_pstPDUMsg)
@@ -1602,24 +1710,8 @@ static void RoutineControl0x31(struct UDSServiceInfo* i_pstUDSServiceInfo, tUdsA
 						break;
 
 					case 0xFF01:
-						if (TRUE != IsCurSecurityLevelRequet(SECURITY_LEVEL_2))
-						{
-							SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_SECURITY_ACCESS_DENIED, m_pstPDUMsg);
-							break;
-						}
-
-						if (m_pstPDUMsg->xDataLen < 4)
-						{
-							SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_INVALID_MESSAGE_LENGTH_OR_FORMAT, m_pstPDUMsg);
-							break;
-						}
-						m_pstPDUMsg->aDataBuf[0] = 0x71;
-						m_pstPDUMsg->aDataBuf[1] = 0x01;
-
-
-						m_pstPDUMsg->aDataBuf[4] = m_pstPDUMsg->aDataBuf[4] << 8 | m_pstPDUMsg->aDataBuf[5];
-						m_pstPDUMsg->aDataBuf[5] = (uint8) routineResult;
-						m_pstPDUMsg->xDataLen = 6;
+						/* CheckProgrammingDependency routine - not supported in this implementation */
+						SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_SUBFUNCTION_NOT_SUPPORTED, m_pstPDUMsg);
 						break;
 
 					case 0xDFFF:
