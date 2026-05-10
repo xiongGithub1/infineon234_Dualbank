@@ -35,6 +35,7 @@ uint32		g_LoopFlag;		// 0.5ms������
 uint32		g_BaseTime;
 uint32 		g_count2ms;		// 2ms������
 uint32 		g_count1ms;		// 1ms������
+tRxTxCanMsg txcanmsg;
 /******************************************************************************/
 /*-------------------------Function Implementations---------------------------*/
 /******************************************************************************/
@@ -59,7 +60,7 @@ uint32 ResetStatus_Previous(void)
     return rststat;
 }
 
-tRxTxCanMsg txcanmsg;
+
 void MainProgram(void) 
 {
 	static uint32 m_DetaTime = 0;
@@ -94,6 +95,14 @@ void MainProgram(void)
 		}
 		else if((g_LoopFlag & 0x03) == 1)	// 2ms
 		{
+			txcanmsg.usRxTxDataId=0x123;
+			txcanmsg.aucDataBuf[0]=1;
+			txcanmsg.aucDataBuf[1]=1;
+			txcanmsg.aucDataBuf[2]=1;
+			txcanmsg.aucDataBuf[3]=1;
+			txcanmsg.aucDataBuf[4]=1;
+
+
 			drv_can1_send(&txcanmsg);
 		}
 		else if((g_LoopFlag & 0x03) == 2)	// 2ms
@@ -130,9 +139,6 @@ void core0_main(void)
 
     BrdLed_init();
 
-
-    /* ===== ��� RAM ������־��ֻ�ڷ��ϵ縴λʱ�� ===== */
-    /* ��ȡ��λԭ��bit0=1 ��ʾ�ϵ縴λ */
     resetReason = SCU_RSTSTAT.U;
     isPowerOnReset = (resetReason & 0x01) != 0;
     //

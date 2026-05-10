@@ -15,9 +15,11 @@
 /*********************************************************************************************************************/
 #include    "Std_Types.h"
 #include    "CanIf.h"
-
-
-
+#include    "custom_delay.h"
+#include    "Flash.h"
+#include    "Boot_DualBank.h"
+#include "MultiCAN.h"
+#include "uds_main.h"
 /*********************************************************************************************************************/
 /*------------------------------------------------------Macros-------------------------------------------------------*/
 /*********************************************************************************************************************/
@@ -63,7 +65,7 @@ extern backToBeforeCodeS g_backToBeforeCodeS;
 /*********************************************************************************************************************/
 void Flash_BackupAppBlocks(void);
 //void AppBL_cpyMem(uint32 * dest, const uint32 *source, uint32 length);
-int Mcu_getCpuFreq(cpu_freq_stt * cpu);
+
 void AppBL_init(void);
 void AppUds_main(void);
 void SW_Reset(void);

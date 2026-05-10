@@ -43,7 +43,10 @@
 #include "IfxScuWdt.h"
 #include "ConfigurationIsr.h"
 #include "ScuClock.h"
-
+#include "CANRxTxInterface.h"
+#include "Stm.h"
+#include "App_bootloader.h"
+#include    "Brd_led.h"
 /******************************************************************************/
 /*-----------------------------------Macros-----------------------------------*/
 /******************************************************************************/

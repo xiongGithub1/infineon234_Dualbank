@@ -11,21 +11,7 @@
 /*-----------------------------------------------------Includes------------------------------------------------------*/
 /*********************************************************************************************************************/
 #include "App_bootloader.h"
-#include <App_bootloader_cfg.h>
-#include "bsp.h"
-#include "Can.h"
-#include "IfxFlash.h"
-#include "IfxFlash_cfg.h"
-#include "Flash.h"
-#include "Cpu0_Main.h"
-#include "Tmr.h"
-#include "Can_Session.h"
-#include "custom_delay.h"
-#include "CANRxTxInterface.h"
-#include "uds_main.h"
-#include "MultiCAN.h"
-#include "uds_main.h"
-#include "Boot_DualBank.h"
+
 
 
 /*********************************************************************************************************************/

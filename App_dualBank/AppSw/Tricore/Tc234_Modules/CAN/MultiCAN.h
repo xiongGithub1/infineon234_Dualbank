@@ -28,7 +28,9 @@
 #include <Multican/Std/IfxMultican.h>
 #include "Configuration.h"
 #include "CANRxTxInterface.h"
-
+#include "ConfigurationIsr.h"		// 配置中断优先级及中断服务提供者
+#include "IfxMultican.h"
+#include "IfxMultican_can.h"
 
 /******************************************************************************/
 /*-----------------------------------Macros-----------------------------------*/
