@@ -403,7 +403,28 @@ uint32 min(uint32 var1,uint32 var2)
 uint8 s_remainBuffer[32] = {0};  // �ݴ治��32�ֽڵ�����
 uint32 s_remainAddr = 0;   // �ݴ����ݵ���ʼ��ַ
 uint32 s_remainSize = 0;   // ��ǰ�ݴ�����ݳ���
-void Flash_ForceWriteRemaining(void)//����32λ��ֱ��д�룬��������������
+
+/**
+ * @brief Write a 32-byte PFlash page and verify by reading back.
+ * @param addr  Target address (must be PFlash uncached address, 32-byte aligned).
+ * @param data  Pointer to 32 bytes of data to write.
+ * @return 1 if write and verify succeeded, 0 if verify failed.
+ */
+static int Flash_writeAndVerifyPage(uint32 addr, uint8 *data)
+{
+    uint8 i;
+    g_commandFromPSPR.writeFlash(addr, (uint32 *)data, 32);
+    for (i = 0; i < 32; i++)
+    {
+        if (((volatile uint8 *)addr)[i] != data[i])
+        {
+            return 0;  /* Verify failed: written data does not match read-back */
+        }
+    }
+    return 1;
+}
+
+int Flash_ForceWriteRemaining(void)//����32λ��ֱ��д�룬��������������
 {
 //	static uint32 s_remainBuffer32[8] = {0};
     if (s_remainSize > 0)
@@ -411,12 +432,17 @@ void Flash_ForceWriteRemaining(void)//����32λ��ֱ��д�룬��
         // ���ʣ�ಿ��Ϊ0xFF
         memset(s_remainBuffer + s_remainSize, 0x00, 32 - s_remainSize);//����32λ�ģ�û���ݵĶ���д0����Ȼ������һЩ����
 
-        // д��������32�ֽڿ�
-        g_commandFromPSPR.writeFlash(s_remainAddr, s_remainBuffer, 32);
+        // д��������32�ֽڿ顢����֤
+        if (Flash_writeAndVerifyPage(s_remainAddr, s_remainBuffer) == 0)
+        {
+            s_remainSize = 0;
+            return 0;  /* Force write failed */
+        }
 
         // ����״̬
         s_remainSize = 0;
     }
+    return 1;
 }
 
 int Flash_writePFlash_portex(uint32 flashAddr, uint8 *data, uint32 byteLength)//��32λ����д��
@@ -437,7 +463,10 @@ int Flash_writePFlash_portex(uint32 flashAddr, uint8 *data, uint32 byteLength)//
             memcpy(s_remainBuffer + s_remainSize, data, copySize);//(0xa00200be,ǰ�������ݣ�2)
 
             // ����д������ҳ��ʹ�û����ַ��
-			g_commandFromPSPR.writeFlash(s_remainAddr, s_remainBuffer, 32);//(0xa00200a0,32�����ݣ�32)
+			if (Flash_writeAndVerifyPage(s_remainAddr, s_remainBuffer) == 0)
+				{
+					return 0;  /* Write-verify failed */
+				}
 
 			offset += copySize;//offset->0+2=2
 			currentAddr += copySize;//0xa00200be+2=0xa00200c0
@@ -448,7 +477,10 @@ int Flash_writePFlash_portex(uint32 flashAddr, uint8 *data, uint32 byteLength)//
 			if((s_remainAddr + 32) < currentAddr)
 			{
 				// ��ַ��������ǿ��д��ɻ���
-				Flash_ForceWriteRemaining();
+				if (Flash_ForceWriteRemaining() == 0)
+					{
+						return 0;  /* Force write-verify failed */
+					}
 			}
 			else //if((s_remainAddr + 32) > currentAddr)
 			{
@@ -467,7 +499,10 @@ int Flash_writePFlash_portex(uint32 flashAddr, uint8 *data, uint32 byteLength)//
 					//(s_remainBuffer + 32 - needBetysLength)
 					if(needBetysLength <= byteLength)
 					{
-						g_commandFromPSPR.writeFlash(s_remainAddr, s_remainBuffer, 32);//(0xa00200a0,32�����ݣ�32)
+						if (Flash_writeAndVerifyPage(s_remainAddr, s_remainBuffer) == 0)
+							{
+								return 0;  /* Write-verify failed */
+							}//(0xa00200a0,32�����ݣ�32)
 						offset += copySize2;//offset->0+2=2
 						currentAddr += copySize2;//0xa00200be+2=0xa00200c0
 						s_remainSize = 0;
@@ -497,7 +532,11 @@ int Flash_writePFlash_portex(uint32 flashAddr, uint8 *data, uint32 byteLength)//
     //��a00200e0->a00200f0(8)->offset=34+32=66<42����offset=34
     while (offset + 32 <= byteLength) //126
     {
-        g_commandFromPSPR.writeFlash(currentAddr, data + offset, 32);//д��һҳ
+        if (Flash_writeAndVerifyPage(currentAddr, data + offset) == 0)
+        {
+            s_remainSize = 0;  /* Clear buffer state on error */
+            return 0;          /* Write-verify failed */
+        }
         offset += 32;
         currentAddr += 32; // �ؼ���ÿ��д������32
     }

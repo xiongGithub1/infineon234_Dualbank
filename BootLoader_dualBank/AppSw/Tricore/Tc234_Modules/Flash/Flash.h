@@ -34,7 +34,7 @@
 #define DATA_TO_WRITE               0x07738135                  /* Dummy data to be written in the Flash memories   */
 
 #define PFLASH_STARTING_ADDRESS				0xA0060000      //0xA00E0000 /* Address of the PFLASH where the data is written  */
-#define PFLASH_appBackup_STARTING_ADDRESS	0xA00E0000		//appµÄ±¸·ÝÆðÊ¼µØÖ·
+#define PFLASH_appBackup_STARTING_ADDRESS	0xA00E0000		//appï¿½Ä±ï¿½ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½Ö·
 //#define DFLASH_STARTING_ADDRESS     0xAF000000                  /* Address of the DFLASH where the data is written  */
 
 #define PFLASH_NUM_PAGE_TO_FLASH    9                           /* Number of pages to flash in the PFLASH           */
@@ -43,28 +43,28 @@
 //#define DFLASH_NUM_SECTORS          1                           /* Number of DFLASH sectors to be erased            */
 
 /* Reserved space for erase and program routines in bytes */
-#define ERASESECTOR_LEN             (0x100)		// 0x100=256 ²Á³ýÉÈÇø´óÐ¡
-#define WAITUNBUSY_LEN              (0x100)		// µÈ´ý¿ÕÏÐ´óÐ¡
-#define ENTERPAGEMODE_LEN           (0x100)		// ½øÈëÒ³Ä£Ê½´óÐ¡
-#define LOADPAGE2X32_LEN            (0x100)		// ¼ÓÔØÒ³2*0x32´óÐ¡
-#define WRITEPAGE_LEN               (0x100)		// Ð´Ò³´óÐ¡
-#define ERASEPFLASH_LEN             (0x200)		// ²Á³ýpFlash´óÐ¡
-#define WRITEPFLASH_LEN             (0x200)		// Ð´pFlash´óÐ¡
+#define ERASESECTOR_LEN             (0x100)		// 0x100=256 ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¡
+#define WAITUNBUSY_LEN              (0x100)		// ï¿½È´ï¿½ï¿½ï¿½ï¿½Ð´ï¿½Ð¡
+#define ENTERPAGEMODE_LEN           (0x100)		// ï¿½ï¿½ï¿½ï¿½Ò³Ä£Ê½ï¿½ï¿½Ð¡
+#define LOADPAGE2X32_LEN            (0x100)		// ï¿½ï¿½ï¿½ï¿½Ò³2*0x32ï¿½ï¿½Ð¡
+#define WRITEPAGE_LEN               (0x100)		// Ð´Ò³ï¿½ï¿½Ð¡
+#define ERASEPFLASH_LEN             (0x200)		// ï¿½ï¿½ï¿½ï¿½pFlashï¿½ï¿½Ð¡
+#define WRITEPFLASH_LEN             (0x200)		// Ð´pFlashï¿½ï¿½Ð¡
 
 /*
  * Ram PSPR
  */
 /* Relocation address for the erase and program routines: Program Scratch-Pad SRAM (PSPR) of CPU0 */
-#define RELOCATION_START_ADDR       (0x70100000U)		// ¼ÓÔØÆðÊ¼µØÖ·
+#define RELOCATION_START_ADDR       (0x70100000U)		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½Ö·
 
 /* Definition of the addresses where to relocate the erase and program routines, given their reserved space */
-#define ERASESECTOR_ADDR            (RELOCATION_START_ADDR)					// ²Á³ýÉÈÇøµØÖ·0x70100000U
-#define WAITUNBUSY_ADDR             (ERASESECTOR_ADDR + ERASESECTOR_LEN)	// µÈ´ý¿ÕÏÐµØÖ·0x70100100U
-#define ENTERPAGEMODE_ADDR          (WAITUNBUSY_ADDR + WAITUNBUSY_LEN)		// ½øÈëÒ³Ä£Ê½µØÖ·0x70100200U
-#define LOAD2X32_ADDR               (ENTERPAGEMODE_ADDR + ENTERPAGEMODE_LEN)// ¼ÓÔØÒ³2*32µØÖ·0x70100300U
-#define WRITEPAGE_ADDR              (LOAD2X32_ADDR + LOADPAGE2X32_LEN)		// Ð´Ò³µØÖ·0x70100400U
-#define ERASEPFLASH_ADDR            (WRITEPAGE_ADDR + WRITEPAGE_LEN)		// ²Á³ýpFlashµØÖ·0x70100500U
-#define WRITEPFLASH_ADDR            (ERASEPFLASH_ADDR + ERASEPFLASH_LEN)	// Ð´pFlashµØÖ·0x70100700U
+#define ERASESECTOR_ADDR            (RELOCATION_START_ADDR)					// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö·0x70100000U
+#define WAITUNBUSY_ADDR             (ERASESECTOR_ADDR + ERASESECTOR_LEN)	// ï¿½È´ï¿½ï¿½ï¿½ï¿½Ðµï¿½Ö·0x70100100U
+#define ENTERPAGEMODE_ADDR          (WAITUNBUSY_ADDR + WAITUNBUSY_LEN)		// ï¿½ï¿½ï¿½ï¿½Ò³Ä£Ê½ï¿½ï¿½Ö·0x70100200U
+#define LOAD2X32_ADDR               (ENTERPAGEMODE_ADDR + ENTERPAGEMODE_LEN)// ï¿½ï¿½ï¿½ï¿½Ò³2*32ï¿½ï¿½Ö·0x70100300U
+#define WRITEPAGE_ADDR              (LOAD2X32_ADDR + LOADPAGE2X32_LEN)		// Ð´Ò³ï¿½ï¿½Ö·0x70100400U
+#define ERASEPFLASH_ADDR            (WRITEPAGE_ADDR + WRITEPAGE_LEN)		// ï¿½ï¿½ï¿½ï¿½pFlashï¿½ï¿½Ö·0x70100500U
+#define WRITEPFLASH_ADDR            (ERASEPFLASH_ADDR + ERASEPFLASH_LEN)	// Ð´pFlashï¿½ï¿½Ö·0x70100700U
 /*********************************************************************************************************************/
 /*-------------------------------------------------Global variables--------------------------------------------------*/
 /*********************************************************************************************************************/
@@ -96,10 +96,10 @@ void Flash_erasePFLASH(uint32 sectorAddr);
 void Flash_writePFlashPage(uint32 startingAddr, uint32 *data, uint32 byteLength);
 void Flash_copyFunctionsToPSPR(void);
 void Flash_init(void);
-void Flash_ForceWriteRemaining(void) ;
+int Flash_ForceWriteRemaining(void);
 int  Flash_erasePFlash_port(uint32 flashAddr);
 int  Flash_writePFlash_port(uint32 flashAddr, uint32 *data, uint32 bytelength);
-int  Flash_writePFlash_portex(uint32 flashAddr, uint8 *data, uint32 byteLength);//ÊÊÅäÓÚudsµÄbootloader
+int  Flash_writePFlash_portex(uint32 flashAddr, uint8 *data, uint32 byteLength);//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½udsï¿½ï¿½bootloader
 int  Flash_eraseDFlash_port(uint32 flashAddr);
 int  Flash_writeDFlash_port(uint32 flashAddr, uint32 *data, uint32 bytelength );
 extern void Flash_erasePFLASH(uint32 sectorAddr);

@@ -1619,7 +1619,11 @@ static void RoutineControl0x31(struct UDSServiceInfo* i_pstUDSServiceInfo, tUdsA
 	{
 		case 0x01:
 			{
-				Flash_ForceWriteRemaining();
+				if (Flash_ForceWriteRemaining() == 0)
+					{
+						SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_CONDITIONS_NOT_CORRECT, m_pstPDUMsg);
+						break;
+					}
 
 				if (m_pstPDUMsg->xDataLen < 4)
 				{
