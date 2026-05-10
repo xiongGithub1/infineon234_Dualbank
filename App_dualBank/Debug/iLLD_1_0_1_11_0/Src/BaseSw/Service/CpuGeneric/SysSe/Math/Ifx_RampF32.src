@@ -1,0 +1,459 @@
+	; Module start
+	.compiler_version	"TASKING VX-toolset for TriCore: C compiler v6.2r2 Build 18041957 SN 53216552"
+	.compiler_invocation	"ctc -f cc22756a --dep-file=iLLD_1_0_1_11_0\\Src\\BaseSw\\Service\\CpuGeneric\\SysSe\\Math\\.Ifx_RampF32.o.d -c99 --fp-model=3cflnrSTz -D__CPU__=tc23x -D__CPU_TC23X__ --core=tc1.6.x --fp-model=+float -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723 -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723 -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723 -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\.settings -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\.vscode -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\AppSw -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\AppSw\\Config -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\AppSw\\Config\\Common -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\AppSw\\Tricore -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\AppSw\\Tricore\\App_bootloader -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\AppSw\\Tricore\\App_bootloader\\CANTP -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\AppSw\\Tricore\\App_UDS -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\AppSw\\Tricore\\App_UDS\\Flah_app -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\AppSw\\Tricore\\Cfg_Illd -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\AppSw\\Tricore\\Communication -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\AppSw\\Tricore\\Tc234_Modules -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\AppSw\\Tricore\\Tc234_Modules\\brd -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\AppSw\\Tricore\\Tc234_Modules\\CAN -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\AppSw\\Tricore\\Tc234_Modules\\custom_delay -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\AppSw\\Tricore\\Tc234_Modules\\Flash -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\AppSw\\Tricore\\Tc234_Modules\\ScuClock -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\AppSw\\Tricore\\Tc234_Modules\\STM -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\AppSw\\Tricore\\Tc234_Modules\\Tmr -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\AppSw -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\AppSw\\Tricore -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\AppSw\\Tricore\\App_bootloader -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\AppSw\\Tricore\\App_bootloader\\CANTP -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\AppSw\\Tricore\\App_UDS -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\AppSw\\Tricore\\App_UDS\\Flah_app -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\AppSw\\Tricore\\Communication -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\AppSw\\Tricore\\Tc234_Modules -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\AppSw\\Tricore\\Tc234_Modules\\brd -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\AppSw\\Tricore\\Tc234_Modules\\CAN -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\AppSw\\Tricore\\Tc234_Modules\\custom_delay -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\AppSw\\Tricore\\Tc234_Modules\\Flash -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\AppSw\\Tricore\\Tc234_Modules\\ScuClock -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\AppSw\\Tricore\\Tc234_Modules\\STM -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\AppSw\\Tricore\\Tc234_Modules\\Tmr -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0 -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\_Impl -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\_Lib -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\_Lib\\DataHandling -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\_Lib\\InternalMux -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\_PinMap -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Asclin -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Asclin\\Asc -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Asclin\\Lin -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Asclin\\Spi -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Asclin\\Std -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Ccu6 -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Ccu6\\Icu -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Ccu6\\PwmBc -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Ccu6\\PwmHl -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Ccu6\\Std -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Ccu6\\Timer -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Ccu6\\TimerWithTrigger -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Ccu6\\TPwm -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Cpu -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Cpu\\Irq -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Cpu\\Std -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Cpu\\Trap -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Dma -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Dma\\Dma -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Dma\\Std -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Dts -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Dts\\Dts -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Dts\\Std -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Eray -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Eray\\Eray -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Eray\\Std -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Eth -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Eth\\Phy_Pef7071 -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Eth\\Std -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Flash -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Flash\\Std -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Gpt12 -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Gpt12\\IncrEnc -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Gpt12\\Std -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Gtm -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Gtm\\Std -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Gtm\\Tim -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Gtm\\Tim\\In -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Gtm\\Tom -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Gtm\\Tom\\Pwm -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Gtm\\Tom\\PwmHl -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Gtm\\Tom\\Timer -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Gtm\\Trig -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Iom -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Iom\\Driver -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Iom\\Std -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Mtu -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Mtu\\Std -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Multican -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Multican\\Can -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Multican\\Std -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Port -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Port\\Io -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Port\\Std -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Qspi -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Qspi\\SpiMaster -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Qspi\\SpiSlave -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Qspi\\Std -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Scu -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Scu\\Std -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Sent -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Sent\\Sent -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Sent\\Std -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Smu -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Smu\\Std -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Src -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Src\\Std -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Stm -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Stm\\Std -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Stm\\Timer -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Vadc -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Vadc\\Adc -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Vadc\\Std -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\Infra -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\Infra\\Platform -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\Infra\\Platform\\Tricore -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\Infra\\Platform\\Tricore\\Compilers -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\Service -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\Service\\CpuGeneric -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\Service\\CpuGeneric\\If -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\Service\\CpuGeneric\\StdIf -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\Service\\CpuGeneric\\SysSe -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\Service\\CpuGeneric\\SysSe\\Bsp -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\Service\\CpuGeneric\\SysSe\\Comm -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\Service\\CpuGeneric\\SysSe\\General -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\Service\\CpuGeneric\\SysSe\\Math -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\iLLD_1_0_1_11_0\\Src\\BaseSw\\Service\\CpuGeneric\\SysSe\\Time -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0 -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\_Build -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\_Impl -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\_Lib -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\_Lib\\DataHandling -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\_Lib\\InternalMux -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\_PinMap -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Asclin -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Asclin\\Asc -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Asclin\\Lin -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Asclin\\Spi -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Asclin\\Std -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Ccu6 -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Ccu6\\Icu -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Ccu6\\PwmBc -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Ccu6\\PwmHl -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Ccu6\\Std -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Ccu6\\Timer -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Ccu6\\TimerWithTrigger -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Ccu6\\TPwm -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Cpu -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Cpu\\Irq -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Cpu\\Std -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Cpu\\Trap -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Dma -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Dma\\Dma -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Dma\\Std -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Dts -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Dts\\Dts -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Dts\\Std -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Eray -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Eray\\Eray -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Eray\\Std -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Eth -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Eth\\Phy_Pef7071 -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Eth\\Std -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Flash -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Flash\\Std -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Gpt12 -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Gpt12\\IncrEnc -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Gpt12\\Std -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Gtm -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Gtm\\Std -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Gtm\\Tim -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Gtm\\Tim\\In -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Gtm\\Tom -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Gtm\\Tom\\Pwm -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Gtm\\Tom\\PwmHl -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Gtm\\Tom\\Timer -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Gtm\\Trig -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Iom -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Iom\\Driver -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Iom\\Std -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Mtu -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Mtu\\Std -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Multican -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Multican\\Can -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Multican\\Std -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Port -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Port\\Io -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Port\\Std -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Qspi -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Qspi\\SpiMaster -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Qspi\\SpiSlave -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Qspi\\Std -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Scu -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Scu\\Std -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Sent -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Sent\\Sent -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Sent\\Std -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Smu -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Smu\\Std -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Src -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Src\\Std -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Stm -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Stm\\Std -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Stm\\Timer -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Vadc -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Vadc\\Adc -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Vadc\\Std -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\Infra -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\Infra\\Platform -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\Infra\\Platform\\Tricore -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\Infra\\Platform\\Tricore\\Compilers -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\Infra\\Sfr -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\Infra\\Sfr\\TC23A -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\Infra\\Sfr\\TC23A\\_Reg -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\Service -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\Service\\CpuGeneric -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\Service\\CpuGeneric\\_Utilities -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\Service\\CpuGeneric\\If -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\Service\\CpuGeneric\\If\\Ccu6If -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\Service\\CpuGeneric\\StdIf -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\Service\\CpuGeneric\\SysSe -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\Service\\CpuGeneric\\SysSe\\Bsp -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\Service\\CpuGeneric\\SysSe\\Comm -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\Service\\CpuGeneric\\SysSe\\General -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\Service\\CpuGeneric\\SysSe\\Math -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\Service\\CpuGeneric\\SysSe\\Time -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723 -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\.settings -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\.vscode -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\AppSw -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\AppSw\\Config -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\AppSw\\Config\\Common -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\AppSw\\Tricore -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\AppSw\\Tricore\\App_bootloader -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\AppSw\\Tricore\\App_bootloader\\CANTP -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\AppSw\\Tricore\\App_UDS -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\AppSw\\Tricore\\App_UDS\\Flah_app -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\AppSw\\Tricore\\Cfg_Illd -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\AppSw\\Tricore\\Communication -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\AppSw\\Tricore\\Tc234_Modules -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\AppSw\\Tricore\\Tc234_Modules\\brd -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\AppSw\\Tricore\\Tc234_Modules\\CAN -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\AppSw\\Tricore\\Tc234_Modules\\custom_delay -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\AppSw\\Tricore\\Tc234_Modules\\Flash -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\AppSw\\Tricore\\Tc234_Modules\\ScuClock -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\AppSw\\Tricore\\Tc234_Modules\\STM -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\AppSw\\Tricore\\Tc234_Modules\\Tmr -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\.settings -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\AppSw -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\AppSw\\Tricore -ID:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\AppSw\\Tricore\\Communication -g2 --make-target=iLLD_1_0_1_11_0\\Src\\BaseSw\\Service\\CpuGeneric\\SysSe\\Math\\Ifx_RampF32.o -t4 --language=-gcc,-volatile,+strings,-kanji --default-near-size=0 -O0 --default-a1-size=0 --default-a0-size=0 --source --align=0 --switch=auto --error-limit=42 -o iLLD_1_0_1_11_0\\Src\\BaseSw\\Service\\CpuGeneric\\SysSe\\Math\\Ifx_RampF32.src ..\\iLLD_1_0_1_11_0\\Src\\BaseSw\\Service\\CpuGeneric\\SysSe\\Math\\Ifx_RampF32.c"
+	.compiler_name		"ctc"
+	;source	'..\\iLLD_1_0_1_11_0\\Src\\BaseSw\\Service\\CpuGeneric\\SysSe\\Math\\Ifx_RampF32.c'
+
+	
+$TC16X
+	
+	.sdecl	'.text.Ifx_RampF32.Ifx_RampF32_step',code,cluster('Ifx_RampF32_step')
+	.sect	'.text.Ifx_RampF32.Ifx_RampF32_step'
+	.align	2
+	
+	.global	Ifx_RampF32_step
+
+; ..\iLLD_1_0_1_11_0\Src\BaseSw\Service\CpuGeneric\SysSe\Math\Ifx_RampF32.c	     1  /**
+; ..\iLLD_1_0_1_11_0\Src\BaseSw\Service\CpuGeneric\SysSe\Math\Ifx_RampF32.c	     2   * \file Ifx_RampF32.c
+; ..\iLLD_1_0_1_11_0\Src\BaseSw\Service\CpuGeneric\SysSe\Math\Ifx_RampF32.c	     3   * \brief Ramp function
+; ..\iLLD_1_0_1_11_0\Src\BaseSw\Service\CpuGeneric\SysSe\Math\Ifx_RampF32.c	     4   *
+; ..\iLLD_1_0_1_11_0\Src\BaseSw\Service\CpuGeneric\SysSe\Math\Ifx_RampF32.c	     5   *
+; ..\iLLD_1_0_1_11_0\Src\BaseSw\Service\CpuGeneric\SysSe\Math\Ifx_RampF32.c	     6   * \version disabled
+; ..\iLLD_1_0_1_11_0\Src\BaseSw\Service\CpuGeneric\SysSe\Math\Ifx_RampF32.c	     7   * \copyright Copyright (c) 2013 Infineon Technologies AG. All rights reserved.
+; ..\iLLD_1_0_1_11_0\Src\BaseSw\Service\CpuGeneric\SysSe\Math\Ifx_RampF32.c	     8   *
+; ..\iLLD_1_0_1_11_0\Src\BaseSw\Service\CpuGeneric\SysSe\Math\Ifx_RampF32.c	     9   *
+; ..\iLLD_1_0_1_11_0\Src\BaseSw\Service\CpuGeneric\SysSe\Math\Ifx_RampF32.c	    10   *                                 IMPORTANT NOTICE
+; ..\iLLD_1_0_1_11_0\Src\BaseSw\Service\CpuGeneric\SysSe\Math\Ifx_RampF32.c	    11   *
+; ..\iLLD_1_0_1_11_0\Src\BaseSw\Service\CpuGeneric\SysSe\Math\Ifx_RampF32.c	    12   *
+; ..\iLLD_1_0_1_11_0\Src\BaseSw\Service\CpuGeneric\SysSe\Math\Ifx_RampF32.c	    13   * Use of this file is subject to the terms of use agreed between (i) you or 
+; ..\iLLD_1_0_1_11_0\Src\BaseSw\Service\CpuGeneric\SysSe\Math\Ifx_RampF32.c	    14   * the company in which ordinary course of business you are acting and (ii) 
+; ..\iLLD_1_0_1_11_0\Src\BaseSw\Service\CpuGeneric\SysSe\Math\Ifx_RampF32.c	    15   * Infineon Technologies AG or its licensees. If and as long as no such 
+; ..\iLLD_1_0_1_11_0\Src\BaseSw\Service\CpuGeneric\SysSe\Math\Ifx_RampF32.c	    16   * terms of use are agreed, use of this file is subject to following:
+; ..\iLLD_1_0_1_11_0\Src\BaseSw\Service\CpuGeneric\SysSe\Math\Ifx_RampF32.c	    17  
+; ..\iLLD_1_0_1_11_0\Src\BaseSw\Service\CpuGeneric\SysSe\Math\Ifx_RampF32.c	    18  
+; ..\iLLD_1_0_1_11_0\Src\BaseSw\Service\CpuGeneric\SysSe\Math\Ifx_RampF32.c	    19   * Boost Software License - Version 1.0 - August 17th, 2003
+; ..\iLLD_1_0_1_11_0\Src\BaseSw\Service\CpuGeneric\SysSe\Math\Ifx_RampF32.c	    20  
+; ..\iLLD_1_0_1_11_0\Src\BaseSw\Service\CpuGeneric\SysSe\Math\Ifx_RampF32.c	    21   * Permission is hereby granted, free of charge, to any person or 
+; ..\iLLD_1_0_1_11_0\Src\BaseSw\Service\CpuGeneric\SysSe\Math\Ifx_RampF32.c	    22   * organization obtaining a copy of the software and accompanying 
+; ..\iLLD_1_0_1_11_0\Src\BaseSw\Service\CpuGeneric\SysSe\Math\Ifx_RampF32.c	    23   * documentation covered by this license (the "Software") to use, reproduce,
+; ..\iLLD_1_0_1_11_0\Src\BaseSw\Service\CpuGeneric\SysSe\Math\Ifx_RampF32.c	    24   * display, distribute, execute, and transmit the Software, and to prepare
+; ..\iLLD_1_0_1_11_0\Src\BaseSw\Service\CpuGeneric\SysSe\Math\Ifx_RampF32.c	    25   * derivative works of the Software, and to permit third-parties to whom the 
+; ..\iLLD_1_0_1_11_0\Src\BaseSw\Service\CpuGeneric\SysSe\Math\Ifx_RampF32.c	    26   * Software is furnished to do so, all subject to the following:
+; ..\iLLD_1_0_1_11_0\Src\BaseSw\Service\CpuGeneric\SysSe\Math\Ifx_RampF32.c	    27  
+; ..\iLLD_1_0_1_11_0\Src\BaseSw\Service\CpuGeneric\SysSe\Math\Ifx_RampF32.c	    28   * The copyright notices in the Software and this entire statement, including
+; ..\iLLD_1_0_1_11_0\Src\BaseSw\Service\CpuGeneric\SysSe\Math\Ifx_RampF32.c	    29   * the above license grant, this restriction and the following disclaimer, must
+; ..\iLLD_1_0_1_11_0\Src\BaseSw\Service\CpuGeneric\SysSe\Math\Ifx_RampF32.c	    30   * be included in all copies of the Software, in whole or in part, and all
+; ..\iLLD_1_0_1_11_0\Src\BaseSw\Service\CpuGeneric\SysSe\Math\Ifx_RampF32.c	    31   * derivative works of the Software, unless such copies or derivative works are
+; ..\iLLD_1_0_1_11_0\Src\BaseSw\Service\CpuGeneric\SysSe\Math\Ifx_RampF32.c	    32   * solely in the form of machine-executable object code generated by a source
+; ..\iLLD_1_0_1_11_0\Src\BaseSw\Service\CpuGeneric\SysSe\Math\Ifx_RampF32.c	    33   * language processor.
+; ..\iLLD_1_0_1_11_0\Src\BaseSw\Service\CpuGeneric\SysSe\Math\Ifx_RampF32.c	    34  
+; ..\iLLD_1_0_1_11_0\Src\BaseSw\Service\CpuGeneric\SysSe\Math\Ifx_RampF32.c	    35   * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
+; ..\iLLD_1_0_1_11_0\Src\BaseSw\Service\CpuGeneric\SysSe\Math\Ifx_RampF32.c	    36   * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+; ..\iLLD_1_0_1_11_0\Src\BaseSw\Service\CpuGeneric\SysSe\Math\Ifx_RampF32.c	    37   * FITNESS FOR A PARTICULAR PURPOSE, TITLE AND NON-INFRINGEMENT. IN NO EVENT
+; ..\iLLD_1_0_1_11_0\Src\BaseSw\Service\CpuGeneric\SysSe\Math\Ifx_RampF32.c	    38   * SHALL THE COPYRIGHT HOLDERS OR ANYONE DISTRIBUTING THE SOFTWARE BE LIABLE 
+; ..\iLLD_1_0_1_11_0\Src\BaseSw\Service\CpuGeneric\SysSe\Math\Ifx_RampF32.c	    39   * FOR ANY DAMAGES OR OTHER LIABILITY, WHETHER IN CONTRACT, TORT OR OTHERWISE,
+; ..\iLLD_1_0_1_11_0\Src\BaseSw\Service\CpuGeneric\SysSe\Math\Ifx_RampF32.c	    40   * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+; ..\iLLD_1_0_1_11_0\Src\BaseSw\Service\CpuGeneric\SysSe\Math\Ifx_RampF32.c	    41   * DEALINGS IN THE SOFTWARE.
+; ..\iLLD_1_0_1_11_0\Src\BaseSw\Service\CpuGeneric\SysSe\Math\Ifx_RampF32.c	    42  
+; ..\iLLD_1_0_1_11_0\Src\BaseSw\Service\CpuGeneric\SysSe\Math\Ifx_RampF32.c	    43   *
+; ..\iLLD_1_0_1_11_0\Src\BaseSw\Service\CpuGeneric\SysSe\Math\Ifx_RampF32.c	    44   */
+; ..\iLLD_1_0_1_11_0\Src\BaseSw\Service\CpuGeneric\SysSe\Math\Ifx_RampF32.c	    45  
+; ..\iLLD_1_0_1_11_0\Src\BaseSw\Service\CpuGeneric\SysSe\Math\Ifx_RampF32.c	    46  #include "SysSe/Math/Ifx_RampF32.h"
+; ..\iLLD_1_0_1_11_0\Src\BaseSw\Service\CpuGeneric\SysSe\Math\Ifx_RampF32.c	    47  
+; ..\iLLD_1_0_1_11_0\Src\BaseSw\Service\CpuGeneric\SysSe\Math\Ifx_RampF32.c	    48  /**
+; ..\iLLD_1_0_1_11_0\Src\BaseSw\Service\CpuGeneric\SysSe\Math\Ifx_RampF32.c	    49   * \brief Execute the Ramp function
+; ..\iLLD_1_0_1_11_0\Src\BaseSw\Service\CpuGeneric\SysSe\Math\Ifx_RampF32.c	    50   *
+; ..\iLLD_1_0_1_11_0\Src\BaseSw\Service\CpuGeneric\SysSe\Math\Ifx_RampF32.c	    51   * NOTE: shall be called every 'period'.
+; ..\iLLD_1_0_1_11_0\Src\BaseSw\Service\CpuGeneric\SysSe\Math\Ifx_RampF32.c	    52   * The period was defined by Ifx_RampF32_init() or Ifx_RampF32_setSlewRate()
+; ..\iLLD_1_0_1_11_0\Src\BaseSw\Service\CpuGeneric\SysSe\Math\Ifx_RampF32.c	    53   *
+; ..\iLLD_1_0_1_11_0\Src\BaseSw\Service\CpuGeneric\SysSe\Math\Ifx_RampF32.c	    54   * \param ramp Pointer to the Ifx_RampF32 object
+; ..\iLLD_1_0_1_11_0\Src\BaseSw\Service\CpuGeneric\SysSe\Math\Ifx_RampF32.c	    55   * \return Actual value
+; ..\iLLD_1_0_1_11_0\Src\BaseSw\Service\CpuGeneric\SysSe\Math\Ifx_RampF32.c	    56   */
+; ..\iLLD_1_0_1_11_0\Src\BaseSw\Service\CpuGeneric\SysSe\Math\Ifx_RampF32.c	    57  float32 Ifx_RampF32_step(Ifx_RampF32 *ramp)
+; Function Ifx_RampF32_step
+.L12:
+Ifx_RampF32_step:	.type	func
+
+; ..\iLLD_1_0_1_11_0\Src\BaseSw\Service\CpuGeneric\SysSe\Math\Ifx_RampF32.c	    58  {
+; ..\iLLD_1_0_1_11_0\Src\BaseSw\Service\CpuGeneric\SysSe\Math\Ifx_RampF32.c	    59      if (ramp->uk < ramp->ik)
+	ld.w	d0,[a4]
+.L34:
+	ld.w	d15,[a4]4
+.L35:
+	cmp.f	d15,d0,d15
+	extr.u	d15,d15,#0,#1
+.L36:
+	jeq	d15,#0,.L2
+.L37:
+
+; ..\iLLD_1_0_1_11_0\Src\BaseSw\Service\CpuGeneric\SysSe\Math\Ifx_RampF32.c	    60      {
+; ..\iLLD_1_0_1_11_0\Src\BaseSw\Service\CpuGeneric\SysSe\Math\Ifx_RampF32.c	    61          ramp->uk = __minf(ramp->ik, ramp->uk + ramp->delta);
+	ld.w	d0,[a4]4
+	ld.w	d1,[a4]
+	ld.w	d15,[a4]8
+	add.f	d15,d1,d15
+	cmp.f	d15,d0,d15
+	jnz.t	d15:0,.L3
+	ld.w	d0,[a4]
+	ld.w	d15,[a4]8
+	add.f	d15,d0,d15
+	j	.L4
+.L3:
+	ld.w	d15,[a4]4
+.L4:
+	st.w	[a4],d15
+.L38:
+	j	.L5
+.L2:
+
+; ..\iLLD_1_0_1_11_0\Src\BaseSw\Service\CpuGeneric\SysSe\Math\Ifx_RampF32.c	    62      }
+; ..\iLLD_1_0_1_11_0\Src\BaseSw\Service\CpuGeneric\SysSe\Math\Ifx_RampF32.c	    63      else if (ramp->uk > ramp->ik)
+	ld.w	d0,[a4]
+.L39:
+	ld.w	d15,[a4]4
+.L40:
+	cmp.f	d15,d0,d15
+	extr.u	d15,d15,#2,#1
+.L41:
+	jeq	d15,#0,.L6
+.L42:
+
+; ..\iLLD_1_0_1_11_0\Src\BaseSw\Service\CpuGeneric\SysSe\Math\Ifx_RampF32.c	    64      {
+; ..\iLLD_1_0_1_11_0\Src\BaseSw\Service\CpuGeneric\SysSe\Math\Ifx_RampF32.c	    65          ramp->uk = __maxf(ramp->ik, ramp->uk - ramp->delta);
+	ld.w	d0,[a4]4
+	ld.w	d1,[a4]
+	ld.w	d15,[a4]8
+	sub.f	d15,d1,d15
+	cmp.f	d15,d0,d15
+	jnz.t	d15:2,.L7
+	ld.w	d0,[a4]
+	ld.w	d15,[a4]8
+	sub.f	d15,d0,d15
+	j	.L8
+.L7:
+	ld.w	d15,[a4]4
+.L8:
+	st.w	[a4],d15
+.L43:
+	j	.L9
+.L6:
+
+; ..\iLLD_1_0_1_11_0\Src\BaseSw\Service\CpuGeneric\SysSe\Math\Ifx_RampF32.c	    66      }
+; ..\iLLD_1_0_1_11_0\Src\BaseSw\Service\CpuGeneric\SysSe\Math\Ifx_RampF32.c	    67      else
+.L9:
+.L5:
+
+; ..\iLLD_1_0_1_11_0\Src\BaseSw\Service\CpuGeneric\SysSe\Math\Ifx_RampF32.c	    68      {}
+; ..\iLLD_1_0_1_11_0\Src\BaseSw\Service\CpuGeneric\SysSe\Math\Ifx_RampF32.c	    69  
+; ..\iLLD_1_0_1_11_0\Src\BaseSw\Service\CpuGeneric\SysSe\Math\Ifx_RampF32.c	    70      return ramp->uk;
+	ld.w	d2,[a4]
+.L44:
+	j	.L10
+
+; ..\iLLD_1_0_1_11_0\Src\BaseSw\Service\CpuGeneric\SysSe\Math\Ifx_RampF32.c	    71  }
+.L10:
+	ret
+.L23:
+	
+__Ifx_RampF32_step_function_end:
+	.size	Ifx_RampF32_step,__Ifx_RampF32_step_function_end-Ifx_RampF32_step
+.L21:
+	; End of function
+	
+	.calls	'Ifx_RampF32_step','',0
+	.sdecl	'.debug_info',debug
+	.sect	'.debug_info'
+.L14:
+	.word	1079
+	.half	3
+	.word	.L15
+	.byte	4
+.L13:
+	.byte	1
+	.byte	'..\\iLLD_1_0_1_11_0\\Src\\BaseSw\\Service\\CpuGeneric\\SysSe\\Math\\Ifx_RampF32.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'D:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\',0,12,1
+	.word	.L16
+	.byte	2,1,1,3
+	.word	212
+	.byte	4
+	.byte	'Ifx__jump_and_link',0,3,1,61,17,1,1,5
+	.byte	'fun',0,1,61,43
+	.word	215
+	.byte	6,0,7
+	.byte	'__fract',0,4,128,1
+.L22:
+	.byte	7
+	.byte	'float',0,4,4,8
+	.byte	'Ifx__float_to_fract',0,3,1,152,2,18
+	.word	260
+	.byte	1,1,5
+	.byte	'a',0,1,152,2,44
+	.word	272
+	.byte	6,0,7
+	.byte	'unsigned long long int',0,8,7,9
+	.byte	'void',0,3
+	.word	352
+	.byte	8
+	.byte	'__ld64',0,3,2,135,1,19
+	.word	326
+	.byte	1,1,5
+	.byte	'addr',0,2,135,1,32
+	.word	358
+	.byte	6,0,4
+	.byte	'__st64',0,3,2,143,1,17,1,1,5
+	.byte	'addr',0,2,143,1,30
+	.word	358
+	.byte	5
+	.byte	'value',0,2,143,1,43
+	.word	326
+	.byte	6,0,10,3,58,9,12,11
+	.byte	'uk',0
+	.word	272
+	.byte	4,2,35,0,11
+	.byte	'ik',0
+	.word	272
+	.byte	4,2,35,4,11
+	.byte	'delta',0
+	.word	272
+	.byte	4,2,35,8,0
+.L24:
+	.byte	3
+	.word	444
+	.byte	4
+	.byte	'Ifx_RampF32_reset',0,3,3,85,17,1,1,5
+	.byte	'ramp',0,3,85,48
+	.word	489
+	.byte	6,0,4
+	.byte	'Ifx_RampF32_setSlewRate',0,3,3,109,17,1,1,5
+	.byte	'ramp',0,3,109,54
+	.word	489
+	.byte	5
+	.byte	'slewRate',0,3,109,68
+	.word	272
+	.byte	5
+	.byte	'period',0,3,109,86
+	.word	272
+	.byte	6,0,12
+	.word	220
+	.byte	13
+	.word	246
+	.byte	6,0,12
+	.word	281
+	.byte	13
+	.word	313
+	.byte	6,0,12
+	.word	363
+	.byte	13
+	.word	382
+	.byte	6,0,12
+	.word	398
+	.byte	13
+	.word	413
+	.byte	13
+	.word	427
+	.byte	6,0,12
+	.word	494
+	.byte	13
+	.word	519
+	.byte	6,0,12
+	.word	534
+	.byte	13
+	.word	565
+	.byte	13
+	.word	578
+	.byte	13
+	.word	595
+	.byte	6,0,7
+	.byte	'short int',0,2,5,14
+	.byte	'__wchar_t',0,4,1,1
+	.word	699
+	.byte	7
+	.byte	'unsigned int',0,4,7,14
+	.byte	'__size_t',0,4,1,1
+	.word	730
+	.byte	7
+	.byte	'int',0,4,5,14
+	.byte	'__ptrdiff_t',0,4,1,1
+	.word	763
+	.byte	15,1,3
+	.word	790
+	.byte	14
+	.byte	'__codeptr',0,4,1,1
+	.word	792
+	.byte	7
+	.byte	'unsigned char',0,1,8,14
+	.byte	'uint8',0,5,105,29
+	.word	815
+	.byte	7
+	.byte	'unsigned short int',0,2,7,14
+	.byte	'uint16',0,5,109,29
+	.word	846
+	.byte	7
+	.byte	'unsigned long int',0,4,7,14
+	.byte	'uint32',0,5,113,29
+	.word	883
+	.byte	14
+	.byte	'uint64',0,5,118,29
+	.word	326
+	.byte	14
+	.byte	'sint16',0,5,126,29
+	.word	699
+	.byte	7
+	.byte	'long int',0,4,5,14
+	.byte	'sint32',0,5,131,1,29
+	.word	949
+	.byte	7
+	.byte	'long long int',0,8,5,14
+	.byte	'sint64',0,5,138,1,29
+	.word	977
+	.byte	14
+	.byte	'float32',0,5,167,1,29
+	.word	272
+	.byte	14
+	.byte	'pvoid',0,6,57,28
+	.word	358
+	.byte	14
+	.byte	'Ifx_TickTime',0,6,79,28
+	.word	977
+	.byte	14
+	.byte	'Ifx_RampF32',0,3,63,3
+	.word	444
+	.byte	0
+	.sdecl	'.debug_abbrev',debug
+	.sect	'.debug_abbrev'
+.L15:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,16,6,0,0,2,21,0,54,15,39,12,0,0,3,15,0,73,19,0,0,4,46,1,3,8,32,13
+	.byte	58,15,59,15,57,15,54,15,39,12,0,0,5,5,0,3,8,58,15,59,15,57,15,73,19,0,0,6,11,0,0,0,7,36,0,3,8,11,15,62
+	.byte	15,0,0,8,46,1,3,8,32,13,58,15,59,15,57,15,73,19,54,15,39,12,0,0,9,59,0,3,8,0,0,10,19,1,58,15,59,15,57
+	.byte	15,11,15,0,0,11,13,0,3,8,73,19,11,15,56,9,0,0,12,46,1,49,19,0,0,13,5,0,49,19,0,0,14,22,0,3,8,58,15,59
+	.byte	15,57,15,73,19,0,0,15,21,0,54,15,0,0,0
+	.sdecl	'.debug_line',debug
+	.sect	'.debug_line'
+.L16:
+	.word	.L27-.L26
+.L26:
+	.half	3
+	.word	.L29-.L28
+.L28:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1
+	.byte	'D:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\iLLD\\TC23A\\Tricore\\Cpu\\Std',0
+	.byte	'D:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\iLLD_1_0_1_11_0\\Src\\BaseSw\\Service\\CpuGeneric\\SysSe\\Math',0
+	.byte	0
+	.byte	'IfxCpu_IntrinsicsTasking.h',0,1,0,0
+	.byte	'IfxCpu_Intrinsics.h',0,1,0,0
+	.byte	'Ifx_RampF32.h',0,2,0,0
+	.byte	'..\\iLLD_1_0_1_11_0\\Src\\BaseSw\\Service\\CpuGeneric\\SysSe\\Math\\Ifx_RampF32.c',0,0,0,0
+	.byte	'Platform_Types.h',0,1,0,0
+	.byte	'Ifx_Types.h',0,1,0,0,0
+.L29:
+.L27:
+	.sdecl	'.debug_info',debug,cluster('Ifx_RampF32_step')
+	.sect	'.debug_info'
+.L17:
+	.word	285
+	.half	3
+	.word	.L18
+	.byte	4,1
+	.byte	'..\\iLLD_1_0_1_11_0\\Src\\BaseSw\\Service\\CpuGeneric\\SysSe\\Math\\Ifx_RampF32.c',0
+	.byte	'TASKING VX-toolset for TriCore: C compiler',0
+	.byte	'D:\\workFiles\\dualbank\\dualbank-main\\IEBS_wulin_DiagnosisTest_20250723\\Debug\\',0,12,1
+	.word	.L20,.L19
+	.byte	2
+	.word	.L13
+	.byte	3
+	.byte	'Ifx_RampF32_step',0,1,57,9
+	.word	.L22
+	.byte	1,1,1
+	.word	.L12,.L23,.L11
+	.byte	4
+	.byte	'ramp',0,1,57,39
+	.word	.L24,.L25
+	.byte	5
+	.word	.L12,.L23
+	.byte	0,0
+	.sdecl	'.debug_abbrev',debug,cluster('Ifx_RampF32_step')
+	.sect	'.debug_abbrev'
+.L18:
+	.byte	1,17,1,3,8,37,8,27,8,19,15,128,70,12,85,6,16,6,0,0,2,61,0,24,16,0,0,3,46,1,3,8,58,15,59,15,57,15,73,16
+	.byte	54,15,39,12,63,12,17,1,18,1,64,6,0,0,4,5,0,3,8,58,15,59,15,57,15,73,16,2,6,0,0,5,11,0,17,1,18,1,0,0,0
+	.sdecl	'.debug_line',debug,cluster('Ifx_RampF32_step')
+	.sect	'.debug_line'
+.L19:
+	.word	.L31-.L30
+.L30:
+	.half	3
+	.word	.L33-.L32
+.L32:
+	.byte	2,1,-4,9,10,0,1,1,1,1,0,0,0,1,0
+	.byte	'..\\iLLD_1_0_1_11_0\\Src\\BaseSw\\Service\\CpuGeneric\\SysSe\\Math\\Ifx_RampF32.c',0,0,0,0,0
+.L33:
+	.byte	5,13,7,0,5,2
+	.word	.L12
+	.byte	3,58,1,5,24,9
+	.half	.L34-.L12
+	.byte	1,5,18,9
+	.half	.L35-.L34
+	.byte	1,5,5,9
+	.half	.L36-.L35
+	.byte	1,5,20,7,9
+	.half	.L37-.L36
+	.byte	3,2,1,5,18,9
+	.half	.L4-.L37
+	.byte	1,5,60,9
+	.half	.L38-.L4
+	.byte	1,5,18,9
+	.half	.L2-.L38
+	.byte	3,2,1,5,29,9
+	.half	.L39-.L2
+	.byte	1,5,23,9
+	.half	.L40-.L39
+	.byte	1,5,10,9
+	.half	.L41-.L40
+	.byte	1,5,20,7,9
+	.half	.L42-.L41
+	.byte	3,2,1,5,18,9
+	.half	.L8-.L42
+	.byte	1,5,60,9
+	.half	.L43-.L8
+	.byte	1,5,16,9
+	.half	.L5-.L43
+	.byte	3,5,1,5,5,9
+	.half	.L44-.L5
+	.byte	1,5,1,9
+	.half	.L10-.L44
+	.byte	3,1,1,7,9
+	.half	.L21-.L10
+	.byte	0,1,1
+.L31:
+	.sdecl	'.debug_ranges',debug,cluster('Ifx_RampF32_step')
+	.sect	'.debug_ranges'
+.L20:
+	.word	-1,.L12,0,.L21-.L12,0,0
+	.sdecl	'.debug_loc',debug,cluster('Ifx_RampF32_step')
+	.sect	'.debug_loc'
+.L11:
+	.word	-1,.L12,0,.L23-.L12
+	.half	2
+	.byte	138,0
+	.word	0,0
+.L25:
+	.word	-1,.L12,0,.L23-.L12
+	.half	1
+	.byte	100
+	.word	0,0
+	.sdecl	'.debug_frame',debug
+	.sect	'.debug_frame'
+.L45:
+	.word	48
+	.word	-1
+	.byte	3,0,2,1,27,12,26,0,8,27,8,26,8,28,8,29,8,30,8,31,8,34,8,35,8,32,8,33,8,16,8,17,8,24,8,25,8,36,8,37,8,38
+	.byte	8,39
+	.sdecl	'.debug_frame',debug,cluster('Ifx_RampF32_step')
+	.sect	'.debug_frame'
+	.word	24
+	.word	.L45,.L12,.L23-.L12
+	.byte	8,18,8,19,8,21,8,22,8,23,0,0
+
+
+	; Module end
