@@ -24,24 +24,17 @@
  /******************************************************************************/
  /*----------------------------------Includes----------------------------------*/
  /******************************************************************************/
-#include "Brd_led.h"
-#include "ScuClock.h"
-#include <Tc234_Modules/Tmr/Tmr.h>
+
 #include "Cpu0_Main.h"
-#include "SysSe/Bsp/Bsp.h"
-#include "_PinMap/IfxPort_PinMap.h"
-#include  "_Reg/IfxScu_reg.h"
-#include "App_bootloader.h"
-#include "IfxMultican.h"
-#include    "Can.h"
-#include "custom_delay.h"
-#include <Tc234_Modules/Flash/Flash.h>
-#include "Boot_DualBank.h"
 
 
 
 
-
+Deta_Time	DetaTime;
+uint32		g_LoopFlag;		// 0.5msï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+uint32		g_BaseTime;
+uint32 		g_count2ms;		// 2msï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+uint32 		g_count1ms;		// 1msï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 /******************************************************************************/
 /*-------------------------Function Implementations---------------------------*/
 /******************************************************************************/
@@ -66,6 +59,55 @@ uint32 ResetStatus_Previous(void)
     return rststat;
 }
 
+tRxTxCanMsg txcanmsg;
+void MainProgram(void) 
+{
+	static uint32 m_DetaTime = 0;
+
+	//  ï¿½ï¿½ï¿½ï¿½à³¤Ê±ï¿½ï¿½Ö´ï¿½ï¿½Ò»ï¿½ï¿½whileï¿½ï¿½Ñ­ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½20210129
+    DetaTime.MainWhileTime.time1 = Stm_GetSystemClock();
+    DetaTime.MainWhileTime.detatime = DetaTime.MainWhileTime.time1 - DetaTime.MainWhileTime.time2;
+    DetaTime.MainWhileTime.time2 = DetaTime.MainWhileTime.time1;
+
+    m_DetaTime = DetaTime.MainWhileTime.time1 - g_BaseTime;
+
+    if(m_DetaTime >= C_TIME_05MS)
+    {
+    	g_BaseTime += C_TIME_05MS;
+    	g_LoopFlag ++;
+        AppUds_main();
+
+        /* brd */
+
+    	if((g_LoopFlag % 100) == 0)	// 50ms
+    	{
+
+    	}
+		else
+		{
+
+		}
+
+		if((g_LoopFlag & 0x03) == 0)	// 2ms
+		{
+
+		}
+		else if((g_LoopFlag & 0x03) == 1)	// 2ms
+		{
+			drv_can1_send(&txcanmsg);
+		}
+		else if((g_LoopFlag & 0x03) == 2)	// 2ms
+		{
+
+		}
+		else if((g_LoopFlag & 0x03) == 3)	// 2ms
+		{
+
+		}
+
+
+	}
+}
 uint32 resetReason;
 boolean isPowerOnReset;
 //int main( int argc, char *argv[] )
@@ -80,7 +122,7 @@ void core0_main(void)
     IfxScuWdt_disableCpuWatchdog(IfxScuWdt_getCpuWatchdogPassword());
     IfxScuWdt_disableSafetyWatchdog(IfxScuWdt_getSafetyWatchdogPassword());
 
-    //    IfxCpu_disableInterrupts();
+    IfxCpu_disableInterrupts();
 
     IfxScuClock_init();
 
@@ -88,44 +130,20 @@ void core0_main(void)
 
     BrdLed_init();
 
-    /* Dual Bank: initialize flag system and attempt to jump to active bank */
-    Boot_DualBank_Init();
 
-    /* ===== ¼ì²é RAM Æô¶¯±êÖ¾£¨Ö»ÔÚ·ÇÉÏµç¸´Î»Ê±£© ===== */
-    /* ¶ÁÈ¡¸´Î»Ô­Òò£ºbit0=1 ±íÊ¾ÉÏµç¸´Î» */
+    /* ===== ï¿½ï¿½ï¿½ RAM ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¾ï¿½ï¿½Ö»ï¿½Ú·ï¿½ï¿½Ïµç¸´Î»Ê±ï¿½ï¿½ ===== */
+    /* ï¿½ï¿½È¡ï¿½ï¿½Î»Ô­ï¿½ï¿½bit0=1 ï¿½ï¿½Ê¾ï¿½Ïµç¸´Î» */
     resetReason = SCU_RSTSTAT.U;
     isPowerOnReset = (resetReason & 0x01) != 0;
     //
-//    /* Check if APP requested bootloader mode via RAM flag */
-//    {
-//        uint16 ramBootMode = *(uint16 *)RAM_BOOT_MODE_Addr;
-//        if (ramBootMode == RAM_BOOT_MODE_APP)
-//        {
-//            /* APP requested bootloader: clear flag and stay in bootloader for flashing */
-//            *(uint16 *)RAM_BOOT_MODE_Addr = RAM_BOOT_MODE_NORMAL;
-//        }
-//        else
-//        {
-//            /* Normal boot: attempt to jump to active bank */
-            // Boot_DualBank_SelectAndJump();
-//            /* If SelectAndJump() returns, both banks are invalid -> stay in bootloader */
-//        }
-//    }
-//
-//	/* app init*/
-    AppBL_init();
-    // measureEraseTime
-//    MeasureEraseBankA_Time();
+
+    Boot_DualBank_ClearBootAttempts(); /* Clear boot attempts after successful APP startup */
+
     IfxCpu_enableInterrupts();
     while (TRUE)
     {
-        /* app main */
-        AppBL_main();
-
-        /* brd */
+        MainProgram();
         BrdLed_main();
-
-
     }
 }
 

@@ -160,57 +160,17 @@ uint8 UDS_ALG_HAL_DecryptData(const uint8 *i_pCipherText, const uint32 i_dataLen
  *END**************************************************************************/
 uint8 UDS_ALG_HAL_GetRandom(const uint32 i_needRandomDataLen, uint8 *o_pRandomDataBuf)
 {
-    uint8 ret = TRUE;
-    uint8 index = 0u;
-    //uint8 *pRandomTmp = nullptr;
-    uint32 random = (uint32)&index;
-
-    if ((0u == i_needRandomDataLen) || (nullptr == o_pRandomDataBuf))
-    {
-        ret = FALSE;
-    }
-
-    random = uds_timer_GetTimerTickCnt();
-    random |= (gs_UDS_SWTimerTickCnt << 16u);
+    uint32 random = uds_timer_GetTimerTickCnt();
+    random ^= IfxScuCcu_getCpuFrequency(IfxCpu_getCoreIndex());  // CPU 频率
+    random ^= (uint32)SCU_RSTSTAT.U;                              // 复位状态
+    random ^= (gs_UDS_SWTimerTickCnt << 8);                       // 软件计数器
+    
     for (index = 0; index < i_needRandomDataLen; index++)
     {
-        o_pRandomDataBuf[index] = (random >> (index * sizeof(uint8))) & 0xFF;
-        //random += 0x11u;
+        o_pRandomDataBuf[index] = (random >> (index * 8)) & 0xFF;
+        random = (random * 1103515245 + 12345) & 0xFFFFFFFF;      // LCG 迭代
     }
-
-//#if defined (EN_AES_SA_ALGORITHM_SW) || defined (EN_ZLG_SA_ALGORITHM)
-//#if 1
-//    random = TIMER_HAL_GetTimerTickCnt();
-//    random |= (gs_UDS_SWTimerTickCnt << 16u);
-//    fsl_srand(random);
-//
-//    if (TRUE == ret)
-//    {
-//        pRandomTmp = (uint8 *)&random;
-//
-//        for (index = 0u; index < i_needRandomDataLen; index++)
-//        {
-//            if (((index & 0x03u) == 0x03u))
-//            {
-//                random = fsl_rand();
-//            }
-//
-//            o_pRandomDataBuf[index] = pRandomTmp[index & 0x03];
-//        }
-//    }
-//
-//#else
-//    random = 0u;
-//
-//    for (index = 0; index < i_needRandomDataLen; index++)
-//    {
-//        o_pRandomDataBuf[index] = random;
-//        random += 0x11u;
-//    }
-//
-//#endif
-//#endif
-    return ret;
+    return TRUE;
 }
 
 /* UDS software timer tick */

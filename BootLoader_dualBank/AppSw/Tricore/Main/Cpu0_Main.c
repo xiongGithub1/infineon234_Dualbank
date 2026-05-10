@@ -96,23 +96,23 @@ void core0_main(void)
     resetReason = SCU_RSTSTAT.U;
     isPowerOnReset = (resetReason & 0x01) != 0;
     //
-//    /* Check if APP requested bootloader mode via RAM flag */
-//    {
-//        uint16 ramBootMode = *(uint16 *)RAM_BOOT_MODE_Addr;
-//        if (ramBootMode == RAM_BOOT_MODE_APP)
-//        {
-//            /* APP requested bootloader: clear flag and stay in bootloader for flashing */
-//            *(uint16 *)RAM_BOOT_MODE_Addr = RAM_BOOT_MODE_NORMAL;
-//        }
-//        else
-//        {
-//            /* Normal boot: attempt to jump to active bank */
+   /* Check if APP requested bootloader mode via RAM flag */
+   {
+       uint16 ramBootMode = *(uint16 *)RAM_BOOT_MODE_Addr;
+       if (ramBootMode == RAM_BOOT_MODE_APP)
+       {
+           /* APP requested bootloader: clear flag and stay in bootloader for flashing */
+           *(uint16 *)RAM_BOOT_MODE_Addr = RAM_BOOT_MODE_NORMAL;
+       }
+       else
+       {
+           /* Normal boot: attempt to jump to active bank */
             Boot_DualBank_SelectAndJump();
-//            /* If SelectAndJump() returns, both banks are invalid -> stay in bootloader */
-//        }
-//    }
-//
-//	/* app init*/
+           /* If SelectAndJump() returns, both banks are invalid -> stay in bootloader */
+       }
+   }
+
+	/* app init*/
     AppBL_init();
     // measureEraseTime
 //    MeasureEraseBankA_Time();

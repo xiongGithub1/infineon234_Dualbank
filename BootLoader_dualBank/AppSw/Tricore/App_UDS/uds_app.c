@@ -131,7 +131,7 @@ static const tUDSService gs_astUDSService[] =
 
 	{
 			0x34u,
-			DEFALUT_SESSION | PROGRAM_SESSION | EXTEND_SESSION,
+			PROGRAM_SESSION ,
 			SUPPORT_PHYSICAL_ADDR | SUPPORT_FUNCTION_ADDR,
 			SECURITY_LEVEL_2,
 			RequestDownload0x34
@@ -139,14 +139,14 @@ static const tUDSService gs_astUDSService[] =
 
 	{
 			0x36u,
-			DEFALUT_SESSION | PROGRAM_SESSION | EXTEND_SESSION,
+			PROGRAM_SESSION,
 			SUPPORT_PHYSICAL_ADDR | SUPPORT_FUNCTION_ADDR,
 			SECURITY_LEVEL_2,
 			TransferData0x36
 	},
 	{
 			0x37u,
-			DEFALUT_SESSION | PROGRAM_SESSION | EXTEND_SESSION,
+			PROGRAM_SESSION,
 			SUPPORT_PHYSICAL_ADDR | SUPPORT_FUNCTION_ADDR,
 			SECURITY_LEVEL_2,
 			RequestTransferExit0x37
@@ -793,6 +793,7 @@ static void DigSession0x10(struct UDSServiceInfo* i_pstUDSServiceInfo,
 			m_pstPDUMsg->xDataLen = 2u;
 			SetCurrentSession(DEFALUT_SESSION);
 			SetSecurityLevel(NONE_SECURITY);
+			break;
 		case 0x81u:
 			SetCurrentSession(DEFALUT_SESSION);
 			SetSecurityLevel(NONE_SECURITY);
@@ -820,6 +821,7 @@ static void DigSession0x10(struct UDSServiceInfo* i_pstUDSServiceInfo,
 				m_pstPDUMsg->pfUDSTxMsgServiceCallBack = &DoResetToBootloader;
 #endif
 			}
+			break;
 		case 0x82u:
 			SetCurrentSession(PROGRAM_SESSION);
 
@@ -835,6 +837,7 @@ static void DigSession0x10(struct UDSServiceInfo* i_pstUDSServiceInfo,
 			m_pstPDUMsg->aDataBuf[1u] = RequestSubfunction;
 			m_pstPDUMsg->xDataLen = 2u;
 			SetCurrentSession(EXTEND_SESSION);
+			break;
 		case 0x83u:
 			SetCurrentSession(EXTEND_SESSION);
 

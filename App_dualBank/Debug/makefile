@@ -96,7 +96,7 @@ all : "IEBS_wulin_DiagnosisTest_20250209.elf"
 	@"${PRODDIR}\bin\cctc" -f ".IEBS_wulin_DiagnosisTest_20250209.elf.opt"
 
 ".IEBS_wulin_DiagnosisTest_20250209.elf.opt" : .refresh
-	@argfile ".IEBS_wulin_DiagnosisTest_20250209.elf.opt" -o "IEBS_wulin_DiagnosisTest_20250209.elf" $(OBJ_FILES) $(EXT_LIBRARIES) $(PCP_FILES)  -Ctc23x --lsl-core=vtc -t -I"D:\workFiles\dualbank\dualbank-main\IEBS_wulin_DiagnosisTest_20250723" -Wl-o"${PROJ}.hex":IHEX:4 --hex-format=s "D:\workFiles\dualbank\dualbank-main\IEBS_wulin_DiagnosisTest_20250723\App_dualbank_b.lsl" -Wl-OtxycL -Wl-mcrfiklsmnoduq -Wl--error-limit=42 -g --fp-model=3 -Wl--dep-file=".IEBS_wulin_DiagnosisTest_20250209.elf.d" -Wl--make-target="IEBS_wulin_DiagnosisTest_20250209.elf"
+	@argfile ".IEBS_wulin_DiagnosisTest_20250209.elf.opt" -o "IEBS_wulin_DiagnosisTest_20250209.elf" $(OBJ_FILES) $(EXT_LIBRARIES) $(PCP_FILES)  -Ctc23x --lsl-core=vtc -t -I"D:\workFiles\dualbank\dualbank-main\App_dualBank" -Wl-o"${PROJ}.hex":IHEX:4 --hex-format=s "D:\workFiles\dualbank\dualbank-main\App_dualBank\App_dualBank_a.lsl" -Wl-OtxycL -Wl-mcrfiklsmnoduq -Wl--error-limit=42 -g --fp-model=3 -Wl--dep-file=".IEBS_wulin_DiagnosisTest_20250209.elf.d" -Wl--make-target="IEBS_wulin_DiagnosisTest_20250209.elf"
 DEPENDENCY_FILES += ".IEBS_wulin_DiagnosisTest_20250209.elf.d"
 -include $(DEPENDENCY_FILES)
 

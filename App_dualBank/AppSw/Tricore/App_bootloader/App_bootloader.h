@@ -65,7 +65,7 @@ void Flash_BackupAppBlocks(void);
 //void AppBL_cpyMem(uint32 * dest, const uint32 *source, uint32 length);
 int Mcu_getCpuFreq(cpu_freq_stt * cpu);
 void AppBL_init(void);
-void AppBL_main(void);
+void AppUds_main(void);
 void SW_Reset(void);
 
 #endif /* APP_BOOTLOADER_H_ */

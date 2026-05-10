@@ -378,7 +378,7 @@ void AppBL_init(void)
  */
 //uint8 WritePFlash =0;
 uint8 can_node1_error=0;
-void    AppBL_main(void)
+void    AppUds_main(void)
 {
     /* Dual Bank startup decision has been handled in Cpu0_Main.c via
      * Boot_DualBank_SelectAndJump(). If we reach here, both banks are
@@ -389,9 +389,6 @@ void    AppBL_main(void)
 
 	/* Bootloader main loop */
 
-    // Can_RxIndicationMainFunc(); // Replaced by interrupt isrCAN1_RX
-
-  	// Can9252RxLookup(); // Replaced by interrupt isrCAN0_RX
 	UdsMainProcess();
 	CanMainProcess();
 

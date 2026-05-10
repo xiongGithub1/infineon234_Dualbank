@@ -310,5 +310,5 @@ IEBS_wulin_DiagnosisTest_20250209.elf : "D:\softWareFiles\taskingV6_2\ctc\lib\tc
 "D:\softWareFiles\taskingV6_2\ctc\lib\tc16x\libfp_fpu.a" :
 IEBS_wulin_DiagnosisTest_20250209.elf : "D:\softWareFiles\taskingV6_2\ctc\lib\tc16x\librt.a"
 "D:\softWareFiles\taskingV6_2\ctc\lib\tc16x\librt.a" :
-IEBS_wulin_DiagnosisTest_20250209.elf : "D:\workFiles\dualbank\dualbank-main\IEBS_wulin_DiagnosisTest_20250723\App_dualbank_b.lsl"
-"D:\workFiles\dualbank\dualbank-main\IEBS_wulin_DiagnosisTest_20250723\App_dualbank_b.lsl" :
+IEBS_wulin_DiagnosisTest_20250209.elf : "D:\workFiles\dualbank\dualbank-main\App_dualBank\App_dualBank_a.lsl"
+"D:\workFiles\dualbank\dualbank-main\App_dualBank\App_dualBank_a.lsl" :
