@@ -2,7 +2,7 @@
  * \file    tool_class.c
  * \brief
  * \version V1.0.0
- * \date    2022å¹´2æœˆ28æ—¥
+ * \date    2022Äê2ÔÂ28ÈÕ
  * \author  Administrator
  *********************************************************************************************************************/
 #include "tool_class.h"
@@ -14,8 +14,8 @@
 
 void tl_memset(void *s, int c, int count)
 {
-	char *xs = (char *)s;//å°† void * ç±»å‹çš„æŒ‡é’ˆ s è½¬æ¢ä¸º char * ç±»å‹çš„æŒ‡é’ˆ xsã€‚
-						 //è¿™æ˜¯å› ä¸º void * æ˜¯é€šç”¨æŒ‡é’ˆç±»å‹ï¼Œä¸èƒ½ç›´æ¥è¿›è¡ŒæŒ‡é’ˆç®—æœ¯è¿ç®—ï¼ˆå¦‚ ++ï¼‰ï¼Œè€Œ char * æ˜¯å­—èŠ‚æŒ‡é’ˆï¼Œå¯ä»¥é€å­—èŠ‚æ“ä½œå†…å­˜ã€‚
+	char *xs = (char *)s;//½« void * ÀàĞÍµÄÖ¸Õë s ×ª»»Îª char * ÀàĞÍµÄÖ¸Õë xs¡£
+						 //ÕâÊÇÒòÎª void * ÊÇÍ¨ÓÃÖ¸ÕëÀàĞÍ£¬²»ÄÜÖ±½Ó½øĞĞÖ¸ÕëËãÊõÔËËã£¨Èç ++£©£¬¶ø char * ÊÇ×Ö½ÚÖ¸Õë£¬¿ÉÒÔÖğ×Ö½Ú²Ù×÷ÄÚ´æ¡£
 	while (count--)
 		*xs++ = (char)c;
 }
@@ -49,7 +49,7 @@ void tl_queue_add_item(DataQueue *pdq,QueueMsgObject *pObject)
 {
 	if(((pdq->rear + 1) % QUEUE_MAXSIZE) == pdq->front)
 	{
-		// é˜Ÿåˆ—å·²æ»¡ï¼Œæ‰§è¡Œè¦†ç›–
+		// ¶ÓÁĞÒÑÂú£¬Ö´ĞĞ¸²¸Ç
 		//tl_queue_init();
 		tl_queue_init(pdq);
 	}
@@ -61,7 +61,7 @@ uint8 tl_queue_take_item(DataQueue *pdq,QueueMsgObject *pObject)
 {
 	if(pdq->rear == pdq->front)
 	{
-		// é˜Ÿåˆ—ä¸ºç©º
+		// ¶ÓÁĞÎª¿Õ
 		//pObject = ((void *) 0);
 		return 0;
 	}
@@ -69,25 +69,25 @@ uint8 tl_queue_take_item(DataQueue *pdq,QueueMsgObject *pObject)
 	pdq->front = (pdq->front + 1) % QUEUE_MAXSIZE;
 	return 1;
 }
-// ä»EEPROMä¸­è¯»å–æ•°æ®,æˆåŠŸè¿”å›è¯»åˆ°çš„æ•°é‡,å¤±è´¥è¿”å›0
+// ´ÓEEPROMÖĞ¶ÁÈ¡Êı¾İ,³É¹¦·µ»Ø¶Áµ½µÄÊıÁ¿,Ê§°Ü·µ»Ø0
 uint8 tl_read_from_eeprom(uint32 addr,uint8 *pDstData,uint8 count)
 {
 	// TODO
 	return count;
 }
-// ä»FLASHä¸­è¯»å–æ•°æ®,æˆåŠŸè¿”å›è¯»åˆ°çš„æ•°é‡,å¤±è´¥è¿”å›0
+// ´ÓFLASHÖĞ¶ÁÈ¡Êı¾İ,³É¹¦·µ»Ø¶Áµ½µÄÊıÁ¿,Ê§°Ü·µ»Ø0
 uint8 tl_read_from_flash(uint32 addr,uint8 *pDstData,uint8 count)
 {
 	// TODO
 	return count;
 }
-// å‘EEPROMä¸­å†™å…¥æ•°æ®,æˆåŠŸè¿”å›å†™å…¥çš„å­—èŠ‚æ•°,å¤±è´¥è¿”å›0
+// ÏòEEPROMÖĞĞ´ÈëÊı¾İ,³É¹¦·µ»ØĞ´ÈëµÄ×Ö½ÚÊı,Ê§°Ü·µ»Ø0
 uint8 tl_write_to_eeprom(uint32 addr,uint8 *pData,uint8 count)
 {
 	// TODO
 	return count;
 }
-// å‘FLASHä¸­å†™å…¥æ•°æ®,æˆåŠŸè¿”å›å†™å…¥çš„å­—èŠ‚æ•°,å¤±è´¥è¿”å›0
+// ÏòFLASHÖĞĞ´ÈëÊı¾İ,³É¹¦·µ»ØĞ´ÈëµÄ×Ö½ÚÊı,Ê§°Ü·µ»Ø0
 uint8 tl_write_to_flash(uint32 addr,uint8 *pData,uint8 count)
 {
 	// TODO

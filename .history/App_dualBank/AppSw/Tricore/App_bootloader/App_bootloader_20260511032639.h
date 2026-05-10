@@ -1,54 +1,28 @@
-/*
- * @Author: qinXiong
- * @Date: 2026-05-11 01:31:08
- * @LastEditors: xiongGithub1&&qx20001119@163.com
- * @LastEditTime: 2026-05-11 04:49:55
- * @Description: 
- */
 
 /**********************************************************************************************************************
- * \file    Std_Types.h
+ * \file    App_bootloader.h
  * \brief
  * \version V1.0.0
  * \date
  *********************************************************************************************************************/
 
 
-#ifndef APPSW_STD_TYPES_H_
-#define APPSW_STD_TYPES_H_
+#ifndef APP_BOOTLOADER_H_
+#define APP_BOOTLOADER_H_
 
 /*********************************************************************************************************************/
 /*-----------------------------------------------------Includes------------------------------------------------------*/
 /*********************************************************************************************************************/
-#include <Platform_Types.h>
-
-
+#include    "Std_Types.h"
+#include    "CanIf.h"
+#include    "custom_delay.h"
+#include    "Flash.h"
+#include    "Boot_DualBank.h"
+#include "MultiCAN.h"
+#include "uds_main.h"
 /*********************************************************************************************************************/
 /*------------------------------------------------------Macros-------------------------------------------------------*/
 /*********************************************************************************************************************/
-
-/*=======[M A C R O S]========================================================*/
-
-#ifndef TRUE
-#define TRUE    (1)
-#endif
-
-#ifndef FALSE
-#define FALSE   (0)
-#endif
-
-#ifndef NULLPTR
-#define NULLPTR ((void *)0)
-#endif
-
-#define E_OK     0x00
-#define E_NOT_OK 0x01
-
-//#define STATIC static
-#define STATIC
-
-
-
 
 /*********************************************************************************************************************/
 /*-------------------------------------------------Global variables--------------------------------------------------*/
@@ -57,38 +31,43 @@
 /*********************************************************************************************************************/
 /*-------------------------------------------------Data Structures---------------------------------------------------*/
 /*********************************************************************************************************************/
- /*=======[T Y P E   D E F I N I T I O N S]====================================*/
+ 
+typedef struct{
 
-//typedef unsigned char       uint8;
-//typedef unsigned short      uint16;
-//typedef unsigned long       uint32;
-//typedef unsigned char       boolean;
+	uint8 bootloaderState;//bootloader当前的状态
 
-typedef enum
-{
-    notInit = -1,
+	boolean backIsSuccessResult;//回滚代码是否成功的返回结果
+	boolean cpyIsSuccessResult;//拷贝代码到指定内存是否成功的结果
+	uint8 loadIsSuccessResult;//下载代码是否成功的结果
 
-    para1Err =0x1,
-    para2Err =0x2,
-    para3Err =0x4,
-    para4Err =0x8,
-    para5Err =0x10,
-    para6Err =0x20,
-    para7Err =0x40,
-    para8Err =0x80,
+	boolean isCpyFlag;//是否拷贝的标志
+}backToBeforeCodeS;
 
-    noErr   =0
-}function_return;
+typedef enum {
+	bootloaderToApp = 0,//不需要升级直接跳转应用程序
+	bootloaderCpyToMainRam = 1,//把当前app分区程序拷贝到备份分区
+	bootloaderToUpdate = 2,//进入升级状态设置标志为 2
+	bootloaderToCheck = 3,//刷写校验通过后设置标志为 3
+	bootloaderToMainFinish = 4,//拷贝备份区程序到主程序分区并跳转到app
+}blState;
 
 
-typedef uint8 Std_ReturnType;
+
 /*********************************************************************************************************************/
 /*--------------------------------------------Private Variables/Constants--------------------------------------------*/
 /*********************************************************************************************************************/
+extern backToBeforeCodeS g_backToBeforeCodeS;
+
+
 
 /*********************************************************************************************************************/
 /*------------------------------------------------Function Prototypes------------------------------------------------*/
 /*********************************************************************************************************************/
+void Flash_BackupAppBlocks(void);
+//void AppBL_cpyMem(uint32 * dest, const uint32 *source, uint32 length);
 
+void AppBL_init(void);
+void AppUds_main(void);
+void SW_Reset(void);
 
-#endif /* APPSW_STD_TYPES_H_ */
+#endif /* APP_BOOTLOADER_H_ */

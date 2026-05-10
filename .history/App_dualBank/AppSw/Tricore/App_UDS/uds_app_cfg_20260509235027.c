@@ -1,10 +1,3 @@
-/*
- * @Author: qinXiong
- * @Date: 2026-05-11 01:31:08
- * @LastEditors: xiongGithub1&&qx20001119@163.com
- * @LastEditTime: 2026-05-11 04:51:55
- * @Description: 
- */
 #include "uds_app_cfg.h"
 #include "uds_tp.h"
 #include "fls_app.h"
@@ -220,7 +213,7 @@ void DoEraseFlash(uint8 TxStatus)
 
 //uint8 isInProgrammingState(void)
 //{
-//	if(gs_stUdsInfo.CurSessionMode==PROGRAM_SESSION || gs_stUdsInfo.CurSessionMode==EXTEND_SESSION)//Ä¬ÈÏ/±à³Ì
+//	if(gs_stUdsInfo.CurSessionMode==PROGRAM_SESSION || gs_stUdsInfo.CurSessionMode==EXTEND_SESSION)//Ĭ��/���
 //	{
 //		return TRUE;
 //	}
@@ -233,7 +226,7 @@ uint8 DoCheckProgrammingDependency(void)
 {
 //    uint8 ret = FALSE;
 //
-//    if(TRUE == isInProgrammingState())//ÅÐ¶Ï»á»°×´Ì¬
+//    if(TRUE == isInProgrammingState())//�жϻỰ״̬
 //    {
 //        if(TRUE == Flash_IsAppInFlashValid())
 //        {

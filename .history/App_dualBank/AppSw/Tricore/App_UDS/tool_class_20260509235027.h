@@ -1,15 +1,8 @@
-/*
- * @Author: qinXiong
- * @Date: 2026-05-11 01:31:08
- * @LastEditors: xiongGithub1&&qx20001119@163.com
- * @LastEditTime: 2026-05-11 04:51:29
- * @Description: 
- */
 /**********************************************************************************************************************
  * \file    tool_class.h
  * \brief
  * \version V1.0.0
- * \date    2022å¹´2æœˆ28æ—¥
+ * \date    2022Äê2ÔÂ28ÈÕ
  * \author  Administrator
  *********************************************************************************************************************/
 #ifndef TOOLS_TOOL_CLASS_H_
@@ -27,9 +20,9 @@ typedef struct
 
 typedef struct
 {
-	int front;//é˜Ÿé¦–æŒ‡é’ˆ
-	int rear;//é˜Ÿå°¾æŒ‡é’ˆ
-	//int qlen;// é˜Ÿåˆ—å…ƒç´ é•¿åº¦
+	int front;//¶ÓÊ×Ö¸Õë
+	int rear;//¶ÓÎ²Ö¸Õë
+	//int qlen;// ¶ÓÁÐÔªËØ³¤¶È
 	QueueMsgObject msg[QUEUE_MAXSIZE];
 }DataQueue;
 
@@ -37,8 +30,8 @@ typedef struct
 void tl_memset(void *s, int c, int count);
 void tl_memcpy(void *dst, const void *src, int count);
 void tl_queue_init(DataQueue *pdq);
-void tl_queue_add_item(DataQueue *pdq,QueueMsgObject *pObject);// å…¥é˜Ÿ
-uint8 tl_queue_take_item(DataQueue *pdq,QueueMsgObject *pObject);// å‡ºé˜Ÿ
+void tl_queue_add_item(DataQueue *pdq,QueueMsgObject *pObject);// Èë¶Ó
+uint8 tl_queue_take_item(DataQueue *pdq,QueueMsgObject *pObject);// ³ö¶Ó
 
 uint8 tl_read_from_eeprom(uint32 addr,uint8 *pDstData,uint8 count);
 uint8 tl_write_to_eeprom(uint32 addr,uint8 *pData,uint8 count);

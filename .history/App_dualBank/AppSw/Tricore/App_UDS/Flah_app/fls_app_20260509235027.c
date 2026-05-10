@@ -36,9 +36,9 @@ uint8 IsDownloadDataLenValid(const uint32 i_DataLen)
 /*Is download data address valid?*/
 uint8 IsDownloadDataAddrValid(const uint32 i_DataAddr)
 {
-	//å› ä¸ºåœ°å€æ˜¯800å¼€å¤´ï¼Œå¹¶ä¸æ˜¯a00å¼€å¤´ï¼Œæ­¤åˆ¤æ–­ä¼šä¸€ç›´false
-//	i_DataAddråœ¨PFLASHåœ°å€èŒƒå›´å†…-åˆç†
-	if((i_DataAddr >= FL_PFLASH_PF_ADDR_Start) && (i_DataAddr < FL_PFLASH_PF_ADDR_End ))//åœ¨PFLASHåœ°å€èŒƒå›´å†…
+	//ÒòÎªµØÖ·ÊÇ800¿ªÍ·£¬²¢²»ÊÇa00¿ªÍ·£¬´ËÅÐ¶Ï»áÒ»Ö±false
+//	i_DataAddrÔÚPFLASHµØÖ··¶Î§ÄÚ-ºÏÀí
+	if((i_DataAddr >= FL_PFLASH_PF_ADDR_Start) && (i_DataAddr < FL_PFLASH_PF_ADDR_End ))//ÔÚPFLASHµØÖ··¶Î§ÄÚ
 	{
 		 return TRUE;
 	}
@@ -83,19 +83,19 @@ uint8 Flash_ProgramRegion(uint32 i_addr,uint8 *i_pDataBuf,uint32 i_dataLen)
 
     uint8 result = TRUE;
 
-    // æ£€æŸ¥å½“å‰æ˜¯å¦ä¸ºä¼ è¾“é˜¶æ®µ
+    // ¼ì²éµ±Ç°ÊÇ·ñÎª´«Êä½×¶Î
     if (FL_TRANSFER_STEP != Flash_GetCurDownloadStep())
     {
         result = FALSE;
     }
 
-    // æ£€æŸ¥è¾“å…¥æŒ‡é’ˆæ˜¯å¦æœ‰æ•ˆ
+    // ¼ì²éÊäÈëÖ¸ÕëÊÇ·ñÓÐÐ§
     if (NULL_PTR == i_pDataBuf)
     {
         result = FALSE;
     }
 
-	result = (uint8)Flash_writePFlash_portex(i_addr, i_pDataBuf, i_dataLen); // ç›´æŽ¥è°ƒç”¨å†™å…¥å‡½æ•°
+	result = (uint8)Flash_writePFlash_portex(i_addr, i_pDataBuf, i_dataLen); // Ö±½Óµ÷ÓÃÐ´Èëº¯Êý
 
 	if (TRUE == result)
 	{
@@ -104,7 +104,7 @@ uint8 Flash_ProgramRegion(uint32 i_addr,uint8 *i_pDataBuf,uint32 i_dataLen)
 	}
 	else
 	{
-		gs_stFlashDownloadInfo.errorCode = FALSE; // æ ‡è®°å†™å…¥å¤±è´¥
+		gs_stFlashDownloadInfo.errorCode = FALSE; // ±ê¼ÇÐ´ÈëÊ§°Ü
 	}
     return result;
 }

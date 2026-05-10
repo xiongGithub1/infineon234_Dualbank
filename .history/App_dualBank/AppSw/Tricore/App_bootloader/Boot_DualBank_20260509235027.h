@@ -70,9 +70,9 @@ typedef struct
     uint32 bankB_version;
     uint16 bootAttempts;
     uint16 flags;
-    uint32 sequence;        // +0x1C  (4 bytes)  å†™å…¥åºåˆ—å·ï¼ˆç”¨äºä¸»/å¤‡ä»²è£ï¼‰
-    uint32 crc32;           // +0x20  (4 bytes)  æœ¬ç»“æ„ä½“çš„ CRC32ï¼ˆä¸å«æ­¤å­—æ®µï¼‰
-    uint32 targetWriteBank; // +0x24  (4 bytes)  ä¸Šä½æœºç›®æ ‡åˆ·å†™Bank (BANK_A / BANK_B)
+    uint32 sequence;        // +0x1C  (4 bytes)  Ğ´ÈëĞòÁĞºÅ£¨ÓÃÓÚÖ÷/±¸ÖÙ²Ã£©
+    uint32 crc32;           // +0x20  (4 bytes)  ±¾½á¹¹ÌåµÄ CRC32£¨²»º¬´Ë×Ö¶Î£©
+    uint32 targetWriteBank; // +0x24  (4 bytes)  ÉÏÎ»»úÄ¿±êË¢Ğ´Bank (BANK_A / BANK_B)
 } BootFlagMain_t;
 
 typedef struct
@@ -88,7 +88,7 @@ typedef struct
     uint32 shadow_sequence;        // 4 bytes
     uint32 shadow_crc32;           // 4 bytes
     uint32 shadow_targetWriteBank; // 4 bytes
-} BootFlagShadow_t;                // = 40 bytes æ€»è®¡
+} BootFlagShadow_t;                // = 40 bytes ×Ü¼Æ
 
 
 
