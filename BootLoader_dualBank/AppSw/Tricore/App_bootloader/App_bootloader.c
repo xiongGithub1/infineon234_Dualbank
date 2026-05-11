@@ -326,6 +326,9 @@ void AppBL_GotoAppSW(void)
 
 void AppBL_init(void)
 {
+    /* OEM: mark bootloader entry phase */
+    g_bootPhase = BOOT_PHASE_BL_ENTRY;
+
     /* mcu star init */
     Mcu_getCpuFreq(&gAppData.cpuFreq);		// Get CPU frequency
 
@@ -386,6 +389,8 @@ void    AppBL_main(void)
      * Skip legacy single-bank startup checks.
      */
 
+    /* OEM: mark bootloader main loop phase */
+    g_bootPhase = BOOT_PHASE_BL_MAIN;
 
 	/* Bootloader main loop */
 

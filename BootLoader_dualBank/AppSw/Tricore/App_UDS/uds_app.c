@@ -833,6 +833,8 @@ static void DigSession0x10(struct UDSServiceInfo* i_pstUDSServiceInfo,
 				m_pstPDUMsg->aDataBuf[1u] = RequestSubfunction;
 				m_pstPDUMsg->xDataLen = 2u;
 				SetCurrentSession(PROGRAM_SESSION);
+				/* OEM: mark programming session phase */
+				g_bootPhase = BOOT_PHASE_PROG_SESSION;
 #ifdef DIAGNOSTIC_MODE_FOR_APP
 				/* APP mode: set bootloader flag and reset after positive response is sent */
 				* (uint16*) RAM_BOOT_MODE_Addr = RAM_BOOT_MODE_APP;
@@ -1809,6 +1811,7 @@ static void RoutineControl0x31(struct UDSServiceInfo* i_pstUDSServiceInfo, tUdsA
 								}
 
 								/* CRC OK: mark valid and activate */
+								g_bootPhase = BOOT_PHASE_PROG_VERIFY;
 								Boot_DualBank_MarkBankValid(targetBank, 0x00010000u);
 								Boot_DualBank_SetActiveBank(targetBank);
 								routineResult = 0x01;
@@ -1850,6 +1853,7 @@ static void RoutineControl0x31(struct UDSServiceInfo* i_pstUDSServiceInfo, tUdsA
 
 				case jumpToApp:
 					{
+						g_bootPhase = BOOT_PHASE_JUMP_DECISION;
 						if (TRUE != IsCurSecurityLevelRequet(SECURITY_LEVEL_2))
 						{
 							SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_SECURITY_ACCESS_DENIED, m_pstPDUMsg);

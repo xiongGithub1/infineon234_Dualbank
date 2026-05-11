@@ -27,15 +27,15 @@
 
 #include "Cpu0_Main.h"
 #include "MultiCAN.h"
-
+#include "Boot_DualBank.h"
 
 
 
 Deta_Time	DetaTime;
-uint32		g_LoopFlag;		// 0.5ms������
+uint32		g_LoopFlag;		// 0.5ms循环标志
 uint32		g_BaseTime;
-uint32 		g_count2ms;		// 2ms������
-uint32 		g_count1ms;		// 1ms������
+uint32 		g_count2ms;		// 2ms计数器
+uint32 		g_count1ms;		// 1ms计数器
 tRxTxCanMsg txcanmsg;
 /******************************************************************************/
 /*-------------------------Function Implementations---------------------------*/
@@ -66,7 +66,7 @@ void MainProgram(void)
 {
 	static uint32 m_DetaTime = 0;
 	static uint8 i=0;
-	//  ����೤ʱ��ִ��һ��while��ѭ��������20210129
+	//  测量多长时间执行一次while主循环标志20210129
     DetaTime.MainWhileTime.time1 = Stm_GetSystemClock();
     DetaTime.MainWhileTime.detatime = DetaTime.MainWhileTime.time1 - DetaTime.MainWhileTime.time2;
     DetaTime.MainWhileTime.time2 = DetaTime.MainWhileTime.time1;
@@ -97,41 +97,70 @@ void MainProgram(void)
 }
 uint32 resetReason;
 boolean isPowerOnReset;
+
+/* APP phase identifiers for OEM traceability */
+typedef enum
+{
+    APP_PHASE_INIT    = 0xA0u,  /* APP early initialization */
+    APP_PHASE_PERIPH  = 0xA1u,  /* APP peripheral initialization */
+    APP_PHASE_RUN     = 0xA2u,  /* APP main loop running */
+    APP_PHASE_ERROR   = 0xAFu   /* APP unrecoverable error */
+} AppPhase_t;
+
+volatile AppPhase_t g_appPhase = APP_PHASE_INIT;
+
 //int main( int argc, char *argv[] )
 void core0_main(void)
 {
     //	uint32 *p = (uint32 *)0x70000000;
     //	*p = 0;
-        /*
-         * !!WATCHDOG0 AND SAFETY WATCHDOG ARE DISABLED HERE!!
-         * Enable the watchdog in the demo if it is required and also service the watchdog periodically
-         * */
+
+    /* === APP Phase: Early Initialization === */
+    g_appPhase = APP_PHASE_INIT;
+
+    /*
+     * !!WATCHDOG0 AND SAFETY WATCHDOG ARE DISABLED HERE!!
+     * Enable the watchdog in the demo if it is required and also service the watchdog periodically
+     * */
     IfxScuWdt_disableCpuWatchdog(IfxScuWdt_getCpuWatchdogPassword());
     IfxScuWdt_disableSafetyWatchdog(IfxScuWdt_getSafetyWatchdogPassword());
+
+    /* OEM: Record reset reason for diagnostic and fault analysis */
+    resetReason = ResetStatus_Previous();
+    isPowerOnReset = (resetReason & 0x01) != 0;
 
     IfxCpu_disableInterrupts();
 
     IfxScuClock_init();
 
+    /* OEM: Clear boot attempts as early as possible after stable clock.
+     * If APP crashes before this, Bootloader will increment bootAttempts
+     * and eventually roll back after MAX_BOOT_ATTEMPTS failures.
+     * Must be called BEFORE any complex/risky peripheral initialization. */
+    Boot_DualBank_ClearBootAttempts();
+
     delay_init();
 
     IfxStm_init();    /* Initialize STM timer before using Stm_GetSystemClock */
+
+    /* === APP Phase: Peripheral Initialization === */
+    g_appPhase = APP_PHASE_PERIPH;
 
     Multican_init();  /* Initialize CAN module before accessing CAN registers */
 
     BrdLed_init();
 	UdsInit(UDS_FUN_ADDR_ID,UDS_PHY_ADDR_ID,UDS_RESP_ADDR_ID);
-    resetReason = SCU_RSTSTAT.U;
-    isPowerOnReset = (resetReason & 0x01) != 0;
     //
 
-    Boot_DualBank_ClearBootAttempts(); /* Clear boot attempts after successful APP startup */
     g_BaseTime = Stm_GetSystemClock();
     IfxCpu_enableInterrupts();
+
+    /* === APP Phase: Main Loop Running === */
+    g_appPhase = APP_PHASE_RUN;
+
     while (TRUE)
     {
         MainProgram();
         BrdLed_main();
     }
 }
-

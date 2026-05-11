@@ -31,6 +31,14 @@
 #define BANK_B_END_ADDR                 0x80200000u
 #define BANK_APP_SIZE                   (896u * 1024u)  /* S8~S22 = 896KB */
 
+/* APP vector table offsets relative to bank base (must match APP LSL/linker config)
+ * Verified against App_dualBank_a.lsl / App_dualbank_b.lsl:
+ *   Bank A: INTTAB=0x80090000, TRAPTAB=0x80098000 (base=0x80020000)
+ *   Bank B: INTTAB=0x80170000, TRAPTAB=0x80178000 (base=0x80100000)
+ */
+#define APP_INTTAB_OFFSET               0x00070000u
+#define APP_TRAPTAB_OFFSET              0x00078000u
+
 /* Bank logical sector range (matches IfxFlash_pFlashTableLog index) */
 #define BANK_A_SECTOR_START             8u
 #define BANK_A_SECTOR_END               22u
@@ -59,6 +67,24 @@ extern uint32 g_eraseTestDone;
 #define ROLLBACK_REASON_BOOT_TIMEOUT    0x02u
 #define ROLLBACK_REASON_TRAP            0x03u
 #define ROLLBACK_REASON_WATCHDOG        0x04u
+
+/* Boot phase identifiers for OEM traceability and fault analysis */
+typedef enum
+{
+    BOOT_PHASE_STARTUP          = 0x00u,   /* Phase 1: System startup (watchdog/clock) */
+    BOOT_PHASE_FLAG_INIT        = 0x01u,   /* Phase 2: Dual-bank flag initialization */
+    BOOT_PHASE_BANK_VERIFY      = 0x02u,   /* Phase 3: Bank validity verification */
+    BOOT_PHASE_JUMP_DECISION    = 0x03u,   /* Phase 4A: Jump decision */
+    BOOT_PHASE_JUMP_EXEC        = 0x04u,   /* Phase 4A-Jump: Bare jump to APP */
+    BOOT_PHASE_ROLLBACK         = 0x05u,   /* Phase 4B: Rollback handling */
+    BOOT_PHASE_BL_ENTRY         = 0x10u,   /* Phase 5: Bootloader mode entry */
+    BOOT_PHASE_BL_MAIN          = 0x11u,   /* Phase 6: Bootloader main loop */
+    BOOT_PHASE_PROG_SESSION     = 0x20u,   /* Phase 7: Programming session */
+    BOOT_PHASE_PROG_VERIFY      = 0x21u,   /* Phase 7.6: Post-programming CRC verify */
+    BOOT_PHASE_ERROR            = 0xFFu    /* Unrecoverable error / trap */
+} BootPhase_t;
+
+extern volatile BootPhase_t g_bootPhase;
 
 typedef struct
 {
@@ -137,5 +163,8 @@ void Boot_DualBank_ClearBootAttempts(void);
 
 /* Debug: measure erase time for Bank A (S8~S22) */
 void MeasureEraseBankA_Time(void);
+
+/* OEM helper: set BIV/BTV/SP to APP vector table before jump */
+void Boot_DualBank_SetAppVectors(uint32 bankStartAddr);
 
 #endif
