@@ -165,7 +165,7 @@
 							<tool command="cctc" commandLinePattern="${COMMAND} ${FLAGS} ${OUTPUT_FLAG} ${OUTPUT_PREFIX}${OUTPUT} ${INPUTS}" errorParsers="com.tasking.managedbuilder.TskRegexErrorParser" id="com.tasking.ctc.lk.abs.debug.1513115105" name="Linker" superClass="com.tasking.ctc.lk.abs.debug">
 								<option id="com.tasking.ctc.lk.outputFormat.ihex.510931217" name="Generate Intel Hex format file" superClass="com.tasking.ctc.lk.outputFormat.ihex" value="true" valueType="boolean"/>
 								<option id="com.tasking.ctc.lk.outputFormat.srec.1463317766" name="Generate S-records file" superClass="com.tasking.ctc.lk.outputFormat.srec" value="false" valueType="boolean"/>
-								<option id="com.tasking.ctc.lk.lslFile.698999897" name="Linker script file:" superClass="com.tasking.ctc.lk.lslFile" value="D:\workFiles\dualbank\dualbank-main\BootLoader_dualBank\Bootloader_DualBank.lsl" valueType="string"/>
+								<option id="com.tasking.ctc.lk.lslFile.698999897" name="Linker script file:" superClass="com.tasking.ctc.lk.lslFile" value="E:\workFiles\IEBS\tc234bootloader\BootLoader_dualBank\Bootloader_DualBank.lsl" valueType="string"/>
 								<option id="com.tasking.ctc.lk.outputFormat.fileForEachMemoryChip.1121310529" name="Create file for each memory chip" superClass="com.tasking.ctc.lk.outputFormat.fileForEachMemoryChip" value="false" valueType="boolean"/>
 								<option id="com.tasking.ctc.lk.mapFile.mapFile.32783795" name="Generate map file (.map)" superClass="com.tasking.ctc.lk.mapFile.mapFile" value="true" valueType="boolean"/>
 								<inputType id="com.tasking.ctc.lkObjInputType.805456179" name="OBJ" superClass="com.tasking.ctc.lkObjInputType"/>

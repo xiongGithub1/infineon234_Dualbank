@@ -582,6 +582,7 @@ int Flash_eraseDFlash_port(uint32 flashAddr)
     IfxFlash_eraseMultipleSectors(flashAddr, 1); /* Erase the given sector           */
 //    IfxFlash_eraseSector(IfxFlash_dFlashTableEepLog[flashAddr].start);
     IfxScuWdt_setSafetyEndinit(endInitSafetyPassword);          /* Enable EndInit protection                        */
+    IfxCpu_restoreInterrupts(interruptState);                  /* Restore the interrupts state                     */
 
     return 0;
 }

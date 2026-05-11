@@ -26,6 +26,7 @@
  /******************************************************************************/
 
 #include "Cpu0_Main.h"
+#include "MultiCAN.h"
 
 
 
@@ -60,11 +61,11 @@ uint32 ResetStatus_Previous(void)
     return rststat;
 }
 
-
+uint8 num=10;
 void MainProgram(void) 
 {
 	static uint32 m_DetaTime = 0;
-
+	static uint8 i=0;
 	//  ����೤ʱ��ִ��һ��while��ѭ��������20210129
     DetaTime.MainWhileTime.time1 = Stm_GetSystemClock();
     DetaTime.MainWhileTime.detatime = DetaTime.MainWhileTime.time1 - DetaTime.MainWhileTime.time2;
@@ -80,39 +81,16 @@ void MainProgram(void)
 
         /* brd */
 
-    	if((g_LoopFlag % 100) == 0)	// 50ms
+    	if((g_LoopFlag % 1000) == 0)	// 500ms
     	{
-
+    		txcanmsg.usRxTxDataId = 0x123;
+    		txcanmsg.aucDataBuf[0] = 1;
+    		txcanmsg.aucDataBuf[1] = 1;
+    		txcanmsg.aucDataBuf[2] = 1;
+    		txcanmsg.aucDataBuf[3] = 1;
+    		txcanmsg.aucDataBuf[4] = 1;
+    		drv_can1_send(&txcanmsg);
     	}
-		else
-		{
-
-		}
-
-		if((g_LoopFlag & 0x03) == 0)	// 2ms
-		{
-
-		}
-		else if((g_LoopFlag & 0x03) == 1)	// 2ms
-		{
-			txcanmsg.usRxTxDataId=0x123;
-			txcanmsg.aucDataBuf[0]=1;
-			txcanmsg.aucDataBuf[1]=1;
-			txcanmsg.aucDataBuf[2]=1;
-			txcanmsg.aucDataBuf[3]=1;
-			txcanmsg.aucDataBuf[4]=1;
-
-
-			drv_can1_send(&txcanmsg);
-		}
-		else if((g_LoopFlag & 0x03) == 2)	// 2ms
-		{
-
-		}
-		else if((g_LoopFlag & 0x03) == 3)	// 2ms
-		{
-
-		}
 
 
 	}
@@ -137,14 +115,18 @@ void core0_main(void)
 
     delay_init();
 
-    BrdLed_init();
+    IfxStm_init();    /* Initialize STM timer before using Stm_GetSystemClock */
 
+    Multican_init();  /* Initialize CAN module before accessing CAN registers */
+
+    BrdLed_init();
+	UdsInit(UDS_FUN_ADDR_ID,UDS_PHY_ADDR_ID,UDS_RESP_ADDR_ID);
     resetReason = SCU_RSTSTAT.U;
     isPowerOnReset = (resetReason & 0x01) != 0;
     //
 
     Boot_DualBank_ClearBootAttempts(); /* Clear boot attempts after successful APP startup */
-
+    g_BaseTime = Stm_GetSystemClock();
     IfxCpu_enableInterrupts();
     while (TRUE)
     {

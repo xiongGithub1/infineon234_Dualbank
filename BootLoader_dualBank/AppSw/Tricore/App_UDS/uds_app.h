@@ -205,7 +205,8 @@ typedef struct {
     uint8 reserved[11];     // ±£¡Ù«¯”Ú
 } BootloaderParams;
 
-
+static uint32 gs_DownloadCRC ;
+static uint8  gs_bCrcActive ;
 void SetNegativeErroCode(const uint8 i_UDSServiceNum, const uint8 i_ErroCode,tUdsAppMsgInfo *m_pstPDUMsg);
 //extern tUDSCommCtrlMode g_CanMsgCommCtrlMode;
 static uint8 IsReceivedKeyRight(const uint8 *i_pReceivedKey, const uint8 *i_pTxSeed,const uint8 KeyLen);

@@ -130,19 +130,32 @@ static const uint32 s_crc32Table[256] = {
 static uint32 Boot_CRC32(const uint8 *data, uint32 length)
 {
     uint32 crc = 0xFFFFFFFFu;
-    while (length--)
+    uint32 i;
+    for (i = 0; i < length; i++)
     {
-        crc = (crc >> 8u) ^ s_crc32Table[(crc ^ (uint32)(*data++)) & 0xFFu];
+        crc = (crc >> 8u) ^ s_crc32Table[(crc ^ (uint32)data[i]) & 0xFFu];
     }
     return crc ^ 0xFFFFFFFFu;
+}
+
+/* Incremental CRC32 update (used during TransferData streaming) */
+uint32 Boot_CRC32_Update(uint32 crc, const uint8 *data, uint32 length)
+{
+    uint32 i;
+    for (i = 0; i < length; i++)
+    {
+        crc = (crc >> 8u) ^ s_crc32Table[(crc ^ (uint32)data[i]) & 0xFFu];
+    }
+    return crc;
 }
 
 /* Calculate CRC over main flag structure (excluding crc32 field itself) */
 static uint32 Boot_CalcFlagCRC(const BootFlagMain_t *flag)
 {
-    const uint8 *p = (const uint8 *)flag;
-    uint32 len = sizeof(BootFlagMain_t) - sizeof(uint32); /* exclude crc32 field */
-    return Boot_CRC32(p, len);
+    BootFlagMain_t tmp;
+    memcpy(&tmp, flag, sizeof(BootFlagMain_t));
+    tmp.crc32 = 0u;  /* zero out crc32 field before calculating CRC over the whole struct */
+    return Boot_CRC32((const uint8 *)&tmp, sizeof(BootFlagMain_t));
 }
 
 /* Copy main flag fields to shadow structure */
@@ -203,12 +216,12 @@ static boolean Boot_WriteFlagsToDFlash(const DualBankFlags_t *flags)
     IfxFlash_waitUnbusy(FLASH_MODULE, IfxFlash_FlashType_D0);
 
     /* Step 2: Write main flag area */
-    Flash_writeDFlash_port(DFLASH_FLAG_ADDR, (uint32 *)&writeBuf, flagSize);
+    Flash_writeDFlash_port(DFLASH_FLAG_ADDR, (uint32 *)&writeBuf.main, sizeof(BootFlagMain_t));
 
     /* Step 3: Write shadow flag area */
     Flash_writeDFlash_port(DFLASH_FLAG_ADDR + DFLASH_FLAG_SHADOW_OFFSET,
-                           (uint32 *)((uint8 *)&writeBuf + DFLASH_FLAG_SHADOW_OFFSET),
-                           flagSize);
+                           (uint32 *)&writeBuf.shadow,
+                           sizeof(BootFlagShadow_t));
 
     /* Wait for all DFlash writes to complete before reset */
     IfxFlash_waitUnbusy(FLASH_MODULE, IfxFlash_FlashType_D0);
@@ -253,7 +266,7 @@ void Boot_DualBank_Init(void)
         flags.main.flags           = 0u;
         flags.main.sequence        = FLAG_SEQUENCE_INIT;
         flags.main.crc32           = 0u;
-        flags.main.targetWriteBank = BANK_B;  /* Ĭ���Ƽ�ˢд Bank B */
+        flags.main.targetWriteBank = BANK_B;  /* 默认写入 Bank B */
 
         Boot_CopyMainToShadow(&flags.main, &flags.shadow);
         Boot_WriteFlagsToDFlash(&flags);
@@ -340,10 +353,13 @@ boolean Boot_DualBank_WriteFlags(const DualBankFlags_t *flags)
 
 /**
  * @brief Calculate CRC32 over a memory region.
+ * @note Uses uncached address and cache sync to avoid stale data after erase/write.
  */
 uint32 Boot_DualBank_CalculateCRC(uint32 startAddr, uint32 size)
 {
-    return Boot_CRC32((const uint8 *)startAddr, size);
+    uint32 uncachedAddr = (startAddr & 0x00FFFFFFu) | 0xA0000000u;
+    __dsync();
+    return Boot_CRC32((const uint8 *)uncachedAddr, size);
 }
 
 /**
@@ -502,51 +518,96 @@ void Boot_DualBank_MarkBankValid(uint32 bank, uint32 version)
  */
 void Boot_DualBank_JumpToBank(uint32 bank)
 {
-    uint32 startAddr;
-    void (*appEntry)(void);
+     uint32 startAddr;
+     void (*appEntry)(void);
 
-    if (bank == BANK_A)
-    {
-        startAddr = BANK_A_START_ADDR;   /* 0x80020000 cached */
-    }
-    else
-    {
-        startAddr = BANK_B_START_ADDR;   /* 0x80100000 cached */
-    }
+     if (bank == BANK_A)
+     {
+         startAddr = BANK_A_START_ADDR;   /* 0x80020000 cached */
+     }
+     else
+     {
+         startAddr = BANK_B_START_ADDR;   /* 0x80100000 cached */
+     }
 
-    /* TriCore: _START is at offset 0x20 from bank base (BMHD occupies 0x00~0x1F) */
-    /* Use uncached address (0xA0xxxxxx) to avoid cache coherency issues after flash write */
-    uint32 uncachedStart = (startAddr & 0x00FFFFFFu) | 0xA0000000u;
-    appEntry = (void (*)(void))(uncachedStart + 0x20u);
+     /* Basic sanity check: _START should not be 0xFFFFFFFF or 0x00000000 */
+     if ((*(volatile uint32 *)(startAddr + 0x20u) == 0xFFFFFFFFu) ||
+         (*(volatile uint32 *)(startAddr + 0x20u) == 0x00000000u))
+     {
+         return; /* Invalid entry point, do not jump */
+     }
 
-    /* Basic sanity check: _START should not be 0xFFFFFFFF or 0x00000000 */
-    if ((*(volatile uint32 *)(startAddr + 0x20u) == 0xFFFFFFFFu) ||
-        (*(volatile uint32 *)(startAddr + 0x20u) == 0x00000000u))
-    {
-        return; /* Invalid entry point, do not jump */
-    }
+     /* Disable interrupts before jumping */
+     IfxCpu_disableInterrupts();
 
-    /* Disable interrupts before jumping */
-    IfxCpu_disableInterrupts();
+     /* ========== Disable ECC Trap to prevent spurious ECC traps on freshly written Flash ========== */
+     {
+         uint16 pwd = IfxScuWdt_getCpuWatchdogPassword();
+         IfxScuWdt_clearCpuEndinit(pwd);
+         FLASH0_MARP.B.TRAPDIS = 1;  /* PFLSH Disable ECC TRAP */
+         FLASH0_MARD.B.TRAPDIS = 1;  /* DFLSH Disable ECC TRAP */
+         IfxScuWdt_setCpuEndinit(pwd);
+     }
 
-    /* ========== �������ر� ECC Trap����ֹ App Flash �����򴥷� Trap ========== */
-    {
-        uint16 pwd = IfxScuWdt_getCpuWatchdogPassword();
-        IfxScuWdt_clearCpuEndinit(pwd);
-        FLASH0_MARP.B.TRAPDIS = 1;  /* PFLSH Disable ECC TRAP */
-        FLASH0_MARD.B.TRAPDIS = 1;  /* DFLSH Disable ECC TRAP */
-        IfxScuWdt_setCpuEndinit(pwd);
-    }
-
-    /* ========== �޸���ͬʱ���� Data Cache �� Program Cache ========== */
-    IfxCpu_setDataCache(0);      /* �������ݻ��� */
-    IfxCpu_setProgramCache(0);   /* ����ָ��棨�ؼ��޸��� */
+     /* ========== Disable Data Cache and Program Cache before jump ========== */
+     IfxCpu_setDataCache(0);      /* Disable data cache */
+     IfxCpu_setProgramCache(0);   /* Disable program cache (critical) */
     
-    __dsync();                   /* ����ͬ������ */
-    __isync();                   /* ָ��ͬ������ */
+     __dsync();                   /* Data synchronization barrier */
+     __isync();                   /* Instruction synchronization barrier */
 
-    /* Jump to APP _START. APP's _Core0_start will reconfigure SP, BIV, BTV, etc. */
-    appEntry();
+     /* Re-calculate appEntry after all inline operations to avoid register corruption */
+     /* TriCore: _START is at offset 0x20 from bank base (BMHD occupies 0x00~0x1F) */
+     /* Use uncached address (0xA0xxxxxx) to avoid cache coherency issues after flash write */
+     {
+         uint32 uncachedStart = (startAddr & 0x00FFFFFFu) | 0xA0000000u;
+         appEntry = (void (*)(void))(uncachedStart + 0x20u);
+     }
+     /* Jump to APP _START. APP's _Core0_start will reconfigure SP, BIV, BTV, etc. */
+     appEntry();
+//    uint32 startAddr;
+//    uint32 msp;
+//    uint32 resetHandler;
+//    void (*appEntry)(void);
+//
+//    if (bank == BANK_A)
+//    {
+//        startAddr = BANK_A_START_ADDR;
+//    }
+//    else
+//    {
+//        startAddr = BANK_B_START_ADDR;
+//    }
+//
+//    /* Read vector table: MSP at offset 0, Reset Handler at offset 4 */
+//    msp          = *(volatile uint32 *)startAddr;
+//    resetHandler = *(volatile uint32 *)(startAddr + 4u);
+//
+//    /* Basic sanity check */
+//    if ((msp == 0xFFFFFFFFu) || (msp == 0u) ||
+//        (resetHandler == 0xFFFFFFFFu) || (resetHandler == 0u))
+//    {
+//        return; /* Invalid vector table, do not jump */
+//    }
+//        /* Set Main Stack Pointer (A[10] in TriCore) */
+//    __asm("mov d15, %0" : : "d"(msp) : "d15");
+//    __asm("mov.a a10, d15" : : : "a10");
+//
+//    /* Set BIV/BTV for target bank (APP should reconfigure these, but set safe defaults) */
+//    /* Note: If APP uses same vector table offset relative to bank base, this works.
+//     * Adjust INTTAB_OFFSET/TRAPTAB_OFFSET if your APP LSL uses different layout. */
+//    {
+//        const uint32 INTTAB_OFFSET  = 0x0000C000u;  /* Example: 48KB offset for INTTAB */
+//        const uint32 TRAPTAB_OFFSET = 0x0000D000u;  /* Example: 52KB offset for TRAPTAB */
+//        __mtcr(CPU_BIV, startAddr + INTTAB_OFFSET);
+//        __mtcr(CPU_BTV, startAddr + TRAPTAB_OFFSET);
+//        __isync();
+//    }
+//
+//    /* Jump to application Reset Handler */
+//    appEntry = (void (*)(void))resetHandler;
+//    appEntry();
+
 
     /* Should never reach here */
     while (1) {};
@@ -713,7 +774,7 @@ uint32 Boot_DualBank_GetTargetWriteBank(void)
     {
         return flags.main.targetWriteBank;
     }
-    return BANK_A; /* default */
+    return BANK_B; /* default */
 }
 
 /**

@@ -1,26 +1,26 @@
 /******************************************************************************
 
-                  °æÈ¨ËùÓÐ (C), 2020-2030, ÖØÇìºÍÌìµç×Ó¿Æ¼¼ÓÐÏÞ¹«Ë¾
+                  ï¿½ï¿½È¨ï¿½ï¿½ï¿½ï¿½ (C), 2020-2030, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¿Æ¼ï¿½ï¿½ï¿½ï¿½Þ¹ï¿½Ë¾
 
  ******************************************************************************
-  ÎÄ ¼þ Ãû  : Stm.c
-  °æ ±¾ ºÅ  : ³õ¸å
-  ×÷    Õß    :
-  Éú³ÉÈÕÆÚ : 2021Äê10ÔÂ15ÈÕ
-  ×î½üÐÞ¸Ä :
-  ¹¦ÄÜÃèÊö : ¶¨Ê±Æ÷³õÊ¼»¯£¬¶¨Ê±ÖÐ¶ÏÖ´ÐÐ
-  º¯ÊýÁÐ±í :
+  ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½  : Stm.c
+  ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½  : ï¿½ï¿½ï¿½ï¿½
+  ï¿½ï¿½    ï¿½ï¿½    :
+  ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ : 2021ï¿½ï¿½10ï¿½ï¿½15ï¿½ï¿½
+  ï¿½ï¿½ï¿½ï¿½Þ¸ï¿½ :
+  ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ : ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½Ð¶ï¿½Ö´ï¿½ï¿½
+  ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½ :
 
-  ÐÞ¸ÄÀúÊ· :
-  1.ÈÕ    ÆÚ  :
-  2.×÷    Õß  :
-    ÐÞ¸ÄÄÚÈÝ   :
+  ï¿½Þ¸ï¿½ï¿½ï¿½Ê· :
+  1.ï¿½ï¿½    ï¿½ï¿½  :
+  2.ï¿½ï¿½    ï¿½ï¿½  :
+    ï¿½Þ¸ï¿½ï¿½ï¿½ï¿½ï¿½   :
 
 ******************************************************************************/
 
 
 /*****************************************************************************/
-/*----------------------------------°üº¬Í·ÎÄ¼þ--------------------------------*/
+/*----------------------------------ï¿½ï¿½ï¿½ï¿½Í·ï¿½Ä¼ï¿½--------------------------------*/
 /*****************************************************************************/
 #include "Stm.h"
 
@@ -55,35 +55,34 @@ App_Stm  g_Stm;   /**< \brief Stm global data */
 /*-------------------------Function Implementations---------------------------*/
 /******************************************************************************/
 
-///***************************************************************
-// º¯ÊýÃû³Æ£ºvoid IfxStm_init(void)
-// ÊäÈë±äÁ¿£º
-// Êä³ö±äÁ¿£º
-// º¯Êý×¢ÊÍ£ºÏµÍ³¶¨Ê±Æ÷³õÊ¼»¯£¬¸Ãº¯ÊýÖ»ÔÚ³õÊ¼»¯½×¶Î´Ómainµ÷ÓÃ
-//***************************************************************/
-//void IfxStm_init(void)
-//{
-//    /* disable interrupts */
-//    boolean interruptState = IfxCpu_disableInterrupts();
-//
-//    initTime();
-//
-//    g_Stm.stmSfr = &MODULE_STM0;
-//    IfxStm_initCompareConfig(&g_Stm.stmConfig);
-//
-//#ifdef SIMULATION
-//    g_SrcSwInt.stmConfig.ticks      = 1000;
-//#else
-//    g_Stm.stmConfig.ticks           = (uint32)TimeConst_1ms;        // ¼ÆËã½á¹ûÎª 100 000 £¬Ôø¾ü20210126
-//#endif
-//
-//    g_Stm.stmConfig.triggerPriority = ISR_PRIORITY_STM_INT0;
-//    g_Stm.stmConfig.typeOfService   = IfxSrc_Tos_cpu0;
-//    IfxStm_initCompare(g_Stm.stmSfr, &g_Stm.stmConfig);
-//
-//    /* enable interrupts again */
-//    IfxCpu_restoreInterrupts(interruptState);
-//}
+/***************************************************************
+ * Function Name: void IfxStm_init(void)
+ * Description  : System timer initialization
+ * Note         : Call only once during early initialization
+ ***************************************************************/
+void IfxStm_init(void)
+{
+    /* disable interrupts */
+    boolean interruptState = IfxCpu_disableInterrupts();
+
+    initTime();
+
+    g_Stm.stmSfr = &MODULE_STM0;
+    IfxStm_initCompareConfig(&g_Stm.stmConfig);
+
+#ifdef SIMULATION
+    g_Stm.stmConfig.ticks      = 1000;
+#else
+    g_Stm.stmConfig.ticks           = (uint32)TimeConst_1ms;        /* Default 1ms tick */
+#endif
+
+    g_Stm.stmConfig.triggerPriority = ISR_PRIORITY_STM_INT0;
+    g_Stm.stmConfig.typeOfService   = IfxSrc_Tos_cpu0;
+    IfxStm_initCompare(g_Stm.stmSfr, &g_Stm.stmConfig);
+
+    /* enable interrupts again */
+    IfxCpu_restoreInterrupts(interruptState);
+}
 
 
 

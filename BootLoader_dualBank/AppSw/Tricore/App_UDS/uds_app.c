@@ -398,6 +398,8 @@ void UDS_SystemTickCtl(void)
 		SetSecurityLevel(NONE_SECURITY);
 		Flash_InitDowloadInfo();
 		Flash_SetNextDownloadStep(FL_REQUEST_STEP);
+		gs_DownloadCRC = 0xFFFFFFFFu;
+		gs_bCrcActive  = FALSE;
 	}
 }
 
@@ -905,10 +907,25 @@ static void DoResetToBootloader(uint8 status)
  */
 static void DoHardReset(uint8 status)
 {
-	if (TX_MSG_SUCCESSFUL == status)
-	{
-		HardReset();
-	}
+    /* 确保所有 Flash 操作完成 */
+    IfxFlash_waitUnbusy(FLASH_MODULE, IfxFlash_FlashType_P0);
+    IfxFlash_waitUnbusy(FLASH_MODULE, IfxFlash_FlashType_D0);
+    
+    /* 禁用中断 */
+    IfxCpu_disableInterrupts();
+    
+    /* 数据同步 */
+    __dsync();
+    
+    /* 清除 Safety Endinit 以访问 SCU 复位寄存器 */
+    uint16 pwd = IfxScuWdt_getSafetyWatchdogPassword();
+    IfxScuWdt_clearSafetyEndinit(pwd);
+    
+    /* 触发系统软件复位 */
+    SCU_SWRSTCON.U = 0x00000002;  /* SWRSTREQ = 1 */
+    
+    /* 如果以上没有成功，进入死循环等待看门狗复位 */
+    while(1);
 }
 
 /**
@@ -1359,6 +1376,12 @@ static tDowloadDataInfo gs_stDowloadDataInfo = { 0u, 0u };
 
 static uint32 gs_RxBlockNum = 0u;
 
+/* Streaming CRC32 accumulated during TransferData (0x36).
+ * Final value = gs_DownloadCRC ^ 0xFFFFFFFFu after all data received.
+ */
+static uint32 gs_DownloadCRC = 0xFFFFFFFFu;
+static uint8  gs_bCrcActive = FALSE;
+
 
 static void RequestDownload0x34(struct UDSServiceInfo* i_pstUDSServiceInfo,
 	tUdsAppMsgInfo* m_pstPDUMsg)
@@ -1446,6 +1469,12 @@ static void RequestDownload0x34(struct UDSServiceInfo* i_pstUDSServiceInfo,
 
 		Flash_SetNextDownloadStep(FL_TRANSFER_STEP);
 
+		/* Initialise streaming CRC at the start of a new download sequence */
+		if (FALSE == gs_bCrcActive)
+		{
+			gs_DownloadCRC = 0xFFFFFFFFu;
+			gs_bCrcActive  = TRUE;
+		}
 
 		Flash_SaveDownloadDataInfo(gs_stDowloadDataInfo.StartAddr, gs_stDowloadDataInfo.DataLen);
 
@@ -1463,8 +1492,9 @@ static void RequestDownload0x34(struct UDSServiceInfo* i_pstUDSServiceInfo,
 	{
 		Flash_InitDowloadInfo();
 
-
 		Flash_SetNextDownloadStep(FL_REQUEST_STEP);
+		gs_DownloadCRC = 0xFFFFFFFFu;
+		gs_bCrcActive  = FALSE;
 	}
 }
 
@@ -1517,11 +1547,13 @@ static void TransferData0x36(struct UDSServiceInfo* i_pstUDSServiceInfo, tUdsApp
 	}
 	else
 	{
-
-
-
-
-
+		/* Accumulate CRC over the received payload (matches tester-side calculation) */
+		if (gs_bCrcActive != FALSE)
+		{
+			gs_DownloadCRC = Boot_CRC32_Update(gs_DownloadCRC,
+				&m_pstPDUMsg->aDataBuf[2],
+				actualDataLen);
+		}
 
 		gs_stDowloadDataInfo.StartAddr += actualDataLen;
 		gs_stDowloadDataInfo.DataLen -= actualDataLen;
@@ -1547,9 +1579,10 @@ static void TransferData0x36(struct UDSServiceInfo* i_pstUDSServiceInfo, tUdsApp
 	{
 		Flash_InitDowloadInfo();
 
-
 		Flash_SetNextDownloadStep(FL_REQUEST_STEP);
 		gs_RxBlockNum = 0u;
+		gs_DownloadCRC = 0xFFFFFFFFu;
+		gs_bCrcActive  = FALSE;
 	}
 }
 
@@ -1588,16 +1621,19 @@ static void RequestTransferExit0x37(struct UDSServiceInfo* i_pstUDSServiceInfo,
 uint16 CheckProgrammingConditions(void) {
 	uint8 canFlash = 1;
 	uint8 targetBankChar;
-	uint32 targetWriteBank = Boot_DualBank_GetTargetWriteBank();
+	uint32 targetWriteBank = Boot_DualBank_GetActiveBank();
 
 	if (targetWriteBank == BANK_B)
 	{
-		targetBankChar = 0x0B;
+		targetBankChar = 0x0A;
+		Boot_DualBank_SetTargetWriteBank(BANK_A);
 	}
 	else
 	{
-		targetBankChar = 0x0A;
+		targetBankChar = 0x0B;
+		Boot_DualBank_SetTargetWriteBank(BANK_B);
 	}
+	
 	return ((uint16) canFlash << 8) | (uint16) targetBankChar;
 }
 
@@ -1736,8 +1772,6 @@ static void RoutineControl0x31(struct UDSServiceInfo* i_pstUDSServiceInfo, tUdsA
 							{
 								uint32 expectedCRC;
 								uint32 actualCRC;
-								uint32 startAddr;
-								uint32 bankSize;
 								uint32 targetBank = Boot_DualBank_GetTargetWriteBank();
 
 								/* Parse expected CRC32 from tester (big-endian) */
@@ -1746,19 +1780,18 @@ static void RoutineControl0x31(struct UDSServiceInfo* i_pstUDSServiceInfo, tUdsA
 									((uint32) m_pstPDUMsg->aDataBuf[6] << 8) |
 									((uint32) m_pstPDUMsg->aDataBuf[7]);
 
-								if (targetBank == BANK_A)
+
+								/* Use streaming CRC accumulated during 0x36 TransferData.
+								 * This avoids re-reading Flash (and potential Data Cache staleness)
+								 * and matches the tester-side calculation over the raw data stream. */
+								if (gs_bCrcActive != FALSE)
 								{
-									startAddr = BANK_A_START_ADDR;
-									bankSize = BANK_APP_A_SIZE;
+									actualCRC = gs_DownloadCRC ^ 0xFFFFFFFFu;
 								}
 								else
 								{
-									startAddr = BANK_B_START_ADDR;
-									bankSize = BANK_APP_B_SIZE;
+									actualCRC = 0u;
 								}
-
-								/* Calculate CRC over actual Flash contents */
-								actualCRC = Boot_DualBank_CalculateCRC(startAddr, bankSize);
 
 								if (actualCRC != expectedCRC)
 								{
@@ -1770,6 +1803,8 @@ static void RoutineControl0x31(struct UDSServiceInfo* i_pstUDSServiceInfo, tUdsA
 									m_pstPDUMsg->aDataBuf[3] = 0xFF;
 									m_pstPDUMsg->aDataBuf[4] = (uint8) routineResult;
 									m_pstPDUMsg->xDataLen = 5;
+									gs_DownloadCRC = 0xFFFFFFFFu;
+									gs_bCrcActive  = FALSE;
 									break;
 								}
 
@@ -1777,6 +1812,8 @@ static void RoutineControl0x31(struct UDSServiceInfo* i_pstUDSServiceInfo, tUdsA
 								Boot_DualBank_MarkBankValid(targetBank, 0x00010000u);
 								Boot_DualBank_SetActiveBank(targetBank);
 								routineResult = 0x01;
+								gs_DownloadCRC = 0xFFFFFFFFu;
+								gs_bCrcActive  = FALSE;
 							}
 
 							m_pstPDUMsg->aDataBuf[0] = 0x71;

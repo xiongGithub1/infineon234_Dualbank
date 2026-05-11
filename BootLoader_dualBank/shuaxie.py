@@ -33,8 +33,8 @@ CHANNEL = 1                # CAN 通道号
 
 # 刷写文件路径（.hex 或 .bin，需与 LSL 中的 Bank 地址匹配）
 # HEX_FILE = r"E:\workFiles\IEBS\zhenChuangCode\ZhenchuangTest\IEBS_wulin_DiagnosisTest_20250723\Debug\IEBS_wulin_DiagnosisTest_20250723.hex"
-HEX_FILE = r"E:\workFiles\IEBS\IEBSBootloader\App_DualBank\Debug\App_DualBank.hex"
-
+HEX_FILE = r"E:\workFiles\IEBS\tc234bootloader\App_dualBank\Debug\App_dualBank.hex"
+HEX_FILE_B=r"E:\workFiles\IEBS\tc234bootloader\App_dualBank\App_dualBank.hex"
 # 安全访问 DLL 路径（用于 27 服务 Seed->Key 计算）
 KEY_DLL = r"E:\visualStudioCode\ZcanProDll\Debug\ZcanProDll.dll"
 
@@ -487,6 +487,7 @@ def do_flash_process():
         #      targetBank: 'A' 或 'B'（推荐刷写的 Bank）
         # ------------------------------------------------------------
         global TARGET_BANK
+        global HEX_FILE
         rsp = uds_request(uds, 0x31, [0x01, 0xFF, 0xFD], "Check Programming")
         if not rsp:
             return
@@ -500,9 +501,11 @@ def do_flash_process():
                 return
             if target_bank_char ==0x0A:
                 TARGET_BANK = 'A'
+                HEX_FILE= r"E:\workFiles\IEBS\tc234bootloader\App_dualBank\Debug\App_dualBank.hex"
                 app.log_i(f"[Check] ✅ Target bank dynamically set to Bank {TARGET_BANK}")
             elif target_bank_char==0x0B:
                 TARGET_BANK ='B'
+                HEX_FILE=r"E:\workFiles\IEBS\tc234bootloader\App_dualBank\App_dualBank.hex"
             else:
                 app.log_w(f"[Check] ⚠️ Unexpected targetBank char=0x{rsp.data[4]:02X}, keep default={TARGET_BANK}")
         else:
@@ -546,20 +549,20 @@ def do_flash_process():
         # ------------------------------------------------------------
         # 10. 文件下载 (34/36/37，不自动发送 totalCheckCmd)
         # ------------------------------------------------------------
-        # if not file_download(uds):
-        #     return
+        if not file_download(uds):
+            return
 
         # # 替换原来调用 file_download(uds) 的地方
-        if not file_download_manual(uds):
-            app.log_e("[Flash] ❌ File download failed, aborting.")
-            return
+        # if not file_download_manual(uds):
+        #     app.log_e("[Flash] ❌ File download failed, aborting.")
+        #     return
         # ------------------------------------------------------------
         # 11. 手动发送 totalCheckCmd 验证 CRC
         #     31 01 DF FF <CRC32(4 bytes, big-endian)>
         #     Bootloader 收到后会自行计算 Flash CRC 并与传入值比较。
         # ------------------------------------------------------------
-        # bank_start = BANK_B_START_ADDR if TARGET_BANK == "B" else BANK_A_START_ADDR
-        # bank_size  = BANK_APP_B_SIZE  if TARGET_BANK == "B" else BANK_APP_A_SIZE
+        # bank_start = BANK_B_START_ADDR if TARGET_BANK == "A" else BANK_A_START_ADDR
+        # bank_size  = BANK_APP_B_SIZE  if TARGET_BANK == "A" else BANK_APP_A_SIZE
 
         # file_crc = calc_bank_crc32(HEX_FILE, bank_start, bank_size)
         # if file_crc is None:
@@ -593,7 +596,7 @@ def do_flash_process():
         # ------------------------------------------------------------
         # 12. ECU 复位 11 01
         # ------------------------------------------------------------
-        uds_request(uds, 0x11, [0x03], "ECU Reset")
+        uds_request(uds, 0x11, [0x01], "ECU Reset")
 
     finally:
         uds.stop_session_keep()

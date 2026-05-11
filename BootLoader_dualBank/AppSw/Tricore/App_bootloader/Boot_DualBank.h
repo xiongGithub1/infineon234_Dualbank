@@ -70,9 +70,9 @@ typedef struct
     uint32 bankB_version;
     uint16 bootAttempts;
     uint16 flags;
-    uint32 sequence;        // +0x1C  (4 bytes)  Ð´ÈëÐòÁÐºÅ£¨ÓÃÓÚÖ÷/±¸ÖÙ²Ã£©
-    uint32 crc32;           // +0x20  (4 bytes)  ±¾½á¹¹ÌåµÄ CRC32£¨²»º¬´Ë×Ö¶Î£©
-    uint32 targetWriteBank; // +0x24  (4 bytes)  ÉÏÎ»»úÄ¿±êË¢Ð´Bank (BANK_A / BANK_B)
+    uint32 sequence;        // +0x1C  (4 bytes)  Ð´ï¿½ï¿½ï¿½ï¿½ï¿½ÐºÅ£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½/ï¿½ï¿½ï¿½Ù²Ã£ï¿½
+    uint32 crc32;           // +0x20  (4 bytes)  ï¿½ï¿½ï¿½á¹¹ï¿½ï¿½ï¿½ CRC32ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¶Î£ï¿½
+    uint32 targetWriteBank; // +0x24  (4 bytes)  ï¿½ï¿½Î»ï¿½ï¿½Ä¿ï¿½ï¿½Ë¢Ð´Bank (BANK_A / BANK_B)
 } BootFlagMain_t;
 
 typedef struct
@@ -88,7 +88,7 @@ typedef struct
     uint32 shadow_sequence;        // 4 bytes
     uint32 shadow_crc32;           // 4 bytes
     uint32 shadow_targetWriteBank; // 4 bytes
-} BootFlagShadow_t;                // = 40 bytes ×Ü¼Æ
+} BootFlagShadow_t;                // = 40 bytes ï¿½Ü¼ï¿½
 
 
 
@@ -115,6 +115,7 @@ void Boot_DualBank_SelectAndJump(void);
 BankStatus_t Boot_DualBank_VerifyBank(uint32 bank);
 BankStatus_t Boot_DualBank_VerifyBankWithCrc(uint32 bank, uint32 expectedCrc);
 uint32 Boot_DualBank_CalculateCRC(uint32 startAddr, uint32 size);
+uint32 Boot_CRC32_Update(uint32 crc, const uint8 *data, uint32 length);
 void Boot_DualBank_InvalidateBank(uint32 bank);
 void Boot_DualBank_MarkBankValid(uint32 bank, uint32 version);
 void Boot_DualBank_SwitchBank(uint32 targetBank);

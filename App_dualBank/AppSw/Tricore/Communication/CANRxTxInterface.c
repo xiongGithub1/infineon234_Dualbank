@@ -73,6 +73,7 @@ CanRX_MsgObjInit CanRxFrm_9252_InitTab[]=
 CanTX_MsgObjInit CanTxFrm_9252_InitTab[]=
 {//           CANÏûÏ¢ID
     { 10,     UDS_RESP_ADDR_ID,   	Enable_Rx_Enable_Tx,   ((void*)0)},// UDS_RESP_ADDR_ID
+	{ 11,     0x123,   	Enable_Rx_Enable_Tx,   ((void*)0)},
 };
 
 
