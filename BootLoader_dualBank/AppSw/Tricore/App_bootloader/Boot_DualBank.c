@@ -519,7 +519,7 @@ void Boot_DualBank_MarkBankValid(uint32 bank, uint32 version)
 void Boot_DualBank_JumpToBank(uint32 bank)
 {
      uint32 startAddr;
-     void (*appEntry)(void);
+     uint32 entryAddr;
 
      if (bank == BANK_A)
      {
@@ -556,15 +556,36 @@ void Boot_DualBank_JumpToBank(uint32 bank)
      __dsync();                   /* Data synchronization barrier */
      __isync();                   /* Instruction synchronization barrier */
 
-     /* Re-calculate appEntry after all inline operations to avoid register corruption */
      /* TriCore: _START is at offset 0x20 from bank base (BMHD occupies 0x00~0x1F) */
      /* Use uncached address (0xA0xxxxxx) to avoid cache coherency issues after flash write */
      {
          uint32 uncachedStart = (startAddr & 0x00FFFFFFu) | 0xA0000000u;
-         appEntry = (void (*)(void))(uncachedStart + 0x20u);
+         entryAddr = uncachedStart + 0x20u;
      }
-     /* Jump to APP _START. APP's _Core0_start will reconfigure SP, BIV, BTV, etc. */
-     appEntry();
+
+     /*
+      * CRITICAL FIX: Do NOT use C function call (appEntry()).
+      * TriCore 'call' instruction implicitly saves upper context into CSA,
+      * updates PCXI, A11 (RA) and PSW.CDC. If Bootloader's context is left
+      * behind, APP's function returns will corrupt the CSA list and access
+      * invalid CSA addresses (e.g. 0x466 in PSPR), causing Bus Error Trap.
+      *
+      * Correct approach: perform a raw jump (ji) and manually cut the context
+      * link chain by clearing PCXI, so APP's _start runs as if from reset.
+      */
+     /* Load entryAddr to A15 */
+     __asm("mov   d15, %0" : : "d"(entryAddr) : "d15");
+     __asm("mov.a a15, d15" : : : "a15");
+     
+     /* Clear PCXI: cut context chain from Bootloader */
+     __mtcr(CPU_PCXI, 0);
+     __isync();
+     
+     /* Clear Return Address (A11) */
+     __asm("mov.a a11, #0" : : : "a11");
+     
+     /* Jump indirect: no context save, no link, no RA */
+     __asm("ji    a15" : : : "a15");
 //    uint32 startAddr;
 //    uint32 msp;
 //    uint32 resetHandler;

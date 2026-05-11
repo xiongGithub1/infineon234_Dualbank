@@ -5,7 +5,7 @@
 	<ProdInfo type="bin" size="52">vQTv/gAAAQAKAAMA4SADAAEA5QcAAAAAPwAAAAAAAAAEAAAAAgAAAAAAAAAAAAAAAAAAAA==</ProdInfo>
 	<ProdInfoString type="string">2021</ProdInfoString>
 	<CreationDate type="string">22.08.2025 14:35:45:000</CreationDate>
-	<LastWriteDate type="string">11.05.2026 17:45:23:000</LastWriteDate>
+	<LastWriteDate type="string">11.05.2026 19:08:32:000</LastWriteDate>
 	<UseWspCnt type="int">1</UseWspCnt>
 	<MainFrame type="key">
 		<NETPlacementRoot type="key">
@@ -80,7 +80,7 @@
 							<DockingIndex>13</DockingIndex>
 							<PanelIndex>-1</PanelIndex>
 							<ContainerType>TabbedDocument</ContainerType>
-							<Selected>true</Selected>
+							<Selected>false</Selected>
 							<UniqueIdentifier>Core0.ViewSrv.StdUDEProgWin.OPEN_VIEW00</UniqueIdentifier>
 						</UniqueControlIdDockingControlData>
 						<UniqueControlIdDockingControlData>
@@ -98,7 +98,7 @@
 							<DockingIndex>12</DockingIndex>
 							<PanelIndex>-1</PanelIndex>
 							<ContainerType>TabbedDocument</ContainerType>
-							<Selected>false</Selected>
+							<Selected>true</Selected>
 							<UniqueIdentifier>Core0.ViewSrv.StdUDEProgWin.OPEN_VIEW01</UniqueIdentifier>
 						</UniqueControlIdDockingControlData>
 						<UniqueControlIdDockingControlData>
@@ -367,7 +367,7 @@
 						</DockingContainerControlData>
 						<DockingContainerControlData>
 							<Tabbed>false</Tabbed>
-							<Dimension>227</Dimension>
+							<Dimension>375</Dimension>
 						</DockingContainerControlData>
 					</RightDockingContainerControlData>
 					<TopDockingContainerControlData>
@@ -1205,7 +1205,7 @@
 									<ToolItemPersistData>
 										<Name></Name>
 										<Visible>true</Visible>
-										<Text>WARNING: SIMIO disabled !</Text>
+										<Text>ERROR: Unable to establish connection . To correct the situation, check configuration file entries and try again.</Text>
 										<DisplayStyle>ImageAndText</DisplayStyle>
 										<AppendAccelerator>false</AppendAccelerator>
 									</ToolItemPersistData>
@@ -1226,7 +1226,7 @@
 									<ToolItemPersistData>
 										<Name></Name>
 										<Visible>true</Visible>
-										<Text>Core0 running</Text>
+										<Text>Core0 not connected</Text>
 										<DisplayStyle>ImageAndText</DisplayStyle>
 										<AppendAccelerator>false</AppendAccelerator>
 									</ToolItemPersistData>
@@ -1358,7 +1358,7 @@
 		<UDESTK.Script type="key">
 			<MacroGuiEntries type="key">
 				<LastScriptFilePath type="string">C:\Users\Public\Documents\pls\UDESTK 2021</LastScriptFilePath>
-				<Macro_11_05_26_16_10_05_0 type="key">
+				<Macro_11_05_26_18_53_35_0 type="key">
 					<ScriptDescription type="string">The script contains a collection of macros to save memory content into different file formats 
 and fill target memory ranges</ScriptDescription>
 					<ScriptPath type="string">V:\UDE\AddOns\Macro\MacroLibrary\StdMacros1.dsm</ScriptPath>
@@ -1638,7 +1638,7 @@ End Sub</ScriptSource>
 					<ScriptFromStg type="flag">1</ScriptFromStg>
 					<LocalComputerName type="string">WS_CORE_DUO</LocalComputerName>
 					<ExternalScriptPath type="string"></ExternalScriptPath>
-					<NextNodeName type="string">Macro_11_05_26_17_25_08_0</NextNodeName>
+					<NextNodeName type="string">Macro_11_05_26_19_54_26_0</NextNodeName>
 					<UnAss type="key">
 						<GUIEntry type="key">
 							<MenuID type="int">10</MenuID>
@@ -1695,7 +1695,7 @@ End Sub</ScriptSource>
 						<GUIEntryDescription type="string"></GUIEntryDescription>
 					</FillDWord>
 					<NoOfFunctions type="int">5</NoOfFunctions>
-				</Macro_11_05_26_16_10_05_0>
+				</Macro_11_05_26_18_53_35_0>
 			</MacroGuiEntries>
 			<LastSelectedMacro type="string"></LastSelectedMacro>
 		</UDESTK.Script>
@@ -1778,7 +1778,7 @@ End Sub</ScriptSource>
 							<HoldedPeriod type="int">0</HoldedPeriod>
 						</AnimateQueue>
 					</ViewSrv>
-					<SourceFile type="string">code &lt;0x8000001C-0x8000041B&gt;</SourceFile>
+					<SourceFile type="string">code &lt;0x800032C2-0x800036C1&gt;</SourceFile>
 					<SourceFileInstFlag type="int">4</SourceFileInstFlag>
 					<NETFrameMode type="int">73728</NETFrameMode>
 					<NETFrameSaveIndex type="int">4</NETFrameSaveIndex>
@@ -1981,7 +1981,7 @@ End Sub</ScriptSource>
 							</Watch1>
 							<Watch2 type="key">
 								<Name type="string">Node0Readmsg (global) @1</Name>
-								<Status type="string">#0#0,1$-1,0$#0,2#0,2,0$1,1$#0,2,1$1,1$#0,3$0,2$</Status>
+								<Status type="string">#0#0,1$0,0$#0,2#0,2,0$1,1$#0,2,1$1,1$#0,3$0,2$</Status>
 								<Status2 type="string">#0,2,0$1,1$#0,2,1$1,1$</Status2>
 								<RunningPeriod2 type="int">25</RunningPeriod2>
 								<HoldedPeriod2 type="int">100</HoldedPeriod2>
@@ -2309,144 +2309,9 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</DefParaFormat>
 			</CommQueueHndlStg>
 			<TargetStateHndlStg type="key"></TargetStateHndlStg>
 			<breakpointsV3 type="key">
-				<collectionStr type="string">_7,_8,_9,_11,_12,_13,_14,_16,_18,_19,_20,</collectionStr>
+				<collectionStr type="string">_0,_1,_2,_6,_7,_8,</collectionStr>
 				<collection type="key">
-					<_7 type="key">
-						<breakpointType type="string">code</breakpointType>
-						<label type="string">'RoutineControl0x31 {E:\workFiles\IEBS\tc234bootloader\BootLoader_dualBank\AppSw\Tricore\App_UDS\uds_app.c} .1797';uds_app.c;1;172;;</label>
-						<enable type="flag">0</enable>
-						<address type="string">'RoutineControl0x31 {E:\workFiles\IEBS\tc234bootloader\BootLoader_dualBank\AppSw\Tricore\App_UDS\uds_app.c} .1797';uds_app.c;1;172;;</address>
-						<multiCore type="flag">0</multiCore>
-						<enableCondition type="flag">0</enableCondition>
-						<condition type="string"></condition>
-						<enableLoopCounter type="flag">0</enableLoopCounter>
-						<loopCounter type="string">0</loopCounter>
-						<loopGoal type="string">0</loopGoal>
-						<enableMacro type="flag">0</enableMacro>
-						<macro type="string"></macro>
-						<codeBreakpointType type="string">hardware</codeBreakpointType>
-					</_7>
-					<_8 type="key">
-						<breakpointType type="string">code</breakpointType>
-						<label type="string">'core0_main {E:\workFiles\IEBS\tc234bootloader\BootLoader_dualBank\AppSw\Tricore\Main\Cpu0_Main.c} .92';Cpu0_Main.c;1;12;;</label>
-						<enable type="flag">0</enable>
-						<address type="string">'core0_main {E:\workFiles\IEBS\tc234bootloader\BootLoader_dualBank\AppSw\Tricore\Main\Cpu0_Main.c} .92';Cpu0_Main.c;1;12;;</address>
-						<multiCore type="flag">0</multiCore>
-						<enableCondition type="flag">0</enableCondition>
-						<condition type="string"></condition>
-						<enableLoopCounter type="flag">0</enableLoopCounter>
-						<loopCounter type="string">0</loopCounter>
-						<loopGoal type="string">0</loopGoal>
-						<enableMacro type="flag">0</enableMacro>
-						<macro type="string"></macro>
-						<codeBreakpointType type="string">hardware</codeBreakpointType>
-					</_8>
-					<_9 type="key">
-						<breakpointType type="string">code</breakpointType>
-						<label type="string">'Boot_WriteFlagsToDFlash {E:\workFiles\IEBS\tc234bootloader\BootLoader_dualBank\AppSw\Tricore\App_bootloader\Boot_DualBank.c} .199';Boot_DualBank.c;1;7;;</label>
-						<enable type="flag">0</enable>
-						<address type="string">'Boot_WriteFlagsToDFlash {E:\workFiles\IEBS\tc234bootloader\BootLoader_dualBank\AppSw\Tricore\App_bootloader\Boot_DualBank.c} .199';Boot_DualBank.c;1;7;;</address>
-						<multiCore type="flag">0</multiCore>
-						<enableCondition type="flag">0</enableCondition>
-						<condition type="string"></condition>
-						<enableLoopCounter type="flag">0</enableLoopCounter>
-						<loopCounter type="string">0</loopCounter>
-						<loopGoal type="string">0</loopGoal>
-						<enableMacro type="flag">0</enableMacro>
-						<macro type="string"></macro>
-						<codeBreakpointType type="string">hardware</codeBreakpointType>
-					</_9>
-					<_11 type="key">
-						<breakpointType type="string">code</breakpointType>
-						<label type="string">'Boot_DualBank_Init {E:\workFiles\IEBS\tc234bootloader\BootLoader_dualBank\AppSw\Tricore\App_bootloader\Boot_DualBank.c} .295';Boot_DualBank.c;1;21;;</label>
-						<enable type="flag">0</enable>
-						<address type="string">'Boot_DualBank_Init {E:\workFiles\IEBS\tc234bootloader\BootLoader_dualBank\AppSw\Tricore\App_bootloader\Boot_DualBank.c} .295';Boot_DualBank.c;1;21;;</address>
-						<multiCore type="flag">0</multiCore>
-						<enableCondition type="flag">0</enableCondition>
-						<condition type="string"></condition>
-						<enableLoopCounter type="flag">0</enableLoopCounter>
-						<loopCounter type="string">0</loopCounter>
-						<loopGoal type="string">0</loopGoal>
-						<enableMacro type="flag">0</enableMacro>
-						<macro type="string"></macro>
-						<codeBreakpointType type="string">hardware</codeBreakpointType>
-					</_11>
-					<_12 type="key">
-						<breakpointType type="string">code</breakpointType>
-						<label type="string">'Boot_DualBank_ReadFlags {E:\workFiles\IEBS\tc234bootloader\BootLoader_dualBank\AppSw\Tricore\App_bootloader\Boot_DualBank.c} .317';Boot_DualBank.c;1;12;;</label>
-						<enable type="flag">0</enable>
-						<address type="string">'Boot_DualBank_ReadFlags {E:\workFiles\IEBS\tc234bootloader\BootLoader_dualBank\AppSw\Tricore\App_bootloader\Boot_DualBank.c} .317';Boot_DualBank.c;1;12;;</address>
-						<multiCore type="flag">0</multiCore>
-						<enableCondition type="flag">0</enableCondition>
-						<condition type="string"></condition>
-						<enableLoopCounter type="flag">0</enableLoopCounter>
-						<loopCounter type="string">0</loopCounter>
-						<loopGoal type="string">0</loopGoal>
-						<enableMacro type="flag">0</enableMacro>
-						<macro type="string"></macro>
-						<codeBreakpointType type="string">hardware</codeBreakpointType>
-					</_12>
-					<_13 type="key">
-						<breakpointType type="string">code</breakpointType>
-						<label type="string">'Boot_WriteFlagsToDFlash {E:\workFiles\IEBS\tc234bootloader\BootLoader_dualBank\AppSw\Tricore\App_bootloader\Boot_DualBank.c} .257';Boot_DualBank.c;1;63;;</label>
-						<enable type="flag">0</enable>
-						<address type="string">'Boot_WriteFlagsToDFlash {E:\workFiles\IEBS\tc234bootloader\BootLoader_dualBank\AppSw\Tricore\App_bootloader\Boot_DualBank.c} .257';Boot_DualBank.c;1;63;;</address>
-						<multiCore type="flag">0</multiCore>
-						<enableCondition type="flag">0</enableCondition>
-						<condition type="string"></condition>
-						<enableLoopCounter type="flag">0</enableLoopCounter>
-						<loopCounter type="string">0</loopCounter>
-						<loopGoal type="string">0</loopGoal>
-						<enableMacro type="flag">0</enableMacro>
-						<macro type="string"></macro>
-						<codeBreakpointType type="string">hardware</codeBreakpointType>
-					</_13>
-					<_14 type="key">
-						<breakpointType type="string">code</breakpointType>
-						<label type="string">'Boot_WriteFlagsToDFlash {E:\workFiles\IEBS\tc234bootloader\BootLoader_dualBank\AppSw\Tricore\App_bootloader\Boot_DualBank.c} .204';Boot_DualBank.c;1;10;;</label>
-						<enable type="flag">0</enable>
-						<address type="string">'Boot_WriteFlagsToDFlash {E:\workFiles\IEBS\tc234bootloader\BootLoader_dualBank\AppSw\Tricore\App_bootloader\Boot_DualBank.c} .204';Boot_DualBank.c;1;10;;</address>
-						<multiCore type="flag">0</multiCore>
-						<enableCondition type="flag">0</enableCondition>
-						<condition type="string"></condition>
-						<enableLoopCounter type="flag">0</enableLoopCounter>
-						<loopCounter type="string">0</loopCounter>
-						<loopGoal type="string">0</loopGoal>
-						<enableMacro type="flag">0</enableMacro>
-						<macro type="string"></macro>
-						<codeBreakpointType type="string">hardware</codeBreakpointType>
-					</_14>
-					<_16 type="key">
-						<breakpointType type="string">code</breakpointType>
-						<label type="string">'Boot_DualBank_SelectAndJump {E:\workFiles\IEBS\tc234bootloader\BootLoader_dualBank\AppSw\Tricore\App_bootloader\Boot_DualBank.c} .633';Boot_DualBank.c;1;56;;</label>
-						<enable type="flag">0</enable>
-						<address type="string">'Boot_DualBank_SelectAndJump {E:\workFiles\IEBS\tc234bootloader\BootLoader_dualBank\AppSw\Tricore\App_bootloader\Boot_DualBank.c} .633';Boot_DualBank.c;1;56;;</address>
-						<multiCore type="flag">0</multiCore>
-						<enableCondition type="flag">0</enableCondition>
-						<condition type="string"></condition>
-						<enableLoopCounter type="flag">0</enableLoopCounter>
-						<loopCounter type="string">0</loopCounter>
-						<loopGoal type="string">0</loopGoal>
-						<enableMacro type="flag">0</enableMacro>
-						<macro type="string"></macro>
-						<codeBreakpointType type="string">hardware</codeBreakpointType>
-					</_16>
-					<_18 type="key">
-						<breakpointType type="string">code</breakpointType>
-						<label type="string">'Boot_DualBank_JumpToBank {E:\workFiles\IEBS\tc234bootloader\BootLoader_dualBank\AppSw\Tricore\App_bootloader\Boot_DualBank.c} .524';Boot_DualBank.c;1;0;;</label>
-						<enable type="flag">0</enable>
-						<address type="string">'Boot_DualBank_JumpToBank {E:\workFiles\IEBS\tc234bootloader\BootLoader_dualBank\AppSw\Tricore\App_bootloader\Boot_DualBank.c} .524';Boot_DualBank.c;1;0;;</address>
-						<multiCore type="flag">0</multiCore>
-						<enableCondition type="flag">0</enableCondition>
-						<condition type="string"></condition>
-						<enableLoopCounter type="flag">0</enableLoopCounter>
-						<loopCounter type="string">0</loopCounter>
-						<loopGoal type="string">0</loopGoal>
-						<enableMacro type="flag">0</enableMacro>
-						<macro type="string"></macro>
-						<codeBreakpointType type="string">hardware</codeBreakpointType>
-					</_18>
-					<_19 type="key">
+					<_0 type="key">
 						<breakpointType type="string">code</breakpointType>
 						<label type="string">'core0_main {E:\workFiles\IEBS\tc234bootloader\BootLoader_dualBank\AppSw\Tricore\Main\Cpu0_Main.c} .110';Cpu0_Main.c;1;30;;</label>
 						<enable type="flag">0</enable>
@@ -2460,12 +2325,12 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</DefParaFormat>
 						<enableMacro type="flag">0</enableMacro>
 						<macro type="string"></macro>
 						<codeBreakpointType type="string">hardware</codeBreakpointType>
-					</_19>
-					<_20 type="key">
+					</_0>
+					<_1 type="key">
 						<breakpointType type="string">code</breakpointType>
-						<label type="string">'Boot_DualBank_JumpToBank {E:\workFiles\IEBS\tc234bootloader\BootLoader_dualBank\AppSw\Tricore\App_bootloader\Boot_DualBank.c} .539';Boot_DualBank.c;1;15;;</label>
+						<label type="string">'Boot_DualBank_SelectAndJump {E:\workFiles\IEBS\tc234bootloader\BootLoader_dualBank\AppSw\Tricore\App_bootloader\Boot_DualBank.c} .644';Boot_DualBank.c;1;22;;</label>
 						<enable type="flag">0</enable>
-						<address type="string">'Boot_DualBank_JumpToBank {E:\workFiles\IEBS\tc234bootloader\BootLoader_dualBank\AppSw\Tricore\App_bootloader\Boot_DualBank.c} .539';Boot_DualBank.c;1;15;;</address>
+						<address type="string">'Boot_DualBank_SelectAndJump {E:\workFiles\IEBS\tc234bootloader\BootLoader_dualBank\AppSw\Tricore\App_bootloader\Boot_DualBank.c} .644';Boot_DualBank.c;1;22;;</address>
 						<multiCore type="flag">0</multiCore>
 						<enableCondition type="flag">0</enableCondition>
 						<condition type="string"></condition>
@@ -2475,7 +2340,67 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</DefParaFormat>
 						<enableMacro type="flag">0</enableMacro>
 						<macro type="string"></macro>
 						<codeBreakpointType type="string">hardware</codeBreakpointType>
-					</_20>
+					</_1>
+					<_2 type="key">
+						<breakpointType type="string">code</breakpointType>
+						<label type="string">'Boot_DualBank_VerifyBank {E:\workFiles\IEBS\tc234bootloader\BootLoader_dualBank\AppSw\Tricore\App_bootloader\Boot_DualBank.c} .404';Boot_DualBank.c;1;35;;</label>
+						<enable type="flag">0</enable>
+						<address type="string">'Boot_DualBank_VerifyBank {E:\workFiles\IEBS\tc234bootloader\BootLoader_dualBank\AppSw\Tricore\App_bootloader\Boot_DualBank.c} .404';Boot_DualBank.c;1;35;;</address>
+						<multiCore type="flag">0</multiCore>
+						<enableCondition type="flag">0</enableCondition>
+						<condition type="string"></condition>
+						<enableLoopCounter type="flag">0</enableLoopCounter>
+						<loopCounter type="string">0</loopCounter>
+						<loopGoal type="string">0</loopGoal>
+						<enableMacro type="flag">0</enableMacro>
+						<macro type="string"></macro>
+						<codeBreakpointType type="string">hardware</codeBreakpointType>
+					</_2>
+					<_6 type="key">
+						<breakpointType type="string">code</breakpointType>
+						<label type="string">'Boot_DualBank_CalculateCRC {E:\workFiles\IEBS\tc234bootloader\BootLoader_dualBank\AppSw\Tricore\App_bootloader\Boot_DualBank.c} .362';Boot_DualBank.c;1;2;;</label>
+						<enable type="flag">0</enable>
+						<address type="string">'Boot_DualBank_CalculateCRC {E:\workFiles\IEBS\tc234bootloader\BootLoader_dualBank\AppSw\Tricore\App_bootloader\Boot_DualBank.c} .362';Boot_DualBank.c;1;2;;</address>
+						<multiCore type="flag">0</multiCore>
+						<enableCondition type="flag">0</enableCondition>
+						<condition type="string"></condition>
+						<enableLoopCounter type="flag">0</enableLoopCounter>
+						<loopCounter type="string">0</loopCounter>
+						<loopGoal type="string">0</loopGoal>
+						<enableMacro type="flag">0</enableMacro>
+						<macro type="string"></macro>
+						<codeBreakpointType type="string">hardware</codeBreakpointType>
+					</_6>
+					<_7 type="key">
+						<breakpointType type="string">code</breakpointType>
+						<label type="string">'core0_main {E:\workFiles\IEBS\tc234bootloader\BootLoader_dualBank\AppSw\Tricore\Main\Cpu0_Main.c} .80';Cpu0_Main.c;1;0;;</label>
+						<enable type="flag">1</enable>
+						<address type="string">'core0_main {E:\workFiles\IEBS\tc234bootloader\BootLoader_dualBank\AppSw\Tricore\Main\Cpu0_Main.c} .80';Cpu0_Main.c;1;0;;</address>
+						<multiCore type="flag">0</multiCore>
+						<enableCondition type="flag">0</enableCondition>
+						<condition type="string"></condition>
+						<enableLoopCounter type="flag">0</enableLoopCounter>
+						<loopCounter type="string">0</loopCounter>
+						<loopGoal type="string">0</loopGoal>
+						<enableMacro type="flag">0</enableMacro>
+						<macro type="string"></macro>
+						<codeBreakpointType type="string">hardware</codeBreakpointType>
+					</_7>
+					<_8 type="key">
+						<breakpointType type="string">code</breakpointType>
+						<label type="string">'core0_main {E:\workFiles\IEBS\tc234bootloader\BootLoader_dualBank\AppSw\Tricore\Main\Cpu0_Main.c} .81';Cpu0_Main.c;1;1;;</label>
+						<enable type="flag">1</enable>
+						<address type="string">'core0_main {E:\workFiles\IEBS\tc234bootloader\BootLoader_dualBank\AppSw\Tricore\Main\Cpu0_Main.c} .81';Cpu0_Main.c;1;1;;</address>
+						<multiCore type="flag">0</multiCore>
+						<enableCondition type="flag">0</enableCondition>
+						<condition type="string"></condition>
+						<enableLoopCounter type="flag">0</enableLoopCounter>
+						<loopCounter type="string">0</loopCounter>
+						<loopGoal type="string">0</loopGoal>
+						<enableMacro type="flag">0</enableMacro>
+						<macro type="string"></macro>
+						<codeBreakpointType type="string">hardware</codeBreakpointType>
+					</_8>
 				</collection>
 			</breakpointsV3>
 		</UDESTK.StdDbgSrv>

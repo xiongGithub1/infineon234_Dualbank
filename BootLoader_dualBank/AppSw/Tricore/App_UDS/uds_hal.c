@@ -2,7 +2,7 @@
  * @Author: qinXiong
  * @Date: 2026-04-29 09:02:27
  * @LastEditors: Qxiong&&2307975018@qq.com
- * @LastEditTime: 2026-05-11 18:27:54
+ * @LastEditTime: 2026-05-11 19:22:58
  * @Description: 
  */
 /**********************************************************************************************************************
@@ -47,8 +47,8 @@ void HardReset(void)
     IfxScuWdt_clearSafetyEndinit(safetyWdtPassword);
 
     /* Direct register write: set SWRSTCON.SWRSTREQ to trigger Application Reset */
-    MODULE_SCU.SWRSTCON.B.SWRSTREQ = 1;
-
+    // MODULE_SCU.SW![1778498572002](image/uds_hal/1778498572002.png)RSTCON.B.SWRSTREQ = 1;
+    SCU_SWRSTCON.U = 0x01U;  /* SWRSTREQ = 1 */
     /* Restore Safety Endinit (won't actually reach here because reset is immediate) */
     IfxScuWdt_setSafetyEndinit(safetyWdtPassword);
 

@@ -81,6 +81,7 @@ void core0_main(void)
     IfxScuWdt_disableSafetyWatchdog(IfxScuWdt_getSafetyWatchdogPassword());
 
     //    IfxCpu_disableInterrupts();
+	/* app init*/
 
     IfxScuClock_init();
 
@@ -93,26 +94,23 @@ void core0_main(void)
 
     /* ===== 检查 RAM 启动标志（只在非上电复位时） ===== */
     /* 读取复位原因：bit0=1 表示上电复位 */
-    resetReason = SCU_RSTSTAT.U;
-    isPowerOnReset = (resetReason & 0x01) != 0;
     //
    /* Check if APP requested bootloader mode via RAM flag */
-   {
-       uint16 ramBootMode = *(uint16 *)RAM_BOOT_MODE_Addr;
-       if (ramBootMode == RAM_BOOT_MODE_APP)
-       {
-           /* APP requested bootloader: clear flag and stay in bootloader for flashing */
-           *(uint16 *)RAM_BOOT_MODE_Addr = RAM_BOOT_MODE_NORMAL;
-       }
-       else
-       {
+//   {
+//       uint16 ramBootMode = *(uint16 *)RAM_BOOT_MODE_Addr;
+//       if (ramBootMode == RAM_BOOT_MODE_APP)
+//       {
+//           /* APP requested bootloader: clear flag and stay in bootloader for flashing */
+//           *(uint16 *)RAM_BOOT_MODE_Addr = RAM_BOOT_MODE_NORMAL;
+//       }
+//       else
+//       {
            /* Normal boot: attempt to jump to active bank */
-            Boot_DualBank_SelectAndJump();
+//            Boot_DualBank_SelectAndJump();
            /* If SelectAndJump() returns, both banks are invalid -> stay in bootloader */
-       }
-   }
+//       }
+//   }
 
-	/* app init*/
     AppBL_init();
     // measureEraseTime
 //    MeasureEraseBankA_Time();
