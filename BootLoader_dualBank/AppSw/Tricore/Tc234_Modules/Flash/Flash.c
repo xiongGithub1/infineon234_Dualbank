@@ -51,6 +51,9 @@ uint32 gPageData[8];
  ** @Date        ��
  ** ============================================================================
  */
+#if defined(__TASKING__)
+#pragma section code "psram_cpu0"
+#endif
 void Flash_erasePFLASH(uint32 sectorAddr)
 {
     /* Get the current password of the Safety WatchDog module */
@@ -114,6 +117,9 @@ void Flash_writePFlashPage(uint32 startingAddr, uint32 *data, uint32 byteLength)
     return ;
 }
 
+#if defined(__TASKING__)
+#pragma section code restore
+#endif
 
 /*
  ** ============================================================================
@@ -174,6 +180,9 @@ void writePFlashPage(uint32 startingAddr, uint32 *data, uint32 byteLength)
  ** ============================================================================
  */
 
+#if defined(__TASKING__)
+#pragma section code "psram_cpu0"
+#endif
 int     Flash_writePFlashPage_main(uint32 addr,  uint32 length,  uint32 *data)
 {
     boolean interruptState = IfxCpu_disableInterrupts(); /* Get the current state of the interrupts and disable them*/
@@ -193,8 +202,9 @@ int     Flash_writePFlashPage_main(uint32 addr,  uint32 length,  uint32 *data)
     return 0;
 }
 
-
-
+#if defined(__TASKING__)
+#pragma section code restore
+#endif
 
 /*
  ** ============================================================================
@@ -310,14 +320,10 @@ void Flash_copyFunctionsToPSPR(void)
     memcpy((void *)WRITEPAGE_ADDR, (const void *)IfxFlash_writePage, WRITEPAGE_LEN);
     g_commandFromPSPR.writePage = (void *)WRITEPAGE_ADDR;
 
-    /* Copy the erasePFLASH() routine and assign it to a function pointer */
-    memcpy((void *)ERASEPFLASH_ADDR, (const void *)Flash_erasePFLASH, ERASEPFLASH_LEN);
-    g_commandFromPSPR.eraseFlash = (void *)ERASEPFLASH_ADDR;
-
-    /* Copy the writeFlash() routine and assign it to a function pointer */
-    memcpy((void *)WRITEPFLASH_ADDR, (const void *)Flash_writePFlashPage, WRITEPFLASH_LEN);
-//    memcpy((void *)WRITEPFLASH_ADDR, (const void *)writePFlashPage, WRITEPFLASH_LEN);
-    g_commandFromPSPR.writeFlash = (void *)WRITEPFLASH_ADDR;
+    /* Flash_erasePFLASH and Flash_writePFlashPage are now linked into .text.psram_cpu0,
+       no need for runtime memcpy. Directly use their addresses. */
+    g_commandFromPSPR.eraseFlash = (void *)Flash_erasePFLASH;
+    g_commandFromPSPR.writeFlash = (void *)Flash_writePFlashPage;
 
     return;
 }
@@ -348,12 +354,19 @@ void Flash_init(void)
  ** @Date        ��
  ** ============================================================================
  */
+#if defined(__TASKING__)
+#pragma section code "psram_cpu0"
+#endif
 int Flash_erasePFlash_port(uint32 flashAddr)
 {
     boolean interruptState = IfxCpu_disableInterrupts(); /* Get the current state of the interrupts and disable them*/
+    uint16 wdtPassword = IfxScuWdt_getCpuWatchdogPassword();
     Flash_copyFunctionsToPSPR();
     g_commandFromPSPR.eraseFlash(flashAddr);
     IfxCpu_restoreInterrupts(interruptState);            /* Restore the interrupts state                            */
+
+    /* Service watchdog after flash operation (interrupts were disabled, main loop could not feed) */
+    IfxScuWdt_serviceCpuWatchdog(wdtPassword);
 
     /* Check PFlash erase error flags: EVER (erase verify), OPER (operation), SQER (sequence), PROER (protection) */
     if (FLASH0_FSR.B.EVER || FLASH0_FSR.B.OPER || FLASH0_FSR.B.SQER || FLASH0_FSR.B.PROER)
@@ -379,9 +392,13 @@ int  Flash_writePFlash_port(uint32 flashAddr, uint32 *data, uint32 bytelength)
     IfxPort_setPinState(LED2, IfxPort_State_high);
 
     boolean interruptState = IfxCpu_disableInterrupts(); /* Get the current state of the interrupts and disable them*/
+    uint16 wdtPassword = IfxScuWdt_getCpuWatchdogPassword();
     Flash_copyFunctionsToPSPR();
     g_commandFromPSPR.writeFlash(flashAddr, data, bytelength);
     IfxCpu_restoreInterrupts(interruptState);            /* Restore the interrupts state                            */
+
+    /* Service watchdog after flash operation */
+    IfxScuWdt_serviceCpuWatchdog(wdtPassword);
 
     IfxPort_setPinState(LED2, IfxPort_State_low);
 
@@ -447,6 +464,9 @@ int Flash_ForceWriteRemaining(void)//����32λ��ֱ��д�룬��
 
 int Flash_writePFlash_portex(uint32 flashAddr, uint8 *data, uint32 byteLength)//��32λ����д��
 {
+    boolean interruptState = IfxCpu_disableInterrupts(); /* Disable interrupts during flash operation */
+    uint16 wdtPassword = IfxScuWdt_getCpuWatchdogPassword();
+    int result = 1;
     uint32 offset = 0;
     uint32 currentAddr = flashAddr;//0xa0020040+126=0xa00200be
 
@@ -465,7 +485,8 @@ int Flash_writePFlash_portex(uint32 flashAddr, uint8 *data, uint32 byteLength)//
             // ����д������ҳ��ʹ�û����ַ����֤
 			if (Flash_writeAndVerifyPage(s_remainAddr, s_remainBuffer) == 0)
 			{
-				return 0;  /* Write-verify failed */
+				result = 0;  /* Write-verify failed */
+				goto flash_write_exit;
 			}
 
 			offset += copySize;//offset->0+2=2
@@ -479,7 +500,8 @@ int Flash_writePFlash_portex(uint32 flashAddr, uint8 *data, uint32 byteLength)//
 				// ��ַ��������ǿ��д��ɻ���
 				if (Flash_ForceWriteRemaining() == 0)
 					{
-						return 0;  /* Force write-verify failed */
+						result = 0;  /* Force write-verify failed */
+						goto flash_write_exit;
 					}
 			}
 			else //if((s_remainAddr + 32) > currentAddr)
@@ -501,7 +523,8 @@ int Flash_writePFlash_portex(uint32 flashAddr, uint8 *data, uint32 byteLength)//
 					{
 						if (Flash_writeAndVerifyPage(s_remainAddr, s_remainBuffer) == 0)
 							{
-								return 0;  /* Write-verify failed */
+								result = 0;  /* Write-verify failed */
+								goto flash_write_exit;
 							}//(0xa00200a0,32�����ݣ�32)
 						offset += copySize2;//offset->0+2=2
 						currentAddr += copySize2;//0xa00200be+2=0xa00200c0
@@ -514,7 +537,8 @@ int Flash_writePFlash_portex(uint32 flashAddr, uint8 *data, uint32 byteLength)//
 				}
 				else
 				{
-					return 0;
+					result = 0;
+					goto flash_write_exit;
 				}
 			}
     	}
@@ -535,7 +559,8 @@ int Flash_writePFlash_portex(uint32 flashAddr, uint8 *data, uint32 byteLength)//
         if (Flash_writeAndVerifyPage(currentAddr, data + offset) == 0)
         {
             s_remainSize = 0;  /* Clear buffer state on error */
-            return 0;          /* Write-verify failed */
+            result = 0;          /* Write-verify failed */
+            goto flash_write_exit;
         }
         offset += 32;
         currentAddr += 32; // �ؼ���ÿ��д������32
@@ -559,10 +584,18 @@ int Flash_writePFlash_portex(uint32 flashAddr, uint8 *data, uint32 byteLength)//
     if (FLASH0_FSR.B.PVER || FLASH0_FSR.B.OPER || FLASH0_FSR.B.SQER || FLASH0_FSR.B.PROER)
     {
         s_remainSize = 0;  /* Clear buffer state on error */
-        return 0;          /* Write error detected */
+        result = 0;          /* Write error detected */
     }
-    return 1;
+
+flash_write_exit:
+    IfxScuWdt_serviceCpuWatchdog(wdtPassword);
+    IfxCpu_restoreInterrupts(interruptState);
+    return result;
 }
+
+#if defined(__TASKING__)
+#pragma section code restore
+#endif
 
 /*
  ** ============================================================================

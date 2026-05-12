@@ -205,6 +205,7 @@ boolean FLASH_HAL_GetFlashDriverInfo(uint32 *o_pFlashDriverAddrStart, uint32 *o_
 void Flash_EraseFlashDriverInRAM(void);
 void Flash_InitDowloadInfo(void);
 void Flash_SaveDownloadDataInfo(const uint32 i_dataStartAddr, const uint32 i_dataLen);
+uint32 Flash_GetReceivedDataLength(void);
 
 #endif
 

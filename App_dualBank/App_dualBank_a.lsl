@@ -293,10 +293,10 @@ derivative tc23A
 //        {
 //            select "*.bmhd_0";
 //        }
-        group  bmh_1 (ordered, run_addr=0x80020000)
-        {
-            select "*.bmhd_1";
-        }
+//        group  bmh_1 (ordered, run_addr=0x80020000)
+//        {
+//            select "*.bmhd_1";
+//        }
         group  reset (ordered, run_addr=0x80020020)
         {
             select "*.start";

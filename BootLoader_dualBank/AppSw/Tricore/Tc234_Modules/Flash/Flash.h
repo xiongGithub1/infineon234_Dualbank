@@ -55,7 +55,7 @@
  * Ram PSPR
  */
 /* Relocation address for the erase and program routines: Program Scratch-Pad SRAM (PSPR) of CPU0 */
-#define RELOCATION_START_ADDR       (0x70100000U)		// ������ʼ��ַ
+#define RELOCATION_START_ADDR       (0x70101800U)		// 挪到PSPR高地址，避开 .text.psram_cpu0
 
 /* Definition of the addresses where to relocate the erase and program routines, given their reserved space */
 #define ERASESECTOR_ADDR            (RELOCATION_START_ADDR)					// ����������ַ0x70100000U

@@ -15,6 +15,8 @@
 #include "IfxCpu.h"
 #include "Bsp.h"              /* for now(), TimeConst_1ms */
 #include "custom_delay.h"     /* for delay_ms() */
+#include "Can.h"              /* for CAN_deinit() */
+#include "Tmr.h"              /* for TMR_deinit() */
 /* SW_Reset() is defined in App_bootloader.c */
 extern void SW_Reset(void);
 
@@ -83,6 +85,9 @@ void MeasureEraseBankA_Time(void)
 
 static uint32 g_activeBank = BANK_A;
 
+/* Global boot phase identifier for OEM traceability */
+volatile BootPhase_t g_bootPhase = BOOT_PHASE_STARTUP;
+
 /*********************************************************************************************************************/
 /*---------------------------------------------Private CRC32 Table---------------------------------------------------*/
 /*********************************************************************************************************************/
@@ -130,19 +135,32 @@ static const uint32 s_crc32Table[256] = {
 static uint32 Boot_CRC32(const uint8 *data, uint32 length)
 {
     uint32 crc = 0xFFFFFFFFu;
-    while (length--)
+    uint32 i;
+    for (i = 0; i < length; i++)
     {
-        crc = (crc >> 8u) ^ s_crc32Table[(crc ^ (uint32)(*data++)) & 0xFFu];
+        crc = (crc >> 8u) ^ s_crc32Table[(crc ^ (uint32)data[i]) & 0xFFu];
     }
     return crc ^ 0xFFFFFFFFu;
+}
+
+/* Incremental CRC32 update (used during TransferData streaming) */
+uint32 Boot_CRC32_Update(uint32 crc, const uint8 *data, uint32 length)
+{
+    uint32 i;
+    for (i = 0; i < length; i++)
+    {
+        crc = (crc >> 8u) ^ s_crc32Table[(crc ^ (uint32)data[i]) & 0xFFu];
+    }
+    return crc;
 }
 
 /* Calculate CRC over main flag structure (excluding crc32 field itself) */
 static uint32 Boot_CalcFlagCRC(const BootFlagMain_t *flag)
 {
-    const uint8 *p = (const uint8 *)flag;
-    uint32 len = sizeof(BootFlagMain_t) - sizeof(uint32); /* exclude crc32 field */
-    return Boot_CRC32(p, len);
+    BootFlagMain_t tmp;
+    memcpy(&tmp, flag, sizeof(BootFlagMain_t));
+    tmp.crc32 = 0u;  /* zero out crc32 field before calculating CRC over the whole struct */
+    return Boot_CRC32((const uint8 *)&tmp, sizeof(BootFlagMain_t));
 }
 
 /* Copy main flag fields to shadow structure */
@@ -203,12 +221,12 @@ static boolean Boot_WriteFlagsToDFlash(const DualBankFlags_t *flags)
     IfxFlash_waitUnbusy(FLASH_MODULE, IfxFlash_FlashType_D0);
 
     /* Step 2: Write main flag area */
-    Flash_writeDFlash_port(DFLASH_FLAG_ADDR, (uint32 *)&writeBuf, flagSize);
+    Flash_writeDFlash_port(DFLASH_FLAG_ADDR, (uint32 *)&writeBuf.main, sizeof(BootFlagMain_t));
 
     /* Step 3: Write shadow flag area */
     Flash_writeDFlash_port(DFLASH_FLAG_ADDR + DFLASH_FLAG_SHADOW_OFFSET,
-                           (uint32 *)((uint8 *)&writeBuf + DFLASH_FLAG_SHADOW_OFFSET),
-                           flagSize);
+                           (uint32 *)&writeBuf.shadow,
+                           sizeof(BootFlagShadow_t));
 
     /* Wait for all DFlash writes to complete before reset */
     IfxFlash_waitUnbusy(FLASH_MODULE, IfxFlash_FlashType_D0);
@@ -238,6 +256,7 @@ static boolean Boot_WriteFlagsToDFlash(const DualBankFlags_t *flags)
 void Boot_DualBank_Init(void)
 {
     DualBankFlags_t flags;
+    g_bootPhase = BOOT_PHASE_FLAG_INIT;
 
     if (Boot_DualBank_ReadFlags(&flags) == FALSE)
     {
@@ -253,7 +272,7 @@ void Boot_DualBank_Init(void)
         flags.main.flags           = 0u;
         flags.main.sequence        = FLAG_SEQUENCE_INIT;
         flags.main.crc32           = 0u;
-        flags.main.targetWriteBank = BANK_B;  /* Ĭ���Ƽ�ˢд Bank B */
+        flags.main.targetWriteBank = BANK_B;  /* 默认写入 Bank B */
 
         Boot_CopyMainToShadow(&flags.main, &flags.shadow);
         Boot_WriteFlagsToDFlash(&flags);
@@ -340,10 +359,13 @@ boolean Boot_DualBank_WriteFlags(const DualBankFlags_t *flags)
 
 /**
  * @brief Calculate CRC32 over a memory region.
+ * @note Uses uncached address and cache sync to avoid stale data after erase/write.
  */
 uint32 Boot_DualBank_CalculateCRC(uint32 startAddr, uint32 size)
 {
-    return Boot_CRC32((const uint8 *)startAddr, size);
+    uint32 uncachedAddr = (startAddr & 0x00FFFFFFu) | 0xA0000000u;
+    __dsync();
+    return Boot_CRC32((const uint8 *)uncachedAddr, size);
 }
 
 /**
@@ -500,53 +522,113 @@ void Boot_DualBank_MarkBankValid(uint32 bank, uint32 version)
  * @note  This function does NOT return if jump is successful.
  *        It reads the vector table at bank start, sets MSP, and jumps to Reset_Handler.
  */
+/**
+ * @brief Set CPU vector tables (BIV/BTV) to APP's vector table base.
+ * @note  OEM requirement: before jumping to APP, Bootloader must restore
+ *        CPU vector table pointers so that interrupts/traps in APP land
+ *        in APP's handlers, not Bootloader's.
+ *        INTTAB/TRAPTAB offsets must match APP linker configuration.
+ */
+void Boot_DualBank_SetAppVectors(uint32 bankStartAddr)
+{
+    uint32 appBiv;
+    uint32 appBtv;
+
+    /* TriCore BIV for VSS=0 (32-byte vector spacing):
+     * BIV = (INTTAB_base | 0x1FE0).
+     * See IfxCpu_CStart0.c / CompilerTasking.h for project convention.
+     */
+    appBiv = (bankStartAddr + APP_INTTAB_OFFSET) | 0x1FE0u;
+    appBtv = (bankStartAddr + APP_TRAPTAB_OFFSET);
+
+    __mtcr(CPU_BIV, appBiv);
+    __isync();
+    __mtcr(CPU_BTV, appBtv);
+    __isync();
+}
+
 void Boot_DualBank_JumpToBank(uint32 bank)
 {
-    uint32 startAddr;
-    void (*appEntry)(void);
+     uint32 startAddr;
+     uint32 entryAddr;
 
-    if (bank == BANK_A)
-    {
-        startAddr = BANK_A_START_ADDR;   /* 0x80020000 cached */
-    }
-    else
-    {
-        startAddr = BANK_B_START_ADDR;   /* 0x80100000 cached */
-    }
+     g_bootPhase = BOOT_PHASE_JUMP_EXEC;
 
-    /* TriCore: _START is at offset 0x20 from bank base (BMHD occupies 0x00~0x1F) */
-    /* Use uncached address (0xA0xxxxxx) to avoid cache coherency issues after flash write */
-    uint32 uncachedStart = (startAddr & 0x00FFFFFFu) | 0xA0000000u;
-    appEntry = (void (*)(void))(uncachedStart + 0x20u);
+     if (bank == BANK_A)
+     {
+         startAddr = BANK_A_START_ADDR;   /* 0x80020000 cached */
+     }
+     else
+     {
+         startAddr = BANK_B_START_ADDR;   /* 0x80100000 cached */
+     }
 
-    /* Basic sanity check: _START should not be 0xFFFFFFFF or 0x00000000 */
-    if ((*(volatile uint32 *)(startAddr + 0x20u) == 0xFFFFFFFFu) ||
-        (*(volatile uint32 *)(startAddr + 0x20u) == 0x00000000u))
-    {
-        return; /* Invalid entry point, do not jump */
-    }
+     /* Basic sanity check: _START should not be 0xFFFFFFFF or 0x00000000 */
+     if ((*(volatile uint32 *)(startAddr + 0x20u) == 0xFFFFFFFFu) ||
+         (*(volatile uint32 *)(startAddr + 0x20u) == 0x00000000u))
+     {
+         g_bootPhase = BOOT_PHASE_BL_ENTRY;
+         return; /* Invalid entry point, do not jump */
+     }
 
-    /* Disable interrupts before jumping */
-    IfxCpu_disableInterrupts();
+     /* Disable interrupts before jumping */
+     IfxCpu_disableInterrupts();
 
-    /* ========== �������ر� ECC Trap����ֹ App Flash �����򴥷� Trap ========== */
-    {
-        uint16 pwd = IfxScuWdt_getCpuWatchdogPassword();
-        IfxScuWdt_clearCpuEndinit(pwd);
-        FLASH0_MARP.B.TRAPDIS = 1;  /* PFLSH Disable ECC TRAP */
-        FLASH0_MARD.B.TRAPDIS = 1;  /* DFLSH Disable ECC TRAP */
-        IfxScuWdt_setCpuEndinit(pwd);
-    }
+     /* Deinitialize peripherals to leave a clean state for APP */
+     CAN_deinit();
+     TMR_deinit();
 
-    /* ========== �޸���ͬʱ���� Data Cache �� Program Cache ========== */
-    IfxCpu_setDataCache(0);      /* �������ݻ��� */
-    IfxCpu_setProgramCache(0);   /* ����ָ��棨�ؼ��޸��� */
+     /* ========== Disable ECC Trap to prevent spurious ECC traps on freshly written Flash ========== */
+     {
+         uint16 pwd = IfxScuWdt_getCpuWatchdogPassword();
+         IfxScuWdt_clearCpuEndinit(pwd);
+         FLASH0_MARP.B.TRAPDIS = 1;  /* PFLSH Disable ECC TRAP */
+         FLASH0_MARD.B.TRAPDIS = 1;  /* DFLSH Disable ECC TRAP */
+         IfxScuWdt_setCpuEndinit(pwd);
+     }
+
+     /* ========== Disable Data Cache and Program Cache before jump ========== */
+     IfxCpu_setDataCache(0);      /* Disable data cache */
+     IfxCpu_setProgramCache(0);   /* Disable program cache (critical) */
     
-    __dsync();                   /* ����ͬ������ */
-    __isync();                   /* ָ��ͬ������ */
+     __dsync();                   /* Data synchronization barrier */
+     __isync();                   /* Instruction synchronization barrier */
 
-    /* Jump to APP _START. APP's _Core0_start will reconfigure SP, BIV, BTV, etc. */
-    appEntry();
+     /* TriCore: _START is at offset 0x20 from bank base (BMHD occupies 0x00~0x1F) */
+     /* Use uncached address (0xA0xxxxxx) to avoid cache coherency issues after flash write */
+     {
+         uint32 uncachedStart = (startAddr & 0x00FFFFFFu) | 0xA0000000u;
+         entryAddr = uncachedStart + 0x20u;
+     }
+
+     /* === OEM: Set APP vector tables (BIV/BTV) before jump === */
+     Boot_DualBank_SetAppVectors(startAddr);
+
+     /*
+      * CRITICAL FIX: Do NOT use C function call (appEntry()).
+      * TriCore 'call' instruction implicitly saves upper context into CSA,
+      * updates PCXI, A11 (RA) and PSW.CDC. If Bootloader's context is left
+      * behind, APP's function returns will corrupt the CSA list and access
+      * invalid CSA addresses (e.g. 0x466 in PSPR), causing Bus Error Trap.
+      *
+      * Correct approach: perform a raw jump (ji) and manually cut the context
+      * link chain by clearing PCXI, so APP's _start runs as if from reset.
+      */
+     /* Load entryAddr to A15 */
+     __asm("mov   d15, %0" : : "d"(entryAddr) : "d15");
+     __asm("mov.a a15, d15" : : : "a15");
+     
+     /* Clear PCXI: cut context chain from Bootloader */
+     __mtcr(CPU_PCXI, 0);
+     __isync();
+     
+     /* Clear Return Address (A11) */
+     __asm("mov.a a11, #0" : : : "a11");
+     
+     /* Jump indirect: no context save, no link, no RA */
+     __asm("ji    a15" : : : "a15");
+
+
 
     /* Should never reach here */
     while (1) {};
@@ -565,6 +647,8 @@ void Boot_DualBank_SelectAndJump(void)
     uint32 fallbackBank;
     BankStatus_t targetStatus;
     BankStatus_t fallbackStatus;
+
+    g_bootPhase = BOOT_PHASE_BANK_VERIFY;
 
     if (Boot_DualBank_ReadFlags(&flags) == FALSE)
     {
@@ -586,6 +670,8 @@ void Boot_DualBank_SelectAndJump(void)
 
     if (targetStatus == BANK_STATUS_VALID)
     {
+        g_bootPhase = BOOT_PHASE_JUMP_DECISION;
+
         /* Increment boot attempts before jumping. If APP crashes before
          * Boot_DualBank_ClearBootAttempts(), counter persists and on next
          * boot we roll back after MAX_BOOT_ATTEMPTS consecutive failures. */
@@ -595,13 +681,29 @@ void Boot_DualBank_SelectAndJump(void)
 
         if (flags.main.bootAttempts >= MAX_BOOT_ATTEMPTS)
         {
-            /* Too many consecutive boot failures: invalidate target and try fallback */
+            g_bootPhase = BOOT_PHASE_ROLLBACK;
+
+            /* Stage 2 pass check: if the Bank has previously proven stable,
+             * treat this as a runtime fault rather than boot failure.
+             * Clear bootAttempts and give the Bank another chance. */
+            if ((flags.main.flags & BOOT_FLAG_STAGE2_PASS) != 0)
+            {
+                flags.main.bootAttempts = 0u;
+                flags.main.sequence++;
+                Boot_DualBank_WriteFlags(&flags);
+                Boot_DualBank_JumpToBank(targetBank);
+                return;
+            }
+
+            /* Too many consecutive boot failures without stage 2 pass:
+             * invalidate target and try fallback */
             Boot_DualBank_InvalidateBank(targetBank);
             fallbackStatus = Boot_DualBank_VerifyBank(fallbackBank);
             if (fallbackStatus == BANK_STATUS_VALID)
             {
                 flags.main.activeBank = fallbackBank;
                 flags.main.bootAttempts = 0u;
+                flags.main.flags = 0u;  /* clear stage flags for new Bank */
                 flags.main.sequence++;
                 Boot_DualBank_WriteFlags(&flags);
                 SW_Reset();
@@ -609,6 +711,7 @@ void Boot_DualBank_SelectAndJump(void)
             else
             {
                 /* Both invalid: stay in bootloader */
+                g_bootPhase = BOOT_PHASE_BL_ENTRY;
                 return;
             }
         }
@@ -620,6 +723,8 @@ void Boot_DualBank_SelectAndJump(void)
     }
     else
     {
+        g_bootPhase = BOOT_PHASE_ROLLBACK;
+
         fallbackStatus = Boot_DualBank_VerifyBank(fallbackBank);
         if (fallbackStatus == BANK_STATUS_VALID)
         {
@@ -633,6 +738,7 @@ void Boot_DualBank_SelectAndJump(void)
         else
         {
             /* Both invalid: stay in bootloader */
+            g_bootPhase = BOOT_PHASE_BL_ENTRY;
             return;
         }
     }
@@ -649,6 +755,7 @@ void Boot_DualBank_SwitchBank(uint32 targetBank)
     {
         flags.main.activeBank   = targetBank;
         flags.main.bootAttempts = 0u;
+        flags.main.flags        = 0u;  /* clear stage flags for fresh start */
         flags.main.sequence++;
         Boot_DualBank_WriteFlags(&flags);
 
@@ -669,6 +776,7 @@ void Boot_DualBank_SetActiveBank(uint32 targetBank)
     {
         flags.main.activeBank   = targetBank;
         flags.main.bootAttempts = 0u;
+        flags.main.flags        = 0u;  /* clear stage flags for fresh start */
         flags.main.sequence++;
         Boot_DualBank_WriteFlags(&flags);
         g_activeBank = targetBank;
@@ -703,6 +811,41 @@ void Boot_DualBank_ClearBootAttempts(void)
 }
 
 /**
+ * @brief Mark that App has completed stage 1 (peripheral initialization).
+ * @note  Called by APP after all risky peripheral init is done and interrupts
+ *        are enabled. Sets BOOT_FLAG_STAGE1_PASS in flags.
+ */
+void Boot_DualBank_MarkStage1Pass(void)
+{
+    DualBankFlags_t flags;
+    if (Boot_DualBank_ReadFlags(&flags) == TRUE)
+    {
+        flags.main.flags |= BOOT_FLAG_STAGE1_PASS;
+        flags.main.sequence++;
+        Boot_DualBank_WriteFlags(&flags);
+    }
+}
+
+/**
+ * @brief Mark that App has completed stage 2 (stable main loop running).
+ * @note  Called by APP after main loop has been running for a configurable
+ *        period (e.g. 5 seconds) without crashes. Sets BOOT_FLAG_STAGE2_PASS.
+ *        Once stage 2 is passed, Bootloader treats subsequent resets as
+ *        runtime faults rather than boot failures, giving the Bank extra
+ *        chances before rollback.
+ */
+void Boot_DualBank_MarkStage2Pass(void)
+{
+    DualBankFlags_t flags;
+    if (Boot_DualBank_ReadFlags(&flags) == TRUE)
+    {
+        flags.main.flags |= BOOT_FLAG_STAGE2_PASS;
+        flags.main.sequence++;
+        Boot_DualBank_WriteFlags(&flags);
+    }
+}
+
+/**
  * @brief Get target write bank from DFlash flags.
  * @return BANK_A or BANK_B
  */
@@ -713,7 +856,7 @@ uint32 Boot_DualBank_GetTargetWriteBank(void)
     {
         return flags.main.targetWriteBank;
     }
-    return BANK_A; /* default */
+    return BANK_B; /* default */
 }
 
 /**

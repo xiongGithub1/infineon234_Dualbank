@@ -833,6 +833,8 @@ static void DigSession0x10(struct UDSServiceInfo* i_pstUDSServiceInfo,
 				m_pstPDUMsg->aDataBuf[1u] = RequestSubfunction;
 				m_pstPDUMsg->xDataLen = 2u;
 				SetCurrentSession(PROGRAM_SESSION);
+				/* OEM: mark programming session phase */
+				g_bootPhase = BOOT_PHASE_PROG_SESSION;
 #ifdef DIAGNOSTIC_MODE_FOR_APP
 				/* APP mode: set bootloader flag and reset after positive response is sent */
 				* (uint16*) RAM_BOOT_MODE_Addr = RAM_BOOT_MODE_APP;
@@ -1683,7 +1685,9 @@ static void RoutineControl0x31(struct UDSServiceInfo* i_pstUDSServiceInfo, tUdsA
 							SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_INVALID_MESSAGE_LENGTH_OR_FORMAT, m_pstPDUMsg);
 							break;
 						}
+						IfxScuWdt_serviceCpuWatchdog(IfxScuWdt_getCpuWatchdogPassword());
 						routineResult = CheckProgrammingConditions();
+						IfxScuWdt_serviceCpuWatchdog(IfxScuWdt_getCpuWatchdogPassword());
 						m_pstPDUMsg->aDataBuf[0] = 0x71;
 						m_pstPDUMsg->aDataBuf[1] = 0x01;
 						m_pstPDUMsg->aDataBuf[2] = 0xFF;
@@ -1716,7 +1720,9 @@ static void RoutineControl0x31(struct UDSServiceInfo* i_pstUDSServiceInfo, tUdsA
 						 *   - Bootloader sectors (S0 ~ S7)
 						 *   - The inactive bank (e.g. erasing Bank A while updating Bank B)
 						 */
+						IfxScuWdt_serviceCpuWatchdog(IfxScuWdt_getCpuWatchdogPassword());
 						routineResult = EraseFlashSector(m_pstPDUMsg->aDataBuf[4], m_pstPDUMsg->aDataBuf[5]);
+						IfxScuWdt_serviceCpuWatchdog(IfxScuWdt_getCpuWatchdogPassword());
 
 						if (routineResult == 0xFE)
 						{
@@ -1809,7 +1815,8 @@ static void RoutineControl0x31(struct UDSServiceInfo* i_pstUDSServiceInfo, tUdsA
 								}
 
 								/* CRC OK: mark valid and activate */
-								Boot_DualBank_MarkBankValid(targetBank, 0x00010000u);
+								g_bootPhase = BOOT_PHASE_PROG_VERIFY;
+								Boot_DualBank_MarkBankValid(targetBank, 0x00010000u, Flash_GetReceivedDataLength());
 								Boot_DualBank_SetActiveBank(targetBank);
 								routineResult = 0x01;
 								gs_DownloadCRC = 0xFFFFFFFFu;
@@ -1850,6 +1857,7 @@ static void RoutineControl0x31(struct UDSServiceInfo* i_pstUDSServiceInfo, tUdsA
 
 				case jumpToApp:
 					{
+						g_bootPhase = BOOT_PHASE_JUMP_DECISION;
 						if (TRUE != IsCurSecurityLevelRequet(SECURITY_LEVEL_2))
 						{
 							SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_SECURITY_ACCESS_DENIED, m_pstPDUMsg);

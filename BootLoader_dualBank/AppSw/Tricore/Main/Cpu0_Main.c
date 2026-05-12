@@ -68,17 +68,37 @@ uint32 ResetStatus_Previous(void)
 
 uint32 resetReason;
 boolean isPowerOnReset;
+
+/* OEM: startup phase timeout protection (max 100ms from reset to jump decision) */
+#define BOOT_STARTUP_TIMEOUT_MS     100u
+
 //int main( int argc, char *argv[] )
 void core0_main(void)
 {
     //	uint32 *p = (uint32 *)0x70000000;
     //	*p = 0;
-        /*
-         * !!WATCHDOG0 AND SAFETY WATCHDOG ARE DISABLED HERE!!
-         * Enable the watchdog in the demo if it is required and also service the watchdog periodically
-         * */
-    IfxScuWdt_disableCpuWatchdog(IfxScuWdt_getCpuWatchdogPassword());
+
+    /* === Phase 1: System Startup (OEM Standard) === */
+    g_bootPhase = BOOT_PHASE_STARTUP;
+
+    /*
+     * Enable CPU Watchdog to prevent runaway after Trap.
+     * Explicitly set reload=0x7FFF (~5.3s @ 100MHz/16384) to safely cover
+     * DFlash/PFlash operations. Default UCB reload may be too short.
+     * Safety WDT is disabled to simplify bootloader handling.
+     * */
+    {
+        IfxScuWdt_Config wdtConfig;
+        IfxScuWdt_initConfig(&wdtConfig);
+        wdtConfig.password = IfxScuWdt_getCpuWatchdogPassword();
+        wdtConfig.reload   = 0x7FFF;  /* ~5.3s, safe for all flash operations */
+        IfxScuWdt_initCpuWatchdog(&MODULE_SCU.WDTCPU[0], &wdtConfig);
+    }
     IfxScuWdt_disableSafetyWatchdog(IfxScuWdt_getSafetyWatchdogPassword());
+
+    /* OEM: Record reset reason for diagnostic and fault analysis */
+    resetReason = ResetStatus_Previous();
+    isPowerOnReset = ((resetReason & 0x01u) != 0u) ? TRUE : FALSE;
 
     //    IfxCpu_disableInterrupts();
 	/* app init*/
@@ -92,24 +112,23 @@ void core0_main(void)
     /* Dual Bank: initialize flag system and attempt to jump to active bank */
     Boot_DualBank_Init();
 
-    /* ===== 检查 RAM 启动标志（只在非上电复位时） ===== */
-    /* 读取复位原因：bit0=1 表示上电复位 */
-    //
-   /* Check if APP requested bootloader mode via RAM flag */
-//   {
-//       uint16 ramBootMode = *(uint16 *)RAM_BOOT_MODE_Addr;
-//       if (ramBootMode == RAM_BOOT_MODE_APP)
-//       {
-//           /* APP requested bootloader: clear flag and stay in bootloader for flashing */
-//           *(uint16 *)RAM_BOOT_MODE_Addr = RAM_BOOT_MODE_NORMAL;
-//       }
-//       else
-//       {
-           /* Normal boot: attempt to jump to active bank */
+    /* === OEM Phase: Check if APP requested bootloader mode via RAM flag === */
+    {
+        uint16 ramBootMode = *(uint16 *)RAM_BOOT_MODE_Addr;
+        if (ramBootMode == RAM_BOOT_MODE_APP)
+        {
+            /* APP requested bootloader: clear flag and stay in bootloader for flashing */
+            *(uint16 *)RAM_BOOT_MODE_Addr = RAM_BOOT_MODE_NORMAL;
+            g_bootPhase = BOOT_PHASE_BL_ENTRY;
+            /* Fall through to AppBL_init() without attempting jump */
+        }
+        else
+        {
+            /* Normal boot: attempt to jump to active bank */
             Boot_DualBank_SelectAndJump();
-           /* If SelectAndJump() returns, both banks are invalid -> stay in bootloader */
-//       }
-//   }
+            /* If SelectAndJump() returns, both banks are invalid -> stay in bootloader */
+        }
+    }
 
     AppBL_init();
     // measureEraseTime
@@ -123,7 +142,7 @@ void core0_main(void)
         /* brd */
         BrdLed_main();
 
-
+        /* Service CPU watchdog: if main loop stops (e.g. Trap deadlock), WDT resets system */
+        IfxScuWdt_serviceCpuWatchdog(IfxScuWdt_getCpuWatchdogPassword());
     }
 }
-

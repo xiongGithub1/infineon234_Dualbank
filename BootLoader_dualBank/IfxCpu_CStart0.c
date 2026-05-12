@@ -241,26 +241,7 @@ const uint32 BootModeHeader_0[] = {
 	0x7DD24222
 }; /* First boot mode header, boot from internal flash. Replaced on 20211123 */
 
-//const uint32 BootModeHeader_0[] = {
-//	0xA0000020,
-//	0xB3590170,   /* 内部FLASH启动   外部引脚选择被使能 */
-//	0xA0000020,
-//	0xA0000020,
-//	0x9E8D0E7D,
-//	0x6172F182,
-//	0x822DBDDD,
-//	0x7DD24222
-//};//这一个头文件可用于串口下载boot程序，20211123替换上面一个
-//const uint32 BootModeHeader_0[] = {
-//    0xA0000020,
-//    0xB3590070,    // 改成内部振荡器，排除晶振问题
-//    0xA0000020,
-//    0xA0000020,
-//    0x9E8D0E7D,    // 假设 reset vector 内容没变
-//    0x6172F182,
-//    0x6D7F0B3C,    // ✅ 已验证
-//    0x9280F4C3
-//};
+
 /*reset the sections defined above */
 #if defined(__HIGHTEC__)
 #pragma section
@@ -293,26 +274,16 @@ const uint32 BootModeHeader_0[] = {
  *       to recalculate CRCrange/CRChead after changing STADBM/BMI.
  */
 const uint32 BootModeHeader_1[] = {
-    0xA0100020,     /* STADBM: Bank B uncached start = 0xA0100020 (cached 0x80100020) */
-    0xB3590170,     /* BMI=0170h, BMHDID=B359h - same boot mode as BMHD_0 */
-//    0xB3590070,
-    0xA0100020,     /* ChkStart */
-    0xA0100020,     /* ChkEnd */
-    0x9E8D0E7D,     /* CRCrange - PLACEHOLDER, recalculate with tool */
-    0x6172F182,     /* !CRCrange */
-    0x822DBDDD,     /* CRChead - PLACEHOLDER, recalculate with tool */
-    0x7DD24222      /* !CRChead */
+	0xA0000020,
+    0xB3590170,   /* Internal FLASH boot, external oscillator enabled */
+    0xA0000020,
+	0xA0000020,
+	0x9E8D0E7D,
+	0x6172F182,
+	0x822DBDDD,
+	0x7DD24222
 };
-//const uint32 BootModeHeader_1[] = {
-//    0xA0100020,
-//    0xB3590070,
-//    0xA0100020,
-//    0xA0100020,
-//    0xFFFFFFFF,    // CRC32(FFFFFFFF)
-//    0x00000000,    // ~CRCrange
-//    0xC16B36D4,    // ✅ 已验证
-//    0x3E94C92B
-//};
+
 /*reset the sections defined above */
 #if defined(__HIGHTEC__)
 #pragma section
