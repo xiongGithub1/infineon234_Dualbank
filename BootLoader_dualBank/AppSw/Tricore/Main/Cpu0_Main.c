@@ -106,7 +106,7 @@ void core0_main(void)
 //       else
 //       {
            /* Normal boot: attempt to jump to active bank */
-//            Boot_DualBank_SelectAndJump();
+            Boot_DualBank_SelectAndJump();
            /* If SelectAndJump() returns, both banks are invalid -> stay in bootloader */
 //       }
 //   }

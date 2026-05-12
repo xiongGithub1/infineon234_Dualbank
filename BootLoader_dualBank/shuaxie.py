@@ -596,7 +596,7 @@ def do_flash_process():
         # ------------------------------------------------------------
         # 12. ECU 复位 11 01
         # ------------------------------------------------------------
-        uds_request(uds, 0x11, [0x01], "ECU Reset")
+        uds_request(uds, 0x11, [0x03], "ECU Reset")
 
     finally:
         uds.stop_session_keep()
