@@ -811,6 +811,9 @@ static void DigSession0x10(struct UDSServiceInfo* i_pstUDSServiceInfo,
 			m_pstPDUMsg->xDataLen = 2u;
 			SetCurrentSession(DEFALUT_SESSION);
 			SetSecurityLevel(NONE_SECURITY);
+			/* OEM: Reset download state to prevent stale alignment buffer / FSR
+			 * from affecting a subsequent programming session. */
+			Flash_InitDowloadInfo();
 			break;
 		case 0x81u:
 			SetCurrentSession(DEFALUT_SESSION);
@@ -1232,7 +1235,7 @@ static void ReadDataByIdentifier0x22(struct UDSServiceInfo* i_pstUDSServiceInfo,
 	}
 	else
 	{
-		SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_CONDITIONS_NOT_CORRECT, m_pstPDUMsg);
+		SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_GENERAL_PROGRAMMING_FAILURE, m_pstPDUMsg);
 	}
 }
 
@@ -1388,36 +1391,41 @@ static uint8  gs_bCrcActive = FALSE;
 static void RequestDownload0x34(struct UDSServiceInfo* i_pstUDSServiceInfo,
 	tUdsAppMsgInfo* m_pstPDUMsg)
 {
-
 	uint8 Index = 0u;
 	uint8 Ret = TRUE;
-	uint32  addrBytesLength, dataBytesLength;
+	uint32 addrBytesLength, dataBytesLength;
 	uint32 addrAndDataBytesLength;
+
 	addrAndDataBytesLength = m_pstPDUMsg->aDataBuf[2u];
 	addrBytesLength = addrAndDataBytesLength & 0x0f;
 	dataBytesLength = (addrAndDataBytesLength & 0xf0) >> 4;
 
-
+	/* 1. Message length check */
 	if (m_pstPDUMsg->xDataLen < (1u + 2u + addrBytesLength + dataBytesLength))
 	{
 		Ret = FALSE;
 		SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_INVALID_MESSAGE_LENGTH_OR_FORMAT, m_pstPDUMsg);
 	}
 
+	/* 2. State machine check: reject if a download is already in progress */
 	if (TRUE == Ret)
 	{
+		tFlDownloadStepType curStep = Flash_GetCurDownloadStep();
+		if ((curStep == FL_TRANSFER_STEP) || (curStep == FL_EXIT_TRANSFER_STEP))
+		{
+			Ret = FALSE;
+			SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_REQUEST_SEQUENCE_ERROR, m_pstPDUMsg);
+		}
+	}
 
-
-
+	/* 3. Parse address and length */
+	if (TRUE == Ret)
+	{
 		gs_stDowloadDataInfo.StartAddr = 0u;
 		for (Index = 0u; Index < addrBytesLength; Index++)
-
 		{
 			gs_stDowloadDataInfo.StartAddr <<= 8u;
-
-
 			gs_stDowloadDataInfo.StartAddr |= m_pstPDUMsg->aDataBuf[Index + 3u];
-
 		}
 		gs_stDowloadDataInfo.StartAddr = (gs_stDowloadDataInfo.StartAddr & 0x00FFFFFF) | 0xA0000000;
 
@@ -1436,7 +1444,6 @@ static void RequestDownload0x34(struct UDSServiceInfo* i_pstUDSServiceInfo,
 			}
 		}
 
-
 		if (Boot_DualBank_GetTargetWriteBank() == Boot_DualBank_GetActiveBank())
 		{
 			/* Never allow flashing the active bank, even if it appears invalid.
@@ -1447,7 +1454,6 @@ static void RequestDownload0x34(struct UDSServiceInfo* i_pstUDSServiceInfo,
 			Ret = FALSE;
 		}
 
-
 		gs_stDowloadDataInfo.DataLen = 0u;
 		for (Index = 0u; Index < dataBytesLength; Index++)
 		{
@@ -1456,19 +1462,18 @@ static void RequestDownload0x34(struct UDSServiceInfo* i_pstUDSServiceInfo,
 		}
 	}
 
-
+	/* 4. Address and length validation */
 	if (((TRUE != IsDownloadDataAddrValid(gs_stDowloadDataInfo.StartAddr)) ||
-
-		(TRUE != IsDownloadDataLenValid(gs_stDowloadDataInfo.DataLen))) && (TRUE == Ret))
+		 (TRUE != IsDownloadDataLenValid(gs_stDowloadDataInfo.DataLen))) && (TRUE == Ret))
 	{
 		SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_REQUEST_OUT_OF_RANGE, m_pstPDUMsg);
-
 		Ret = FALSE;
 	}
 
+	/* 5. Success path: FULL reset and start new download */
 	if (TRUE == Ret)
 	{
-
+		Flash_InitDowloadInfo();
 		Flash_SetNextDownloadStep(FL_TRANSFER_STEP);
 
 		/* Initialise streaming CRC at the start of a new download sequence */
@@ -1480,20 +1485,16 @@ static void RequestDownload0x34(struct UDSServiceInfo* i_pstUDSServiceInfo,
 
 		Flash_SaveDownloadDataInfo(gs_stDowloadDataInfo.StartAddr, gs_stDowloadDataInfo.DataLen);
 
-
-
 		m_pstPDUMsg->aDataBuf[0u] = i_pstUDSServiceInfo->SerNum + 0x40u;
 		m_pstPDUMsg->aDataBuf[1u] = 0x10u;
 		m_pstPDUMsg->aDataBuf[2u] = 0x80u;
 		m_pstPDUMsg->xDataLen = 3u;
-
 
 		gs_RxBlockNum = 1;
 	}
 	else
 	{
 		Flash_InitDowloadInfo();
-
 		Flash_SetNextDownloadStep(FL_REQUEST_STEP);
 		gs_DownloadCRC = 0xFFFFFFFFu;
 		gs_bCrcActive  = FALSE;
@@ -1502,17 +1503,17 @@ static void RequestDownload0x34(struct UDSServiceInfo* i_pstUDSServiceInfo,
 
 static void TransferData0x36(struct UDSServiceInfo* i_pstUDSServiceInfo, tUdsAppMsgInfo* m_pstPDUMsg)
 {
-
 	uint8 Ret = TRUE;
 
-
+	/* 1. State machine check */
 	if ((FL_TRANSFER_STEP != Flash_GetCurDownloadStep()) && (TRUE == Ret))
 	{
 		Ret = FALSE;
 		SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_REQUEST_SEQUENCE_ERROR, m_pstPDUMsg);
 	}
 
-	/* Verify sequence number (SN) per UDS specification */
+	/* 2. Verify sequence number (SN) per UDS specification */
+	if (TRUE == Ret)
 	{
 		uint8 rxSN = m_pstPDUMsg->aDataBuf[1u];
 		if (rxSN != gs_RxBlockNum)
@@ -1533,54 +1534,49 @@ static void TransferData0x36(struct UDSServiceInfo* i_pstUDSServiceInfo, tUdsApp
 		}
 	}
 
-	uint8 actualDataLen = m_pstPDUMsg->xDataLen - 2;
-
-
-
-
-	if (TRUE != Flash_ProgramRegion(gs_stDowloadDataInfo.StartAddr,
-		&m_pstPDUMsg->aDataBuf[2],
-		actualDataLen)
-		&& (TRUE == Ret))
+	/* 3. Program received data into Flash */
+	if (TRUE == Ret)
 	{
-		Ret = FALSE;
+		uint8 actualDataLen = m_pstPDUMsg->xDataLen - 2;
 
-		SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_CONDITIONS_NOT_CORRECT, m_pstPDUMsg);
-	}
-	else
-	{
-		/* Accumulate CRC over the received payload (matches tester-side calculation) */
-		if (gs_bCrcActive != FALSE)
+		if (TRUE != Flash_ProgramRegion(gs_stDowloadDataInfo.StartAddr,
+			&m_pstPDUMsg->aDataBuf[2],
+			actualDataLen))
 		{
-			gs_DownloadCRC = Boot_CRC32_Update(gs_DownloadCRC,
-				&m_pstPDUMsg->aDataBuf[2],
-				actualDataLen);
+			Ret = FALSE;
+			SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_GENERAL_PROGRAMMING_FAILURE, m_pstPDUMsg);
 		}
+		else
+		{
+			/* Accumulate CRC over the received payload (matches tester-side calculation) */
+			if (gs_bCrcActive != FALSE)
+			{
+				gs_DownloadCRC = Boot_CRC32_Update(gs_DownloadCRC,
+					&m_pstPDUMsg->aDataBuf[2],
+					actualDataLen);
+			}
 
-		gs_stDowloadDataInfo.StartAddr += actualDataLen;
-		gs_stDowloadDataInfo.DataLen -= actualDataLen;
+			gs_stDowloadDataInfo.StartAddr += actualDataLen;
+			gs_stDowloadDataInfo.DataLen   -= actualDataLen;
+		}
 	}
 
+	/* 4. If all data received, advance to exit-transfer state */
 	if ((0u == gs_stDowloadDataInfo.DataLen) && (TRUE == Ret))
 	{
-
 		gs_RxBlockNum = 0u;
-
 		Flash_SetNextDownloadStep(FL_EXIT_TRANSFER_STEP);
 	}
 
+	/* 5. Build response */
 	if (TRUE == Ret)
 	{
-
-
 		m_pstPDUMsg->aDataBuf[0u] = i_pstUDSServiceInfo->SerNum + 0x40u;
 		m_pstPDUMsg->xDataLen = 4u;
-
 	}
 	else
 	{
 		Flash_InitDowloadInfo();
-
 		Flash_SetNextDownloadStep(FL_REQUEST_STEP);
 		gs_RxBlockNum = 0u;
 		gs_DownloadCRC = 0xFFFFFFFFu;
@@ -1592,21 +1588,29 @@ static void TransferData0x36(struct UDSServiceInfo* i_pstUDSServiceInfo, tUdsApp
 static void RequestTransferExit0x37(struct UDSServiceInfo* i_pstUDSServiceInfo,
 	tUdsAppMsgInfo* m_pstPDUMsg)
 {
-
 	uint8 Ret = TRUE;
 
+	/* 1. State machine check */
 	if (FL_EXIT_TRANSFER_STEP != Flash_GetCurDownloadStep())
 	{
 		Ret = FALSE;
-
 		SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_REQUEST_SEQUENCE_ERROR, m_pstPDUMsg);
 	}
 
+	/* 2. Flush any remaining alignment buffer and advance to checksum */
 	if (TRUE == Ret)
 	{
+		/* OEM: Flush any remaining alignment buffer (< 32 bytes) before
+		 * advancing to checksum verification.  Padded with 0xFF. */
+		if (Flash_ForceWriteRemaining() == FALSE)
+		{
+			SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_GENERAL_PROGRAMMING_FAILURE, m_pstPDUMsg);
+			Flash_InitDowloadInfo();
+			Flash_SetNextDownloadStep(FL_REQUEST_STEP);
+			return;
+		}
+
 		Flash_SetNextDownloadStep(FL_CHECKSUM_STEP);
-
-
 
 		m_pstPDUMsg->aDataBuf[0u] = i_pstUDSServiceInfo->SerNum + 0x40u;
 		m_pstPDUMsg->xDataLen = 1u;
@@ -1614,6 +1618,7 @@ static void RequestTransferExit0x37(struct UDSServiceInfo* i_pstUDSServiceInfo,
 	else
 	{
 		Flash_InitDowloadInfo();
+		Flash_SetNextDownloadStep(FL_REQUEST_STEP);
 	}
 }
 
@@ -1657,11 +1662,12 @@ static void RoutineControl0x31(struct UDSServiceInfo* i_pstUDSServiceInfo, tUdsA
 	{
 		case 0x01:
 			{
-				if (Flash_ForceWriteRemaining() == 0)
-					{
-						SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_CONDITIONS_NOT_CORRECT, m_pstPDUMsg);
-						break;
-					}
+				/* OEM: Removed unconditional Flash_ForceWriteRemaining() here.
+				 * Alignment buffer flush now happens only at:
+				 *   - RequestTransferExit (0x37)
+				 *   - RoutineControl 0xDFFF CRC OK path (implicit via 0x37 sequence)
+				 * This prevents stale buffer from a failed previous session
+				 * causing false NRC 0x22 on the next RoutineControl start. */
 
 				if (m_pstPDUMsg->xDataLen < 4)
 				{

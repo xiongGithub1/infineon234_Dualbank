@@ -51,6 +51,9 @@ do{\
 /*Flash finger print length*/
 #define FL_FINGER_PRINT_LENGTH  (17u)
 
+/*PFlash page size (smallest programmable unit)*/
+#define FLS_PFLASH_PAGE_SIZE    (32u)
+
 /*invalid UDS services ID*/
 #define INVALID_UDS_SERVICES_ID (0xFFu)
 
@@ -176,6 +179,11 @@ typedef struct
     /*opeate flash API*/
 	tFlashOperateAPI stFlashOperateAPI;
 
+    /*--- Alignment buffer for cross-page data (moved from Flash.c) ---*/
+    uint8  aAlignBuffer[FLS_PFLASH_PAGE_SIZE];  /* leftover data < 32 bytes */
+    uint32 alignBufferAddr;                     /* Flash addr where leftover starts */
+    uint32 alignBufferLen;                      /* Number of valid bytes in aAlignBuffer */
+
 }tFlsDownloadStateType;
 
 
@@ -186,7 +194,6 @@ typedef struct
 	tLogicalAddr xBlockStartLogicalAddr; /*block start logical addr*/
 	tLogicalAddr xBlockEndLogicalAddr;	 /*block end logical addr*/
 }BlockInfo_t;
-
 
 
 

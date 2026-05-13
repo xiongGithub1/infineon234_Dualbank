@@ -1,8 +1,5 @@
 #include "fls_app.h"
-
-
-
-
+#include <string.h>
 
 /*flash download info*/
 static tFlsDownloadStateType gs_stFlashDownloadInfo;
@@ -80,22 +77,18 @@ void Flash_SetNextDownloadStep(const tFlDownloadStepType i_donwloadStep)
 
 uint8 Flash_ProgramRegion(uint32 i_addr,uint8 *i_pDataBuf,uint32 i_dataLen)
 {
-
     uint8 result = TRUE;
 
-    // ��鵱ǰ�Ƿ�Ϊ����׶�
     if (FL_TRANSFER_STEP != Flash_GetCurDownloadStep())
     {
-        result = FALSE;
+        return FALSE;
     }
-
-    // �������ָ���Ƿ���Ч
     if (NULL_PTR == i_pDataBuf)
     {
-        result = FALSE;
+        return FALSE;
     }
 
-	result = (uint8)Flash_writePFlash_portex(i_addr, i_pDataBuf, i_dataLen); // ֱ�ӵ���д�뺯��
+	result = (uint8)Flash_writePFlash_portex(i_addr, i_pDataBuf, i_dataLen);
 
 	if (TRUE == result)
 	{
@@ -104,7 +97,7 @@ uint8 Flash_ProgramRegion(uint32 i_addr,uint8 *i_pDataBuf,uint32 i_dataLen)
 	}
 	else
 	{
-		gs_stFlashDownloadInfo.errorCode = FALSE; // ���д��ʧ��
+		gs_stFlashDownloadInfo.errorCode = FALSE;
 	}
     return result;
 }
@@ -143,27 +136,28 @@ void Flash_EraseFlashDriverInRAM(void)
 
 
 
-/*Init flash download*/
+/*Init flash download — FULL reset of all state including alignment buffer*/
 void Flash_InitDowloadInfo(void)
 {
+	/* Entire structure zeroed to eliminate stale state */
+	memset(&gs_stFlashDownloadInfo, 0, sizeof(tFlsDownloadStateType));
+
+	/* Explicitly reset fields that have non-zero defaults */
 	gs_stFlashDownloadInfo.isFingerPrintWritten = FALSE;
-
-	if(TRUE == IsFlashDriverDownload())
-	{
-		Flash_EraseFlashDriverInRAM();
-
-		SetFlashDriverNotDonwload();
-	}
+	gs_stFlashDownloadInfo.isFlashDrvDownloaded = FALSE;
+	gs_stFlashDownloadInfo.errorCode            = TRUE;
+	gs_stFlashDownloadInfo.requestActiveJobUDSSerID = INVALID_UDS_SERVICES_ID;
 
 	Flash_SetNextDownloadStep(FL_REQUEST_STEP);
-
 	Flash_SetOperateFlashActiveJob(FLASH_IDLE, NULL_PTR, INVALID_UDS_SERVICES_ID, NULL_PTR);
 
 	gs_stFlashDownloadInfo.pstAppFlashStatus = &gs_stAppFlashStatus;
 
-	fsl_memset(&gs_stFlashDownloadInfo.stFlashOperateAPI, 0x0u, sizeof(tFlashOperateAPI));
-
 	fsl_memset(&gs_stAppFlashStatus, 0xFFu, sizeof(tAppFlashStatus));
+
+	/* OEM: Reset Flash.c alignment buffer to prevent stale data from
+	 * a previous aborted session from poisoning the new download. */
+	Flash_ResetAlignBuffer();
 }
 
 
@@ -187,4 +181,3 @@ uint32 Flash_GetReceivedDataLength(void)
 {
 	return gs_stFlashDownloadInfo.receivedDataLength;
 }
-
