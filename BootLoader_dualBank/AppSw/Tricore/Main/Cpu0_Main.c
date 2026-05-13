@@ -108,7 +108,7 @@ void core0_main(void)
     delay_init();
 
     BrdLed_init();
-
+    AppBL_init();
     /* Dual Bank: initialize flag system and attempt to jump to active bank */
     Boot_DualBank_Init();
 
@@ -130,7 +130,7 @@ void core0_main(void)
         }
     }
 
-    AppBL_init();
+
     // measureEraseTime
 //    MeasureEraseBankA_Time();
     IfxCpu_enableInterrupts();
