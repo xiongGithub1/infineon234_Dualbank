@@ -3,7 +3,7 @@ import time
 import os
 import struct
 import zlib
-
+import sys
 # ============================================================================
 # BootLoader20250714_UDS_tasking622 - ZXDoc 完整刷写脚本
 # ============================================================================
@@ -32,9 +32,9 @@ FUNC_ADDR = 0x7DF          # 功能地址（会话保持用）
 CHANNEL = 1                # CAN 通道号
 
 # 刷写文件路径（.hex 或 .bin，需与 LSL 中的 Bank 地址匹配）
-# HEX_FILE = r"E:\workFiles\IEBS\zhenChuangCode\ZhenchuangTest\IEBS_wulin_DiagnosisTest_20250723\Debug\IEBS_wulin_DiagnosisTest_20250723.hex"
-HEX_FILE = r"E:\workFiles\IEBS\tc234bootloader\App_dualBank\Debug\App_dualBank.hex"
-HEX_FILE_B=r"E:\workFiles\IEBS\tc234bootloader\App_dualBank\App_dualBank.hex"
+
+HEX_FILE =r"E:\workFiles\IEBS\tc234bootloader\App_dualBank\Debug\App_dualBank.hex"
+HEX_FILE_B=r"E:\workFiles\IEBS\tc234bootloader\App_dualBank\debug_b\App_dualBank.hex"
 # 安全访问 DLL 路径（用于 27 服务 Seed->Key 计算）
 KEY_DLL = r"E:\visualStudioCode\ZcanProDll\Debug\ZcanProDll.dll"
 
@@ -157,52 +157,7 @@ def erase_target_bank(uds):
     return True
 
 
-def parse_intel_hex(hex_path):
-    """解析 Intel HEX 文件，返回 (起始地址, bytearray 数据)"""
-    data_dict = {}
-    base_addr = 0
-    with open(hex_path, 'r') as f:
-        for line in f:
-            line = line.strip()
-            if not line or line[0] != ':':
-                continue
-            byte_count = int(line[1:3], 16)
-            addr = int(line[3:7], 16)
-            rec_type = int(line[7:9], 16)
-            payload = bytes.fromhex(line[9:9 + byte_count * 2])
-            if rec_type == 0x00:           # Data
-                for i, b in enumerate(payload):
-                    data_dict[base_addr + addr + i] = b
-            elif rec_type == 0x04:         # Extended Linear Address
-                base_addr = struct.unpack('>H', payload)[0] << 16
-            elif rec_type == 0x01:         # End
-                break
-    if not data_dict:
-        return 0, bytearray()
-    min_addr = min(data_dict.keys())
-    max_addr = max(data_dict.keys())
-    size = max_addr - min_addr + 1
-    buf = bytearray([0xFF] * size)
-    for addr, b in data_dict.items():
-        buf[addr - min_addr] = b
-    return min_addr, buf
 
-
-def calc_bank_crc32(hex_path, bank_start, bank_size):
-    """
-    计算 HEX 文件在指定 Bank 范围内的 CRC32（与 Bootloader 内部计算一致）。
-    未编程区域按 0xFF 填充，与 Flash 擦除后的状态一致。
-    """
-    start_addr, data = parse_intel_hex(hex_path)
-    offset = bank_start - start_addr
-    if offset < 0:
-        app.log_e(f"[CRC] HEX start 0x{start_addr:08X} > Bank start 0x{bank_start:08X}")
-        return None
-    bank_data = bytearray([0xFF] * bank_size)
-    copy_len = min(len(data), bank_size - offset)
-    bank_data[offset:offset + copy_len] = data[:copy_len]
-    crc = zlib.crc32(bank_data) & 0xFFFFFFFF
-    return crc
 
 
 def file_download(uds):
@@ -257,184 +212,162 @@ def file_download(uds):
         app.log_e("[Download] ❌ File download failed")
         return False
 
-# ============================================================
-# 手动实现 34/36/37 下载（绕过 ZXDoc file_download 内部检查）
-# ============================================================
-def parse_hex_file(hex_path):
-    """
-    解析 Intel HEX 文件，返回 [(address, data_bytes), ...] 的列表
-    按连续地址合并 segment
-    """
-    segments = []
-    base_addr = 0
-    cur_seg = None
 
-    with open(hex_path, 'r') as f:
-        for line in f:
+def parse_hex_file(filepath):
+    """解析 Intel HEX 文件，返回 {abs_addr: byte_value} 和起始地址"""
+    data = {}
+    base_addr = 0
+    start_addr = None
+
+    with open(filepath, 'r') as f:
+        for line_num, line in enumerate(f, 1):
             line = line.strip()
-            if not line or not line.startswith(':'):
+            if not line:
                 continue
-            byte_count = int(line[1:3], 16)
-            addr = int(line[3:7], 16)
-            rec_type = int(line[7:9], 16)
-            payload = bytes.fromhex(line[9:9+byte_count*2])
+            if line[0] != ':':
+                continue
+
+            if len(line) < 11:
+                continue
+
+            try:
+                byte_count = int(line[1:3], 16)
+                addr = int(line[3:7], 16)
+                rec_type = int(line[7:9], 16)
+            except ValueError:
+                continue
 
             if rec_type == 0x04:  # Extended Linear Address
-                base_addr = struct.unpack(">H", payload)[0] << 16
+                base_addr = int(line[9:13], 16) << 16
+            elif rec_type == 0x02:  # Extended Segment Address
+                base_addr = int(line[9:13], 16) << 4
             elif rec_type == 0x00:  # Data
                 abs_addr = base_addr + addr
-                if cur_seg is None or abs_addr != (cur_seg[0] + len(cur_seg[1])):
-                    if cur_seg is not None:
-                        segments.append(cur_seg)
-                    cur_seg = [abs_addr, bytearray()]
-                cur_seg[1].extend(payload)
-            # 忽略 0x01 (EOF), 0x05 (Start Linear Address) 等
+                for i in range(byte_count):
+                    try:
+                        data[abs_addr + i] = int(line[9 + i*2:11 + i*2], 16)
+                    except (ValueError, IndexError):
+                        pass
+            elif rec_type == 0x05:  # Start Linear Address
+                if len(line) >= 17:
+                    start_addr = int(line[9:17], 16)
+            elif rec_type == 0x01:  # End of File
+                break
 
-    if cur_seg is not None:
-        segments.append(cur_seg)
-
-    # 转换为 (addr, bytes) 元组列表
-    return [(s[0], bytes(s[1])) for s in segments]
+    return data, start_addr
 
 
-def file_download_manual(uds):
-    """
-    手动发送 34/36/37 序列下载 HEX 文件到 TARGET_BANK。
-    完全绕过 ZXDoc file_download API，避免任何内部隐藏检查。
-    """
-    # 1. 擦除检查
-    expected_sectors = set(BANK_SECTORS.get(TARGET_BANK, BANK_SECTORS["A"]))
-    actual_sectors = set(_g_erased_sectors)
-    missing = expected_sectors - actual_sectors
-    if missing:
-        app.log_e(
-            f"[Download] ❌ Erase incomplete! Missing sectors: {sorted(missing)}. "
-            f"Expected {len(expected_sectors)}, actually erased {len(actual_sectors)}."
-        )
-        return False
-    app.log_i(f"[Download] ✅ Erase check passed, proceeding to manual 34/36/37 download.")
+def group_segments(data, max_gap=32):
+    """将数据地址分组为连续段（空隙 <= max_gap 的合并）"""
+    if not data:
+        return []
 
-    if not os.path.exists(HEX_FILE):
-        app.log_e(f"[Download] ❌ File not found: {HEX_FILE}")
-        return False
+    sorted_addrs = sorted(data.keys())
+    segments = []
+    seg_start = sorted_addrs[0]
+    seg_end = sorted_addrs[0] + 1
+    prev_addr = sorted_addrs[0]
 
-    # 2. 解析 HEX
-    segments = parse_hex_file(HEX_FILE)
-    if not segments:
-        app.log_e("[Download] ❌ No valid data segments found in HEX file")
-        return False
-
-    # 3. 过滤只下载到目标 Bank 的段
-    bank_start = BANK_A_START_ADDR if TARGET_BANK == "A" else BANK_B_START_ADDR
-    bank_end = bank_start + (BANK_APP_A_SIZE if TARGET_BANK == "A" else BANK_APP_B_SIZE)
-    filtered_segments = []
-    for addr, data in segments:
-        seg_start = max(addr, bank_start)
-        seg_end = min(addr + len(data), bank_end)
-        if seg_start < seg_end:
-            offset = seg_start - addr
-            filtered_segments.append((seg_start, data[offset:offset + (seg_end - seg_start)]))
-
-    if not filtered_segments:
-        app.log_e(f"[Download] ❌ No data in HEX falls within target bank {TARGET_BANK} "
-                  f"range [{hex(bank_start)} - {hex(bank_end)}]")
-        return False
-
-    app.log_i(f"[Download] Target bank: {TARGET_BANK}, {len(filtered_segments)} segment(s) to download")
-
-    # 4. 逐段下载
-    MAX_TX_DATA = 4095  # CAN FD 单帧最大数据，留点余量
-    sequence = 1
-
-    for seg_idx, (addr, data) in enumerate(filtered_segments):
-        data_len = len(data)
-        app.log_i(f"[Download] Segment {seg_idx+1}/{len(filtered_segments)}: "
-                  f"addr={hex(addr)}, len={data_len}")
-
-        # ---- 0x34 RequestDownload ----
-        # 地址格式: 0x44 = 4字节地址 + 4字节长度
-        addr_bytes = struct.pack(">I", addr)
-        len_bytes = struct.pack(">I", data_len)
-        req34_data = [0x00, 0x44] + list(addr_bytes) + list(len_bytes)
-        req34 = ZUdsRequest(
-            src_addr=PHY_ADDR,
-            dst_addr=TESTER_ADDR,
-            is_extend=False,
-            suppress_response=False,
-            sid=0x34,
-            data=req34_data,
-        )
-        resp34 = uds.request(req34)
-        if resp34 is None or resp34.status != UDS_RSP_STATUS_OK or len(resp34.data) < 2:
-            app.log_e(f"[Download] ❌ 0x34 RequestDownload failed or NRC")
-            return False
-
-        # 解析 0x74 响应中的 maxNumberOfBlockLength
-        # resp34.data 不含 SID，格式: [lengthFormatIdentifier, maxNumberOfBlockLength...]
-        lfi = resp34.data[0]
-        # UDS 规范: bit3-0 编码为 (字节数 - 1)，即实际字节数 = (lfi & 0x0F) + 1
-        len_size = (lfi & 0x0F) + 1
-        if len_size == 1 and len(resp34.data) >= 2:
-            max_block_len = resp34.data[1]
-        elif len_size == 2 and len(resp34.data) >= 3:
-            max_block_len = (resp34.data[1] << 8) | resp34.data[2]
+    for addr in sorted_addrs[1:]:
+        if addr <= prev_addr + max_gap:
+            seg_end = max(seg_end, addr + 1)
         else:
-            max_block_len = MAX_TX_DATA
-        app.log_i(f"[Download] Server max block length: {max_block_len}")
-        # 实际可用数据长度 = max_block_len - 2 (减去 SID + blockSequenceCounter)
-        max_tx = max_block_len - 2 if max_block_len > 2 else MAX_TX_DATA
+            segments.append((seg_start, seg_end))
+            seg_start = addr
+            seg_end = addr + 1
+        prev_addr = addr
 
-        # ---- 0x36 TransferData ----
-        offset = 0
-        while offset < data_len:
-            chunk = data[offset:offset + max_tx]
-            block_seq = sequence & 0xFF
-            req36_data = [block_seq] + list(chunk)
-            req36 = ZUdsRequest(
-                src_addr=PHY_ADDR,
-                dst_addr=TESTER_ADDR,
-                is_extend=False,
-                suppress_response=False,
-                sid=0x36,
-                data=req36_data,
-            )
-            resp36 = uds.request(req36)
-            if resp36 is None or resp36.status != UDS_RSP_STATUS_OK:
-                app.log_e(f"[Download] ❌ 0x36 TransferData failed at offset {offset}, seq={block_seq}")
-                return False
-            # 0x76 正响应: resp36.data[0] 应为 blockSequenceCounter
-            if len(resp36.data) < 1 or resp36.data[0] != block_seq:
-                app.log_e(f"[Download] ❌ 0x76 block sequence mismatch, expected {block_seq}, got {resp36.data.hex() if resp36.data else 'empty'}")
-                return False
+    segments.append((seg_start, seg_end))
+    return segments
 
-            offset += len(chunk)
-            sequence += 1
-            if sequence > 0xFF:
-                sequence = 0
 
-            # 每 10 个数据包打印一次进度
-            if offset % (max_tx * 10) < max_tx:
-                pct = offset * 100 / data_len
-                app.log_i(f"[Download] Segment {seg_idx+1} progress: {offset}/{data_len} ({pct:.1f}%)")
+def write_hex_record(f, byte_count, offset, rec_type, data_bytes):
+    """写入一条 Intel HEX 记录"""
+    record = f"{byte_count:02X}{offset:04X}{rec_type:02X}"
+    if data_bytes:
+        record += data_bytes.hex().upper()
 
-        # ---- 0x37 RequestTransferExit ----
-        req37 = ZUdsRequest(
-            src_addr=PHY_ADDR,
-            dst_addr=TESTER_ADDR,
-            is_extend=False,
-            suppress_response=False,
-            sid=0x37,
-            data=[],
-        )
-        resp37 = uds.request(req37)
-        if resp37 is None or resp37.status != UDS_RSP_STATUS_OK:
-            app.log_e(f"[Download] ❌ 0x37 RequestTransferExit failed")
-            return False
+    # 计算校验和：所有字节的和取低8位，再取补码
+    checksum = byte_count + ((offset >> 8) & 0xFF) + (offset & 0xFF) + rec_type
+    for b in data_bytes:
+        checksum += b
+    checksum = ((-checksum) & 0xFF)
 
-        app.log_i(f"[Download] ✅ Segment {seg_idx+1}/{len(filtered_segments)} downloaded successfully")
+    record += f"{checksum:02X}"
+    f.write(f":{record}\n")
 
-    app.log_i("[Download] ✅ All segments downloaded successfully")
+
+def align_hex_file(input_path, output_path, align=32, fill_byte=0x00):
+    """
+    对齐 Intel HEX 文件。
+
+    Args:
+        input_path:  输入 HEX 文件路径
+        output_path: 输出 HEX 文件路径
+        align:       对齐边界（默认 32 字节，TC234 PFlash page size）
+        fill_byte:   填充字节（默认 0x00，AURIX PFlash 擦除状态）
+    """
+    data, start_addr = parse_hex_file(input_path)
+
+    if not data:
+        print(f"[align_hex] Error: No data found in {input_path}")
+        return False
+
+    segments = group_segments(data, max_gap=align)
+
+    with open(output_path, 'w') as f:
+        current_base = -1
+
+        for seg_start, seg_end in segments:
+            aligned_start = seg_start & ~(align - 1)
+            aligned_end = (seg_end + align - 1) & ~(align - 1)
+
+            addr = aligned_start
+            while addr < aligned_end:
+                # 检查是否需要发送扩展线性地址记录
+                base = addr >> 16
+                if base != current_base:
+                    current_base = base
+                    write_hex_record(f, 2, 0x0000, 0x04,
+                                     bytes([base >> 8, base & 0xFF]))
+
+                offset = addr & 0xFFFF
+                line_data = bytearray()
+                for i in range(align):
+                    line_data.append(data.get(addr + i, fill_byte))
+
+                write_hex_record(f, align, offset, 0x00, bytes(line_data))
+                addr += align
+
+        # 起始地址记录（如果有）
+        if start_addr is not None:
+            write_hex_record(f, 4, 0x0000, 0x05,
+                             bytes([(start_addr >> 24) & 0xFF,
+                                    (start_addr >> 16) & 0xFF,
+                                    (start_addr >> 8) & 0xFF,
+                                    start_addr & 0xFF]))
+
+        # 结束记录
+        write_hex_record(f, 0, 0x0000, 0x01, b'')
+
+    # 统计信息
+    total_data = len(data)
+    aligned_total = sum(
+        ((seg_end + align - 1) & ~(align - 1)) - (seg_start & ~(align - 1))
+        for seg_start, seg_end in segments
+    )
+    added = aligned_total - total_data
+
+    print(f"[align_hex] Aligned HEX file saved to: {output_path}")
+    print(f"[align_hex]   Original data bytes: {total_data}")
+    print(f"[align_hex]   Aligned total bytes: {aligned_total}")
+    print(f"[align_hex]   Added fill bytes:    {added} ({added/total_data*100:.1f}%)")
+    print(f"[align_hex]   Alignment:           {align} bytes")
+    print(f"[align_hex]   Fill byte:           0x{fill_byte:02X}")
+
     return True
+
+
 def do_flash_process():
     """完整刷写主流程"""
     uds = ZDoCanInterface(
@@ -501,11 +434,37 @@ def do_flash_process():
                 return
             if target_bank_char ==0x0A:
                 TARGET_BANK = 'A'
-                HEX_FILE= r"E:\workFiles\IEBS\tc234bootloader\App_dualBank\Debug\App_dualBank.hex"
+                input_file = HEX_FILE
+                Bank_A_file = r"E:\workFiles\IEBS\tc234bootloader\tc234bootloader\App_dualBank_A.hex"
+                alignment = int(sys.argv[3]) if len(sys.argv) > 3 else 32
+
+                if not os.path.exists(input_file):
+                    app.log_e(f"[Check] ❌ Input file for Bank A not found: {input_file}")
+                    sys.exit(1)
+
+                success = align_hex_file(input_file, Bank_A_file, align=alignment, fill_byte=0x00)
+                if not success:
+                    app.log_e("[Check] ❌ Failed to align HEX file for Bank A")
+                    sys.exit(1)
+                else:
+                    HEX_FILE = Bank_A_file
                 app.log_i(f"[Check] ✅ Target bank dynamically set to Bank {TARGET_BANK}")
             elif target_bank_char==0x0B:
                 TARGET_BANK ='B'
-                HEX_FILE=r"E:\workFiles\IEBS\tc234bootloader\App_dualBank\App_dualBank.hex"
+                input_file = HEX_FILE_B
+                Bank_B_file = r"E:\workFiles\IEBS\tc234bootloader\tc234bootloader\App_dualBank_B.hex"
+                alignment = int(sys.argv[3]) if len(sys.argv) > 3 else 32
+
+                if not os.path.exists(input_file):
+                    app.log_e(f"[Check] ❌ Input file for Bank B not found: {input_file}")
+                    sys.exit(1)
+
+                success = align_hex_file(input_file, Bank_B_file, align=alignment, fill_byte=0x00)
+                if not success:
+                    app.log_e("[Check] ❌ Failed to align HEX file for Bank B")
+                    sys.exit(1)
+                else:
+                    HEX_FILE = Bank_B_file
             else:
                 app.log_w(f"[Check] ⚠️ Unexpected targetBank char=0x{rsp.data[4]:02X}, keep default={TARGET_BANK}")
         else:
@@ -606,9 +565,12 @@ def do_flash_process():
 # ZXDoc 脚本入口
 # ============================================================================
 def __zxdoc_main__():
+    
+
+
     if not measurement.is_started():
         measurement.start()
-
+    
     do_flash_process()
 
     # 保持测量运行一段时间，便于观察最后几帧报文

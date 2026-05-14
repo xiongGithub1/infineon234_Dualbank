@@ -65,7 +65,6 @@ uint8 num=10;
 void MainProgram(void) 
 {
 	static uint32 m_DetaTime = 0;
-	static uint8 i=0;
 	static boolean stage2Done = FALSE;
 	//  测量多长时间执行一次while主循环标志20210129
     DetaTime.MainWhileTime.time1 = Stm_GetSystemClock();
@@ -172,17 +171,9 @@ void core0_main(void)
     /* === APP Phase: Peripheral Initialization === */
     g_appPhase = APP_PHASE_PERIPH;
 
-    Multican_init();  /* Initialize CAN module before accessing CAN registers */
 
     BrdLed_init();
-	UdsInit(UDS_FUN_ADDR_ID,UDS_PHY_ADDR_ID,UDS_RESP_ADDR_ID);
-    //
-
-    
-
-
-
-
+    AppBL_init();
     /* === APP Phase: Main Loop Running === */
     g_appPhase = APP_PHASE_RUN;
     g_BaseTime = Stm_GetSystemClock();
@@ -190,7 +181,7 @@ void core0_main(void)
     while (TRUE)
     {
         MainProgram();
-        // BrdLed_main();
+        BrdLed_main();
         IfxScuWdt_serviceCpuWatchdog(IfxScuWdt_getCpuWatchdogPassword());
     }
 }

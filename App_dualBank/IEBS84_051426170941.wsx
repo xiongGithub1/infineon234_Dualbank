@@ -1,25 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <stg format="2.0">
-	<OriginalWsp type="string">BootLoader_822.wsx</OriginalWsp>
+	<OriginalWsp type="string">IEBS84.wsx</OriginalWsp>
 	<BackupWspFlag type="flag">1</BackupWspFlag>
 	<ProdInfo type="bin" size="52">vQTv/gAAAQAKAAMA4SADAAEA5QcAAAAAPwAAAAAAAAAEAAAAAgAAAAAAAAAAAAAAAAAAAA==</ProdInfo>
 	<ProdInfoString type="string">2021</ProdInfoString>
-	<CreationDate type="string">22.08.2025 14:35:45:000</CreationDate>
-	<LastWriteDate type="string">14.05.2026 10:25:58:000</LastWriteDate>
-	<UseWspCnt type="int">1</UseWspCnt>
+	<CreationDate type="string">04.08.2025 09:09:02:000</CreationDate>
+	<LastWriteDate type="string">14.05.2026 17:09:41:000</LastWriteDate>
 	<MainFrame type="key">
 		<NETPlacementRoot type="key">
 			<FormsData type="innerxml">
 				<FormsData>
 					<Bounds>
-						<X>-939</X>
-						<Y>129</Y>
+						<X>172</X>
+						<Y>8</Y>
 						<Width>981</Width>
-						<Height>942</Height>
+						<Height>871</Height>
 					</Bounds>
 					<ClientSize>
 						<Width>965</Width>
-						<Height>903</Height>
+						<Height>832</Height>
 					</ClientSize>
 					<State>Maximized</State>
 				</FormsData>
@@ -29,6 +28,60 @@
 					<MDIActive>false</MDIActive>
 					<DocumentDockStyle>Top</DocumentDockStyle>
 					<DockingControls>
+						<UniqueControlIdDockingControlData>
+							<DockedDimension>666</DockedDimension>
+							<Cancelled>false</Cancelled>
+							<DockingType>Left</DockingType>
+							<FloatingBounds>
+								<X>0</X>
+								<Y>0</Y>
+								<Width>0</Width>
+								<Height>0</Height>
+							</FloatingBounds>
+							<AutoHide>false</AutoHide>
+							<AutoHideByContextSwitch>false</AutoHideByContextSwitch>
+							<DockingIndex>0</DockingIndex>
+							<PanelIndex>0</PanelIndex>
+							<ContainerType>DockPanel</ContainerType>
+							<Selected>false</Selected>
+							<UniqueIdentifier>MainFrame.StdTargetManagerWin.OPEN_VIEW</UniqueIdentifier>
+						</UniqueControlIdDockingControlData>
+						<UniqueControlIdDockingControlData>
+							<DockedDimension>1385</DockedDimension>
+							<Cancelled>false</Cancelled>
+							<DockingType>Bottom</DockingType>
+							<FloatingBounds>
+								<X>0</X>
+								<Y>0</Y>
+								<Width>0</Width>
+								<Height>0</Height>
+							</FloatingBounds>
+							<AutoHide>false</AutoHide>
+							<AutoHideByContextSwitch>false</AutoHideByContextSwitch>
+							<DockingIndex>0</DockingIndex>
+							<PanelIndex>0</PanelIndex>
+							<ContainerType>DockPanel</ContainerType>
+							<Selected>false</Selected>
+							<UniqueIdentifier>MainFrame.StdUDEMessageWin.OPEN_VIEW</UniqueIdentifier>
+						</UniqueControlIdDockingControlData>
+						<UniqueControlIdDockingControlData>
+							<DockedDimension>533</DockedDimension>
+							<Cancelled>false</Cancelled>
+							<DockingType>Bottom</DockingType>
+							<FloatingBounds>
+								<X>0</X>
+								<Y>0</Y>
+								<Width>0</Width>
+								<Height>0</Height>
+							</FloatingBounds>
+							<AutoHide>false</AutoHide>
+							<AutoHideByContextSwitch>false</AutoHideByContextSwitch>
+							<DockingIndex>1</DockingIndex>
+							<PanelIndex>0</PanelIndex>
+							<ContainerType>DockPanel</ContainerType>
+							<Selected>false</Selected>
+							<UniqueIdentifier>MainFrame.UDEProgressWin.OPEN_VIEW</UniqueIdentifier>
+						</UniqueControlIdDockingControlData>
 						<UniqueControlIdDockingControlData>
 							<DockedDimension>0</DockedDimension>
 							<Cancelled>false</Cancelled>
@@ -41,14 +94,14 @@
 							</FloatingBounds>
 							<AutoHide>false</AutoHide>
 							<AutoHideByContextSwitch>false</AutoHideByContextSwitch>
-							<DockingIndex>9</DockingIndex>
+							<DockingIndex>7</DockingIndex>
 							<PanelIndex>-1</PanelIndex>
 							<ContainerType>TabbedDocument</ContainerType>
 							<Selected>false</Selected>
 							<UniqueIdentifier>MainFrame.BreakpointWin.OPEN_VIEW</UniqueIdentifier>
 						</UniqueControlIdDockingControlData>
 						<UniqueControlIdDockingControlData>
-							<DockedDimension>692</DockedDimension>
+							<DockedDimension>689</DockedDimension>
 							<Cancelled>false</Cancelled>
 							<DockingType>Right</DockingType>
 							<FloatingBounds>
@@ -77,47 +130,11 @@
 							</FloatingBounds>
 							<AutoHide>false</AutoHide>
 							<AutoHideByContextSwitch>false</AutoHideByContextSwitch>
-							<DockingIndex>13</DockingIndex>
+							<DockingIndex>8</DockingIndex>
 							<PanelIndex>-1</PanelIndex>
 							<ContainerType>TabbedDocument</ContainerType>
-							<Selected>true</Selected>
+							<Selected>false</Selected>
 							<UniqueIdentifier>Core0.ViewSrv.StdUDEProgWin.OPEN_VIEW00</UniqueIdentifier>
-						</UniqueControlIdDockingControlData>
-						<UniqueControlIdDockingControlData>
-							<DockedDimension>0</DockedDimension>
-							<Cancelled>false</Cancelled>
-							<DockingType>Top</DockingType>
-							<FloatingBounds>
-								<X>0</X>
-								<Y>0</Y>
-								<Width>0</Width>
-								<Height>0</Height>
-							</FloatingBounds>
-							<AutoHide>false</AutoHide>
-							<AutoHideByContextSwitch>false</AutoHideByContextSwitch>
-							<DockingIndex>12</DockingIndex>
-							<PanelIndex>-1</PanelIndex>
-							<ContainerType>TabbedDocument</ContainerType>
-							<Selected>false</Selected>
-							<UniqueIdentifier>Core0.ViewSrv.StdUDEProgWin.OPEN_VIEW01</UniqueIdentifier>
-						</UniqueControlIdDockingControlData>
-						<UniqueControlIdDockingControlData>
-							<DockedDimension>0</DockedDimension>
-							<Cancelled>false</Cancelled>
-							<DockingType>Top</DockingType>
-							<FloatingBounds>
-								<X>0</X>
-								<Y>0</Y>
-								<Width>0</Width>
-								<Height>0</Height>
-							</FloatingBounds>
-							<AutoHide>false</AutoHide>
-							<AutoHideByContextSwitch>false</AutoHideByContextSwitch>
-							<DockingIndex>11</DockingIndex>
-							<PanelIndex>-1</PanelIndex>
-							<ContainerType>TabbedDocument</ContainerType>
-							<Selected>false</Selected>
-							<UniqueIdentifier>Core0.ViewSrv.StdUDEProgWin.OPEN_VIEW02</UniqueIdentifier>
 						</UniqueControlIdDockingControlData>
 						<UniqueControlIdDockingControlData>
 							<DockedDimension>0</DockedDimension>
@@ -135,7 +152,7 @@
 							<PanelIndex>-1</PanelIndex>
 							<ContainerType>TabbedDocument</ContainerType>
 							<Selected>false</Selected>
-							<UniqueIdentifier>Core0.ViewSrv.StdUDEProgWin.OPEN_VIEW03</UniqueIdentifier>
+							<UniqueIdentifier>Core0.ViewSrv.StdUDEProgWin.OPEN_VIEW01</UniqueIdentifier>
 						</UniqueControlIdDockingControlData>
 						<UniqueControlIdDockingControlData>
 							<DockedDimension>0</DockedDimension>
@@ -149,43 +166,7 @@
 							</FloatingBounds>
 							<AutoHide>false</AutoHide>
 							<AutoHideByContextSwitch>false</AutoHideByContextSwitch>
-							<DockingIndex>8</DockingIndex>
-							<PanelIndex>-1</PanelIndex>
-							<ContainerType>TabbedDocument</ContainerType>
-							<Selected>false</Selected>
-							<UniqueIdentifier>Core0.ViewSrv.StdUDEProgWin.OPEN_VIEW04</UniqueIdentifier>
-						</UniqueControlIdDockingControlData>
-						<UniqueControlIdDockingControlData>
-							<DockedDimension>0</DockedDimension>
-							<Cancelled>false</Cancelled>
-							<DockingType>Top</DockingType>
-							<FloatingBounds>
-								<X>0</X>
-								<Y>0</Y>
-								<Width>0</Width>
-								<Height>0</Height>
-							</FloatingBounds>
-							<AutoHide>false</AutoHide>
-							<AutoHideByContextSwitch>false</AutoHideByContextSwitch>
-							<DockingIndex>7</DockingIndex>
-							<PanelIndex>-1</PanelIndex>
-							<ContainerType>TabbedDocument</ContainerType>
-							<Selected>false</Selected>
-							<UniqueIdentifier>Core0.ViewSrv.StdUDEProgWin.OPEN_VIEW05</UniqueIdentifier>
-						</UniqueControlIdDockingControlData>
-						<UniqueControlIdDockingControlData>
-							<DockedDimension>0</DockedDimension>
-							<Cancelled>false</Cancelled>
-							<DockingType>Top</DockingType>
-							<FloatingBounds>
-								<X>0</X>
-								<Y>0</Y>
-								<Width>0</Width>
-								<Height>0</Height>
-							</FloatingBounds>
-							<AutoHide>false</AutoHide>
-							<AutoHideByContextSwitch>false</AutoHideByContextSwitch>
-							<DockingIndex>6</DockingIndex>
+							<DockingIndex>9</DockingIndex>
 							<PanelIndex>-1</PanelIndex>
 							<ContainerType>TabbedDocument</ContainerType>
 							<Selected>false</Selected>
@@ -203,7 +184,7 @@
 							</FloatingBounds>
 							<AutoHide>false</AutoHide>
 							<AutoHideByContextSwitch>false</AutoHideByContextSwitch>
-							<DockingIndex>5</DockingIndex>
+							<DockingIndex>6</DockingIndex>
 							<PanelIndex>-1</PanelIndex>
 							<ContainerType>TabbedDocument</ContainerType>
 							<Selected>false</Selected>
@@ -221,10 +202,10 @@
 							</FloatingBounds>
 							<AutoHide>false</AutoHide>
 							<AutoHideByContextSwitch>false</AutoHideByContextSwitch>
-							<DockingIndex>4</DockingIndex>
+							<DockingIndex>5</DockingIndex>
 							<PanelIndex>-1</PanelIndex>
 							<ContainerType>TabbedDocument</ContainerType>
-							<Selected>false</Selected>
+							<Selected>true</Selected>
 							<UniqueIdentifier>Core0.ViewSrv.StdUDEProgWin.OPEN_VIEW08</UniqueIdentifier>
 						</UniqueControlIdDockingControlData>
 						<UniqueControlIdDockingControlData>
@@ -239,7 +220,7 @@
 							</FloatingBounds>
 							<AutoHide>false</AutoHide>
 							<AutoHideByContextSwitch>false</AutoHideByContextSwitch>
-							<DockingIndex>3</DockingIndex>
+							<DockingIndex>4</DockingIndex>
 							<PanelIndex>-1</PanelIndex>
 							<ContainerType>TabbedDocument</ContainerType>
 							<Selected>false</Selected>
@@ -257,7 +238,7 @@
 							</FloatingBounds>
 							<AutoHide>false</AutoHide>
 							<AutoHideByContextSwitch>false</AutoHideByContextSwitch>
-							<DockingIndex>2</DockingIndex>
+							<DockingIndex>3</DockingIndex>
 							<PanelIndex>-1</PanelIndex>
 							<ContainerType>TabbedDocument</ContainerType>
 							<Selected>false</Selected>
@@ -275,11 +256,29 @@
 							</FloatingBounds>
 							<AutoHide>false</AutoHide>
 							<AutoHideByContextSwitch>false</AutoHideByContextSwitch>
+							<DockingIndex>2</DockingIndex>
+							<PanelIndex>-1</PanelIndex>
+							<ContainerType>TabbedDocument</ContainerType>
+							<Selected>false</Selected>
+							<UniqueIdentifier>Core0.ViewSrv.StdUDEProgWin.OPEN_VIEW02</UniqueIdentifier>
+						</UniqueControlIdDockingControlData>
+						<UniqueControlIdDockingControlData>
+							<DockedDimension>0</DockedDimension>
+							<Cancelled>false</Cancelled>
+							<DockingType>Top</DockingType>
+							<FloatingBounds>
+								<X>0</X>
+								<Y>0</Y>
+								<Width>0</Width>
+								<Height>0</Height>
+							</FloatingBounds>
+							<AutoHide>false</AutoHide>
+							<AutoHideByContextSwitch>false</AutoHideByContextSwitch>
 							<DockingIndex>1</DockingIndex>
 							<PanelIndex>-1</PanelIndex>
 							<ContainerType>TabbedDocument</ContainerType>
 							<Selected>false</Selected>
-							<UniqueIdentifier>Core0.ViewSrv.StdUDEProgWin.OPEN_VIEW11</UniqueIdentifier>
+							<UniqueIdentifier>Core0.ViewSrv.StdUDEProgWin.OPEN_VIEW03</UniqueIdentifier>
 						</UniqueControlIdDockingControlData>
 						<UniqueControlIdDockingControlData>
 							<DockedDimension>0</DockedDimension>
@@ -297,28 +296,10 @@
 							<PanelIndex>-1</PanelIndex>
 							<ContainerType>TabbedDocument</ContainerType>
 							<Selected>false</Selected>
-							<UniqueIdentifier>Core0.ViewSrv.StdUDEProgWin.OPEN_VIEW12</UniqueIdentifier>
+							<UniqueIdentifier>Core0.ViewSrv.StdUDEProgWin.OPEN_VIEW04</UniqueIdentifier>
 						</UniqueControlIdDockingControlData>
 						<UniqueControlIdDockingControlData>
-							<DockedDimension>1920</DockedDimension>
-							<Cancelled>false</Cancelled>
-							<DockingType>Bottom</DockingType>
-							<FloatingBounds>
-								<X>0</X>
-								<Y>0</Y>
-								<Width>0</Width>
-								<Height>0</Height>
-							</FloatingBounds>
-							<AutoHide>false</AutoHide>
-							<AutoHideByContextSwitch>false</AutoHideByContextSwitch>
-							<DockingIndex>0</DockingIndex>
-							<PanelIndex>0</PanelIndex>
-							<ContainerType>DockPanel</ContainerType>
-							<Selected>false</Selected>
-							<UniqueIdentifier>Core0.ViewSrv.StdUDESimIOWin.OPEN_VIEW</UniqueIdentifier>
-						</UniqueControlIdDockingControlData>
-						<UniqueControlIdDockingControlData>
-							<DockedDimension>666</DockedDimension>
+							<DockedDimension>663</DockedDimension>
 							<Cancelled>false</Cancelled>
 							<DockingType>Left</DockingType>
 							<FloatingBounds>
@@ -329,14 +310,14 @@
 							</FloatingBounds>
 							<AutoHide>false</AutoHide>
 							<AutoHideByContextSwitch>false</AutoHideByContextSwitch>
-							<DockingIndex>0</DockingIndex>
+							<DockingIndex>1</DockingIndex>
 							<PanelIndex>0</PanelIndex>
 							<ContainerType>DockPanel</ContainerType>
 							<Selected>true</Selected>
 							<UniqueIdentifier>Core0.ViewSrv.StdUDESymbolExplWin.OPEN_VIEW</UniqueIdentifier>
 						</UniqueControlIdDockingControlData>
 						<UniqueControlIdDockingControlData>
-							<DockedDimension>692</DockedDimension>
+							<DockedDimension>689</DockedDimension>
 							<Cancelled>false</Cancelled>
 							<DockingType>Right</DockingType>
 							<FloatingBounds>
@@ -357,23 +338,23 @@
 					<LeftDockingContainerControlData>
 						<DockingContainerControlData>
 							<Tabbed>true</Tabbed>
-							<Dimension>215</Dimension>
+							<Dimension>342</Dimension>
 						</DockingContainerControlData>
 					</LeftDockingContainerControlData>
 					<RightDockingContainerControlData>
 						<DockingContainerControlData>
 							<Tabbed>false</Tabbed>
-							<Dimension>445</Dimension>
+							<Dimension>380</Dimension>
 						</DockingContainerControlData>
 						<DockingContainerControlData>
 							<Tabbed>false</Tabbed>
-							<Dimension>375</Dimension>
+							<Dimension>488</Dimension>
 						</DockingContainerControlData>
 					</RightDockingContainerControlData>
 					<TopDockingContainerControlData>
 						<DockingContainerControlData>
 							<Tabbed>false</Tabbed>
-							<Dimension>171</Dimension>
+							<Dimension>200</Dimension>
 						</DockingContainerControlData>
 					</TopDockingContainerControlData>
 					<BottomDockingContainerControlData>
@@ -1186,9 +1167,9 @@
 					<BottomContainer>
 						<PanelBounds>
 							<X>0</X>
-							<Y>992</Y>
+							<Y>989</Y>
 							<Width>1920</Width>
-							<Height>25</Height>
+							<Height>28</Height>
 						</PanelBounds>
 						<ToolBars>
 							<ToolbarPersistData>
@@ -1196,7 +1177,7 @@
 									<X>0</X>
 									<Y>0</Y>
 									<Width>1920</Width>
-									<Height>25</Height>
+									<Height>28</Height>
 								</Bounds>
 								<Name>Platform Status Bar</Name>
 								<AlwaysUnvisible>false</AlwaysUnvisible>
@@ -1205,7 +1186,7 @@
 									<ToolItemPersistData>
 										<Name></Name>
 										<Visible>true</Visible>
-										<Text>ERROR: Read memory block 0x0000000070000DE6-0x0000000070000DE6 failed !</Text>
+										<Text>Ready</Text>
 										<DisplayStyle>ImageAndText</DisplayStyle>
 										<AppendAccelerator>false</AppendAccelerator>
 									</ToolItemPersistData>
@@ -1226,7 +1207,7 @@
 									<ToolItemPersistData>
 										<Name></Name>
 										<Visible>true</Visible>
-										<Text>Core0 halted by reset</Text>
+										<Text>Core0 halted by internal breakpoint</Text>
 										<DisplayStyle>ImageAndText</DisplayStyle>
 										<AppendAccelerator>false</AppendAccelerator>
 									</ToolItemPersistData>
@@ -1246,7 +1227,7 @@
 							<X>0</X>
 							<Y>100</Y>
 							<Width>0</Width>
-							<Height>892</Height>
+							<Height>889</Height>
 						</PanelBounds>
 						<ToolBars></ToolBars>
 					</LeftContainer>
@@ -1255,7 +1236,7 @@
 							<X>1920</X>
 							<Y>100</Y>
 							<Width>0</Width>
-							<Height>892</Height>
+							<Height>889</Height>
 						</PanelBounds>
 						<ToolBars></ToolBars>
 					</RightContainer>
@@ -1301,16 +1282,115 @@
 			</ScreensControlData>
 		</NETPlacementRoot>
 		<StdTargetManagerWin type="key">
-			<SAVED_VIEW_OBJS type="int">0</SAVED_VIEW_OBJS>
+			<OPEN_VIEW type="key">
+				<FrameCreated type="string">04.08.2025 09:09:11:021</FrameCreated>
+				<ViewSrv type="key">
+					<TargetBrowserView type="key">
+						<SplitterRatio type="int">0</SplitterRatio>
+						<ShowTargetState type="flag">1</ShowTargetState>
+						<SetDebuggerFocus type="flag">1</SetDebuggerFocus>
+						<ShowSymbolsOnHalt type="flag">1</ShowSymbolsOnHalt>
+					</TargetBrowserView>
+				</ViewSrv>
+				<NETFrameMode type="int">77824</NETFrameMode>
+				<NETFrameSaveIndex type="int">0</NETFrameSaveIndex>
+				<FrameUserTitle type="string"></FrameUserTitle>
+			</OPEN_VIEW>
+			<SAVED_VIEW_OBJS type="int">1</SAVED_VIEW_OBJS>
+			<SAVED_VIEW type="int">0</SAVED_VIEW>
 		</StdTargetManagerWin>
 		<StdUDEMessageWin type="key">
-			<SAVED_VIEW_OBJS type="int">0</SAVED_VIEW_OBJS>
+			<OPEN_VIEW type="key">
+				<FrameCreated type="string">04.08.2025 09:09:10:985</FrameCreated>
+				<ViewSrv type="key">
+					<LogWin type="key">
+						<Index type="key">
+							<Width type="int">50</Width>
+							<Visible type="flag">1</Visible>
+						</Index>
+						<Type type="key">
+							<Width type="int">100</Width>
+							<Visible type="flag">1</Visible>
+						</Type>
+						<Time type="key">
+							<Width type="int">100</Width>
+							<Visible type="flag">1</Visible>
+						</Time>
+						<Targ type="key">
+							<Width type="int">100</Width>
+							<Visible type="flag">1</Visible>
+						</Targ>
+						<Src type="key">
+							<Width type="int">150</Width>
+							<Visible type="flag">1</Visible>
+						</Src>
+						<Msg type="key">
+							<Width type="int">1000</Width>
+							<Visible type="flag">1</Visible>
+						</Msg>
+					</LogWin>
+					<Filter type="key">
+						<BypassMode type="flag">1</BypassMode>
+						<TypeFilter type="int">0</TypeFilter>
+					</Filter>
+				</ViewSrv>
+				<NETFrameMode type="int">90112</NETFrameMode>
+				<NETFrameSaveIndex type="int">1</NETFrameSaveIndex>
+				<FrameUserTitle type="string"></FrameUserTitle>
+			</OPEN_VIEW>
+			<SAVED_VIEW_OBJS type="int">1</SAVED_VIEW_OBJS>
+			<SAVED_VIEW type="int">0</SAVED_VIEW>
 		</StdUDEMessageWin>
 		<StdUDECmdWin type="key">
 			<SAVED_VIEW_OBJS type="int">0</SAVED_VIEW_OBJS>
 		</StdUDECmdWin>
 		<UDEProgressWin type="key">
-			<SAVED_VIEW_OBJS type="int">0</SAVED_VIEW_OBJS>
+			<OPEN_VIEW type="key">
+				<FrameCreated type="string">04.08.2025 09:09:11:000</FrameCreated>
+				<ViewSrv type="key">
+					<_ExtentX type="bin" size="8">rDYAAA==</_ExtentX>
+					<_ExtentY type="bin" size="8">ZhIAAA==</_ExtentY>
+					<_StockProps type="bin" size="8">AAAAAA==</_StockProps>
+					<Columns type="bin" size="8">CAAAAA==</Columns>
+					<ColName00 type="bin" size="16">VABhAHMAawAAAA==</ColName00>
+					<TypeName00 type="bin" size="16">VABhAHMAawAAAA==</TypeName00>
+					<Format00 type="bin" size="8">AAAAAA==</Format00>
+					<Size00 type="bin" size="8">8AAAAA==</Size00>
+					<ColName01 type="bin" size="24">UAByAG8AZwByAGUAcwBzAAAA</ColName01>
+					<TypeName01 type="bin" size="24">UAByAG8AZwByAGUAcwBzAAAA</TypeName01>
+					<Format01 type="bin" size="8">AAAAAA==</Format01>
+					<Size01 type="bin" size="8">oAAAAA==</Size01>
+					<ColName02 type="bin" size="16">UwB0AGEAdABlAAAA</ColName02>
+					<TypeName02 type="bin" size="16">UwB0AGEAdABlAAAA</TypeName02>
+					<Format02 type="bin" size="8">AAAAAA==</Format02>
+					<Size02 type="bin" size="8">yAAAAA==</Size02>
+					<ColName03 type="bin" size="20">QwBhAG4AYwBlAGwAAAA=</ColName03>
+					<TypeName03 type="bin" size="20">QwBhAG4AYwBlAGwAAAA=</TypeName03>
+					<Format03 type="bin" size="8">AAAAAA==</Format03>
+					<Size03 type="bin" size="8">UAAAAA==</Size03>
+					<ColName04 type="bin" size="16">TwB3AG4AZQByAAAA</ColName04>
+					<TypeName04 type="bin" size="16">TwB3AG4AZQByAAAA</TypeName04>
+					<Format04 type="bin" size="8">AAAAAA==</Format04>
+					<Size04 type="bin" size="8">oAAAAA==</Size04>
+					<ColName05 type="bin" size="24">QwB1AHIAcgBlAG4AdAAAAA==</ColName05>
+					<TypeName05 type="bin" size="24">QwB1AHIAcgBlAG4AdAAAAA==</TypeName05>
+					<Format05 type="bin" size="8">AAAAAA==</Format05>
+					<Size05 type="bin" size="8">UAAAAA==</Size05>
+					<ColName06 type="bin" size="16">UwB0AGEAcgB0AAAA</ColName06>
+					<TypeName06 type="bin" size="16">UwB0AGEAcgB0AAAA</TypeName06>
+					<Format06 type="bin" size="8">AAAAAA==</Format06>
+					<Size06 type="bin" size="8">UAAAAA==</Size06>
+					<ColName07 type="bin" size="16">UwB0AG8AcAAAAA==</ColName07>
+					<TypeName07 type="bin" size="16">UwB0AG8AcAAAAA==</TypeName07>
+					<Format07 type="bin" size="8">AAAAAA==</Format07>
+					<Size07 type="bin" size="8">UAAAAA==</Size07>
+				</ViewSrv>
+				<NETFrameMode type="int">90113</NETFrameMode>
+				<NETFrameSaveIndex type="int">2</NETFrameSaveIndex>
+				<FrameUserTitle type="string"></FrameUserTitle>
+			</OPEN_VIEW>
+			<SAVED_VIEW_OBJS type="int">1</SAVED_VIEW_OBJS>
+			<SAVED_VIEW type="int">0</SAVED_VIEW>
 		</UDEProgressWin>
 		<StdUDEWspHTMLView type="key">
 			<SAVED_VIEW_OBJS type="int">0</SAVED_VIEW_OBJS>
@@ -1318,12 +1398,12 @@
 		<BreakpointWin type="key">
 			<SAVED_VIEW_OBJS type="int">1</SAVED_VIEW_OBJS>
 			<OPEN_VIEW type="key">
-				<FrameCreated type="string">07.05.2026 18:26:07:356</FrameCreated>
+				<FrameCreated type="string">08.05.2026 20:13:26:189</FrameCreated>
 				<ViewSrv type="key">
 					<BreakpointWin type="key"></BreakpointWin>
 				</ViewSrv>
 				<NETFrameMode type="int">73728</NETFrameMode>
-				<NETFrameSaveIndex type="int">0</NETFrameSaveIndex>
+				<NETFrameSaveIndex type="int">3</NETFrameSaveIndex>
 				<FrameUserTitle type="string"></FrameUserTitle>
 			</OPEN_VIEW>
 			<SAVED_VIEW type="int">0</SAVED_VIEW>
@@ -1331,7 +1411,7 @@
 		<UDEUECUseCaseParameterView type="key">
 			<SAVED_VIEW_OBJS type="int">0</SAVED_VIEW_OBJS>
 		</UDEUECUseCaseParameterView>
-		<SelectedPrinter type="string">RICOH SP 221S DDST (云盒_69 USB1)</SelectedPrinter>
+		<SelectedPrinter type="string">Print to Evernote</SelectedPrinter>
 		<perspective type="key">
 			<autoSwitchOnDebuggerChange type="flag">0</autoSwitchOnDebuggerChange>
 			<autoSwitchMap type="key">
@@ -1345,20 +1425,31 @@
 			<MacroLib type="string">C:\Program Files\pls\UDE Starterkit 2021\StdLibrary.mso</MacroLib>
 		</Macro>
 		<PLACEMENT type="key">
-			<MULTICORELOADERDLG type="string">-1300,-619,397,644</MULTICORELOADERDLG>
+			<MULTICORELOADERDLG type="string">620,1301,397,644</MULTICORELOADERDLG>
+			<WatchSelectDlg type="string">788,1133,359,682</WatchSelectDlg>
+			<EnumSelectDlg type="string">788,1133,359,682</EnumSelectDlg>
 		</PLACEMENT>
 		<EXTRAVALUE type="key">
 			<MULTICORELOADERDLG type="int">0</MULTICORELOADERDLG>
+			<WatchSelectDlg type="int">0</WatchSelectDlg>
+			<EnumSelectDlg type="int">0</EnumSelectDlg>
 		</EXTRAVALUE>
 		<Loader type="key">
 			<LOADER_REGKEY_WSP type="string">{bafe3233-2a53-406c-8975-cce53c53f258}</LOADER_REGKEY_WSP>
 		</Loader>
+		<UDESTK.ProgressWin type="key">
+			<Normal type="string">;Courier;9.75;0;0;0;0;400;0;000000;FFFFFF</Normal>
+			<Selected type="string">;Courier;9.75;0;0;0;0;400;0;FFFFFF;FF0000</Selected>
+			<ProgressBar type="string">;Courier;9.75;0;0;0;0;400;0;000000;66846C</ProgressBar>
+			<SelectedBar type="string">;Courier;9.75;0;0;0;0;400;0;FFFFFF;808080</SelectedBar>
+			<Warning type="string">;Courier;9.75;0;0;0;0;400;0;000000;0000FF</Warning>
+		</UDESTK.ProgressWin>
 	</INI_SECTION>
 	<AddOns type="key">
 		<UDESTK.Script type="key">
 			<MacroGuiEntries type="key">
 				<LastScriptFilePath type="string">C:\Users\Public\Documents\pls\UDESTK 2021</LastScriptFilePath>
-				<Macro_11_05_26_20_04_23_0 type="key">
+				<Macro_14_05_26_09_20_52_0 type="key">
 					<ScriptDescription type="string">The script contains a collection of macros to save memory content into different file formats 
 and fill target memory ranges</ScriptDescription>
 					<ScriptPath type="string">V:\UDE\AddOns\Macro\MacroLibrary\StdMacros1.dsm</ScriptPath>
@@ -1638,7 +1729,7 @@ End Sub</ScriptSource>
 					<ScriptFromStg type="flag">1</ScriptFromStg>
 					<LocalComputerName type="string">WS_CORE_DUO</LocalComputerName>
 					<ExternalScriptPath type="string"></ExternalScriptPath>
-					<NextNodeName type="string">Macro_14_05_26_10_20_32_0</NextNodeName>
+					<NextNodeName type="string">Macro_14_05_26_10_25_58_0</NextNodeName>
 					<UnAss type="key">
 						<GUIEntry type="key">
 							<MenuID type="int">10</MenuID>
@@ -1695,7 +1786,7 @@ End Sub</ScriptSource>
 						<GUIEntryDescription type="string"></GUIEntryDescription>
 					</FillDWord>
 					<NoOfFunctions type="int">5</NoOfFunctions>
-				</Macro_11_05_26_20_04_23_0>
+				</Macro_14_05_26_09_20_52_0>
 			</MacroGuiEntries>
 			<LastSelectedMacro type="string"></LastSelectedMacro>
 		</UDESTK.Script>
@@ -1709,218 +1800,52 @@ End Sub</ScriptSource>
 		<ViewSrv type="key">
 			<TriCoreCpuWin type="key">
 				<SAVED_VIEW_OBJS type="int">0</SAVED_VIEW_OBJS>
-				<OPEN_VIEW type="key">
-					<FrameCreated type="string">09.05.2026 17:07:32:491</FrameCreated>
-					<ViewSrv type="key">
-						<History0 type="string">0x00000000</History0>
-						<History1 type="string">0x00000064</History1>
-						<History2 type="string">0x700031E7</History2>
-						<History3 type="string">0xAFFFD060</History3>
-						<History4 type="string">0x7002C5E8</History4>
-						<History5 type="string">0x8000A451</History5>
-						<History6 type="string">0x80000020</History6>
-						<History7 type="string"></History7>
-						<History8 type="string"></History8>
-						<History9 type="string"></History9>
-					</ViewSrv>
-					<NETFrameMode type="int">81920</NETFrameMode>
-					<FrameUserTitle type="string"></FrameUserTitle>
-				</OPEN_VIEW>
 			</TriCoreCpuWin>
 			<StdUDESymbolExplWin type="key">
-				<SAVED_VIEW_OBJS type="int">1</SAVED_VIEW_OBJS>
 				<OPEN_VIEW type="key">
-					<FrameCreated type="string">07.05.2026 18:24:44:023</FrameCreated>
+					<FrameCreated type="string">04.08.2025 09:09:11:157</FrameCreated>
 					<ViewSrv type="key"></ViewSrv>
-					<NETFrameMode type="int">77824</NETFrameMode>
-					<NETFrameSaveIndex type="int">16</NETFrameSaveIndex>
+					<NETFrameMode type="int">77825</NETFrameMode>
+					<NETFrameSaveIndex type="int">15</NETFrameSaveIndex>
 					<FrameUserTitle type="string"></FrameUserTitle>
 				</OPEN_VIEW>
+				<SAVED_VIEW_OBJS type="int">1</SAVED_VIEW_OBJS>
 				<SAVED_VIEW type="int">0</SAVED_VIEW>
 			</StdUDESymbolExplWin>
 			<StdUDEProgWin type="key">
 				<OPEN_VIEW00 type="key">
-					<FrameCreated type="string">22.08.2025 16:04:33:134</FrameCreated>
+					<FrameCreated type="string">04.08.2025 09:10:26:753</FrameCreated>
 					<ViewSrv type="key">
 						<AnimateQueue type="key">
 							<RunningPeriod type="int">0</RunningPeriod>
 							<HoldedPeriod type="int">0</HoldedPeriod>
 						</AnimateQueue>
 					</ViewSrv>
+					<NETFrameMode type="int">73728</NETFrameMode>
+					<FrameUserTitle type="string"></FrameUserTitle>
 					<SourceFile type="string">IfxCpu_CStart0.c</SourceFile>
 					<SourceFileInstFlag type="int">1</SourceFileInstFlag>
-					<NETFrameMode type="int">73728</NETFrameMode>
-					<NETFrameSaveIndex type="int">2</NETFrameSaveIndex>
-					<FrameUserTitle type="string"></FrameUserTitle>
+					<NETFrameSaveIndex type="int">5</NETFrameSaveIndex>
 				</OPEN_VIEW00>
-				<SAVED_VIEW_OBJS type="int">13</SAVED_VIEW_OBJS>
+				<SAVED_VIEW_OBJS type="int">10</SAVED_VIEW_OBJS>
 				<SAVED_VIEW00 type="int">0</SAVED_VIEW00>
 				<OPEN_VIEW01 type="key">
-					<FrameCreated type="string">26.08.2025 11:32:44:687</FrameCreated>
+					<FrameCreated type="string">04.08.2025 14:59:46:119</FrameCreated>
 					<ViewSrv type="key">
 						<AnimateQueue type="key">
 							<RunningPeriod type="int">0</RunningPeriod>
 							<HoldedPeriod type="int">0</HoldedPeriod>
 						</AnimateQueue>
 					</ViewSrv>
-					<SourceFile type="string">iLLD_1_0_1_11_0\Src\BaseSw\iLLD\TC23A\Tricore\Cpu\Trap\IfxCpu_Trap.c</SourceFile>
-					<SourceFileInstFlag type="int">1</SourceFileInstFlag>
+					<SourceFile type="string">code &lt;0x8002250C-0x8002290B&gt;</SourceFile>
+					<SourceFileInstFlag type="int">4</SourceFileInstFlag>
 					<NETFrameMode type="int">73728</NETFrameMode>
-					<NETFrameSaveIndex type="int">3</NETFrameSaveIndex>
+					<NETFrameSaveIndex type="int">6</NETFrameSaveIndex>
 					<FrameUserTitle type="string"></FrameUserTitle>
 				</OPEN_VIEW01>
 				<SAVED_VIEW01 type="int">1</SAVED_VIEW01>
 				<OPEN_VIEW02 type="key">
-					<FrameCreated type="string">28.04.2026 17:52:05:956</FrameCreated>
-					<ViewSrv type="key">
-						<AnimateQueue type="key">
-							<RunningPeriod type="int">0</RunningPeriod>
-							<HoldedPeriod type="int">0</HoldedPeriod>
-						</AnimateQueue>
-					</ViewSrv>
-					<SourceFile type="string">code &lt;0x8000001C-0x8000041B&gt;</SourceFile>
-					<SourceFileInstFlag type="int">4</SourceFileInstFlag>
-					<NETFrameMode type="int">73728</NETFrameMode>
-					<NETFrameSaveIndex type="int">4</NETFrameSaveIndex>
-					<FrameUserTitle type="string"></FrameUserTitle>
-				</OPEN_VIEW02>
-				<SAVED_VIEW02 type="int">2</SAVED_VIEW02>
-				<OPEN_VIEW03 type="key">
-					<FrameCreated type="string">07.05.2026 18:24:51:462</FrameCreated>
-					<ViewSrv type="key">
-						<AnimateQueue type="key">
-							<RunningPeriod type="int">0</RunningPeriod>
-							<HoldedPeriod type="int">0</HoldedPeriod>
-						</AnimateQueue>
-					</ViewSrv>
-					<SourceFile type="string">AppSw\Tricore\App_UDS\uds_app.c</SourceFile>
-					<SourceFileInstFlag type="int">1</SourceFileInstFlag>
-					<NETFrameMode type="int">73728</NETFrameMode>
-					<NETFrameSaveIndex type="int">5</NETFrameSaveIndex>
-					<FrameUserTitle type="string"></FrameUserTitle>
-				</OPEN_VIEW03>
-				<OPEN_VIEW04 type="key">
-					<FrameCreated type="string">08.05.2026 17:03:18:767</FrameCreated>
-					<ViewSrv type="key">
-						<AnimateQueue type="key">
-							<RunningPeriod type="int">0</RunningPeriod>
-							<HoldedPeriod type="int">0</HoldedPeriod>
-						</AnimateQueue>
-					</ViewSrv>
-					<SourceFile type="string">AppSw\Tricore\App_bootloader\App_bootloader.c</SourceFile>
-					<SourceFileInstFlag type="int">1</SourceFileInstFlag>
-					<NETFrameMode type="int">73728</NETFrameMode>
-					<NETFrameSaveIndex type="int">6</NETFrameSaveIndex>
-					<FrameUserTitle type="string"></FrameUserTitle>
-				</OPEN_VIEW04>
-				<OPEN_VIEW05 type="key">
-					<FrameCreated type="string">08.05.2026 18:06:53:032</FrameCreated>
-					<ViewSrv type="key">
-						<AnimateQueue type="key">
-							<RunningPeriod type="int">0</RunningPeriod>
-							<HoldedPeriod type="int">0</HoldedPeriod>
-						</AnimateQueue>
-					</ViewSrv>
-					<SourceFile type="string">AppSw\Tricore\Main\Cpu0_Main.c</SourceFile>
-					<SourceFileInstFlag type="int">1</SourceFileInstFlag>
-					<NETFrameMode type="int">73728</NETFrameMode>
-					<NETFrameSaveIndex type="int">7</NETFrameSaveIndex>
-					<FrameUserTitle type="string"></FrameUserTitle>
-				</OPEN_VIEW05>
-				<OPEN_VIEW06 type="key">
-					<FrameCreated type="string">08.05.2026 18:24:03:150</FrameCreated>
-					<ViewSrv type="key">
-						<AnimateQueue type="key">
-							<RunningPeriod type="int">0</RunningPeriod>
-							<HoldedPeriod type="int">0</HoldedPeriod>
-						</AnimateQueue>
-					</ViewSrv>
-					<SourceFile type="string">AppSw\Tricore\App_UDS\tool_class.c</SourceFile>
-					<SourceFileInstFlag type="int">1</SourceFileInstFlag>
-					<NETFrameMode type="int">73728</NETFrameMode>
-					<NETFrameSaveIndex type="int">8</NETFrameSaveIndex>
-					<FrameUserTitle type="string"></FrameUserTitle>
-				</OPEN_VIEW06>
-				<SAVED_VIEW03 type="int">3</SAVED_VIEW03>
-				<SAVED_VIEW04 type="int">4</SAVED_VIEW04>
-				<SAVED_VIEW05 type="int">5</SAVED_VIEW05>
-				<SAVED_VIEW06 type="int">6</SAVED_VIEW06>
-				<OPEN_VIEW07 type="key">
-					<FrameCreated type="string">08.05.2026 20:46:57:037</FrameCreated>
-					<ViewSrv type="key">
-						<AnimateQueue type="key">
-							<RunningPeriod type="int">0</RunningPeriod>
-							<HoldedPeriod type="int">0</HoldedPeriod>
-						</AnimateQueue>
-					</ViewSrv>
-					<SourceFile type="string">AppSw\Tricore\Communication\CANRxTxInterface.c</SourceFile>
-					<SourceFileInstFlag type="int">1</SourceFileInstFlag>
-					<NETFrameMode type="int">73728</NETFrameMode>
-					<NETFrameSaveIndex type="int">9</NETFrameSaveIndex>
-					<FrameUserTitle type="string"></FrameUserTitle>
-				</OPEN_VIEW07>
-				<OPEN_VIEW08 type="key">
-					<FrameCreated type="string">08.05.2026 20:47:23:276</FrameCreated>
-					<ViewSrv type="key">
-						<AnimateQueue type="key">
-							<RunningPeriod type="int">0</RunningPeriod>
-							<HoldedPeriod type="int">0</HoldedPeriod>
-						</AnimateQueue>
-					</ViewSrv>
-					<SourceFile type="string">AppSw\Tricore\Tc234_Modules\CAN\Can.c</SourceFile>
-					<SourceFileInstFlag type="int">1</SourceFileInstFlag>
-					<NETFrameMode type="int">73728</NETFrameMode>
-					<NETFrameSaveIndex type="int">10</NETFrameSaveIndex>
-					<FrameUserTitle type="string"></FrameUserTitle>
-				</OPEN_VIEW08>
-				<SAVED_VIEW07 type="int">7</SAVED_VIEW07>
-				<SAVED_VIEW08 type="int">8</SAVED_VIEW08>
-				<OPEN_VIEW09 type="key">
-					<FrameCreated type="string">09.05.2026 13:52:38:140</FrameCreated>
-					<ViewSrv type="key">
-						<AnimateQueue type="key">
-							<RunningPeriod type="int">0</RunningPeriod>
-							<HoldedPeriod type="int">0</HoldedPeriod>
-						</AnimateQueue>
-					</ViewSrv>
-					<SourceFile type="string">AppSw\Tricore\App_bootloader\Boot_DualBank.c</SourceFile>
-					<SourceFileInstFlag type="int">1</SourceFileInstFlag>
-					<NETFrameMode type="int">73728</NETFrameMode>
-					<NETFrameSaveIndex type="int">11</NETFrameSaveIndex>
-					<FrameUserTitle type="string"></FrameUserTitle>
-				</OPEN_VIEW09>
-				<OPEN_VIEW10 type="key">
-					<FrameCreated type="string">09.05.2026 14:00:33:593</FrameCreated>
-					<ViewSrv type="key">
-						<AnimateQueue type="key">
-							<RunningPeriod type="int">0</RunningPeriod>
-							<HoldedPeriod type="int">0</HoldedPeriod>
-						</AnimateQueue>
-					</ViewSrv>
-					<SourceFile type="string">iLLD_1_0_1_11_0\Src\BaseSw\iLLD\TC23A\Tricore\Cpu\Std\IfxCpu.h</SourceFile>
-					<SourceFileInstFlag type="int">1</SourceFileInstFlag>
-					<NETFrameMode type="int">73728</NETFrameMode>
-					<NETFrameSaveIndex type="int">12</NETFrameSaveIndex>
-					<FrameUserTitle type="string"></FrameUserTitle>
-				</OPEN_VIEW10>
-				<SAVED_VIEW09 type="int">9</SAVED_VIEW09>
-				<SAVED_VIEW10 type="int">10</SAVED_VIEW10>
-				<OPEN_VIEW11 type="key">
-					<FrameCreated type="string">11.05.2026 15:17:14:270</FrameCreated>
-					<ViewSrv type="key">
-						<AnimateQueue type="key">
-							<RunningPeriod type="int">0</RunningPeriod>
-							<HoldedPeriod type="int">0</HoldedPeriod>
-						</AnimateQueue>
-					</ViewSrv>
-					<SourceFile type="string">AppSw\Tricore\App_UDS\uds_tp.c</SourceFile>
-					<SourceFileInstFlag type="int">1</SourceFileInstFlag>
-					<NETFrameMode type="int">73728</NETFrameMode>
-					<NETFrameSaveIndex type="int">13</NETFrameSaveIndex>
-					<FrameUserTitle type="string"></FrameUserTitle>
-				</OPEN_VIEW11>
-				<OPEN_VIEW12 type="key">
-					<FrameCreated type="string">11.05.2026 15:28:48:779</FrameCreated>
+					<FrameCreated type="string">11.05.2026 17:26:16:984</FrameCreated>
 					<ViewSrv type="key">
 						<AnimateQueue type="key">
 							<RunningPeriod type="int">0</RunningPeriod>
@@ -1930,11 +1855,129 @@ End Sub</ScriptSource>
 					<SourceFile type="string">AppSw\Tricore\App_UDS\uds_main.c</SourceFile>
 					<SourceFileInstFlag type="int">1</SourceFileInstFlag>
 					<NETFrameMode type="int">73728</NETFrameMode>
+					<NETFrameSaveIndex type="int">12</NETFrameSaveIndex>
+					<FrameUserTitle type="string"></FrameUserTitle>
+				</OPEN_VIEW02>
+				<SAVED_VIEW02 type="int">6</SAVED_VIEW02>
+				<OPEN_VIEW03 type="key">
+					<FrameCreated type="string">11.05.2026 17:26:31:648</FrameCreated>
+					<ViewSrv type="key">
+						<AnimateQueue type="key">
+							<RunningPeriod type="int">0</RunningPeriod>
+							<HoldedPeriod type="int">0</HoldedPeriod>
+						</AnimateQueue>
+					</ViewSrv>
+					<SourceFile type="string">AppSw\Tricore\App_UDS\uds_app.c</SourceFile>
+					<SourceFileInstFlag type="int">1</SourceFileInstFlag>
+					<NETFrameMode type="int">73728</NETFrameMode>
+					<NETFrameSaveIndex type="int">13</NETFrameSaveIndex>
+					<FrameUserTitle type="string"></FrameUserTitle>
+				</OPEN_VIEW03>
+				<OPEN_VIEW04 type="key">
+					<FrameCreated type="string">11.05.2026 17:29:36:860</FrameCreated>
+					<ViewSrv type="key">
+						<AnimateQueue type="key">
+							<RunningPeriod type="int">0</RunningPeriod>
+							<HoldedPeriod type="int">0</HoldedPeriod>
+						</AnimateQueue>
+					</ViewSrv>
+					<SourceFile type="string">AppSw\Tricore\Communication\CANRxTxInterface.h</SourceFile>
+					<SourceFileInstFlag type="int">1</SourceFileInstFlag>
+					<NETFrameMode type="int">73728</NETFrameMode>
 					<NETFrameSaveIndex type="int">14</NETFrameSaveIndex>
 					<FrameUserTitle type="string"></FrameUserTitle>
-				</OPEN_VIEW12>
-				<SAVED_VIEW11 type="int">11</SAVED_VIEW11>
-				<SAVED_VIEW12 type="int">12</SAVED_VIEW12>
+				</OPEN_VIEW04>
+				<OPEN_VIEW05 type="key">
+					<FrameCreated type="string">08.05.2026 19:40:17:386</FrameCreated>
+					<ViewSrv type="key">
+						<AnimateQueue type="key">
+							<RunningPeriod type="int">0</RunningPeriod>
+							<HoldedPeriod type="int">0</HoldedPeriod>
+						</AnimateQueue>
+					</ViewSrv>
+					<SourceFile type="string">App_UDS\uds_tp.c</SourceFile>
+					<SourceFileInstFlag type="int">1</SourceFileInstFlag>
+					<NETFrameMode type="int">73728</NETFrameMode>
+					<NETFrameSaveIndex type="int">10</NETFrameSaveIndex>
+					<FrameUserTitle type="string"></FrameUserTitle>
+				</OPEN_VIEW05>
+				<SAVED_VIEW03 type="int">7</SAVED_VIEW03>
+				<SAVED_VIEW04 type="int">8</SAVED_VIEW04>
+				<SAVED_VIEW05 type="int">9</SAVED_VIEW05>
+				<OPEN_VIEW06 type="key">
+					<FrameCreated type="string">08.05.2026 20:12:18:472</FrameCreated>
+					<ViewSrv type="key">
+						<AnimateQueue type="key">
+							<RunningPeriod type="int">0</RunningPeriod>
+							<HoldedPeriod type="int">0</HoldedPeriod>
+						</AnimateQueue>
+					</ViewSrv>
+					<SourceFile type="string">AppSw\Tricore\Communication\CANRxTxInterface.c</SourceFile>
+					<SourceFileInstFlag type="int">1</SourceFileInstFlag>
+					<NETFrameMode type="int">73728</NETFrameMode>
+					<NETFrameSaveIndex type="int">7</NETFrameSaveIndex>
+					<FrameUserTitle type="string"></FrameUserTitle>
+				</OPEN_VIEW06>
+				<SAVED_VIEW06 type="int">10</SAVED_VIEW06>
+				<OPEN_VIEW07 type="key">
+					<FrameCreated type="string">08.05.2026 21:02:20:013</FrameCreated>
+					<ViewSrv type="key">
+						<AnimateQueue type="key">
+							<RunningPeriod type="int">0</RunningPeriod>
+							<HoldedPeriod type="int">0</HoldedPeriod>
+						</AnimateQueue>
+					</ViewSrv>
+					<SourceFile type="string">iLLD_1_0_1_11_0\Src\BaseSw\iLLD\TC23A\Tricore\Cpu\Trap\IfxCpu_Trap.c</SourceFile>
+					<SourceFileInstFlag type="int">1</SourceFileInstFlag>
+					<NETFrameMode type="int">73728</NETFrameMode>
+					<NETFrameSaveIndex type="int">8</NETFrameSaveIndex>
+					<FrameUserTitle type="string"></FrameUserTitle>
+				</OPEN_VIEW07>
+				<SAVED_VIEW07 type="int">2</SAVED_VIEW07>
+				<OPEN_VIEW08 type="key">
+					<FrameCreated type="string">11.05.2026 16:11:09:396</FrameCreated>
+					<ViewSrv type="key">
+						<AnimateQueue type="key">
+							<RunningPeriod type="int">0</RunningPeriod>
+							<HoldedPeriod type="int">0</HoldedPeriod>
+						</AnimateQueue>
+					</ViewSrv>
+					<SourceFile type="string">Cpu0_Main.c</SourceFile>
+					<SourceFileInstFlag type="int">1</SourceFileInstFlag>
+					<NETFrameMode type="int">73728</NETFrameMode>
+					<NETFrameSaveIndex type="int">9</NETFrameSaveIndex>
+					<FrameUserTitle type="string"></FrameUserTitle>
+				</OPEN_VIEW08>
+				<OPEN_VIEW09 type="key">
+					<FrameCreated type="string">11.05.2026 16:11:33:900</FrameCreated>
+					<ViewSrv type="key">
+						<AnimateQueue type="key">
+							<RunningPeriod type="int">0</RunningPeriod>
+							<HoldedPeriod type="int">0</HoldedPeriod>
+						</AnimateQueue>
+					</ViewSrv>
+					<SourceFile type="string">AppSw\Tricore\Tc234_Modules\STM\Stm.h</SourceFile>
+					<SourceFileInstFlag type="int">1</SourceFileInstFlag>
+					<NETFrameMode type="int">73728</NETFrameMode>
+					<NETFrameSaveIndex type="int">10</NETFrameSaveIndex>
+					<FrameUserTitle type="string"></FrameUserTitle>
+				</OPEN_VIEW09>
+				<OPEN_VIEW10 type="key">
+					<FrameCreated type="string">11.05.2026 16:22:11:752</FrameCreated>
+					<ViewSrv type="key">
+						<AnimateQueue type="key">
+							<RunningPeriod type="int">0</RunningPeriod>
+							<HoldedPeriod type="int">0</HoldedPeriod>
+						</AnimateQueue>
+					</ViewSrv>
+					<SourceFile type="string">AppSw\Tricore\App_bootloader\App_bootloader.c</SourceFile>
+					<SourceFileInstFlag type="int">1</SourceFileInstFlag>
+					<NETFrameMode type="int">73728</NETFrameMode>
+					<NETFrameSaveIndex type="int">11</NETFrameSaveIndex>
+					<FrameUserTitle type="string"></FrameUserTitle>
+				</OPEN_VIEW10>
+				<SAVED_VIEW08 type="int">3</SAVED_VIEW08>
+				<SAVED_VIEW09 type="int">4</SAVED_VIEW09>
 			</StdUDEProgWin>
 			<StdUDESFRView type="key">
 				<SAVED_VIEW_OBJS type="int">0</SAVED_VIEW_OBJS>
@@ -1942,30 +1985,29 @@ End Sub</ScriptSource>
 			<StdUDELocalsWin type="key">
 				<SAVED_VIEW_OBJS type="int">1</SAVED_VIEW_OBJS>
 				<OPEN_VIEW type="key">
-					<FrameCreated type="string">08.05.2026 16:45:10:230</FrameCreated>
+					<FrameCreated type="string">08.05.2026 19:46:46:288</FrameCreated>
 					<ViewSrv type="key">
-						<NameWidth type="int">236</NameWidth>
+						<NameWidth type="int">209</NameWidth>
 						<AddressWidth type="int">0</AddressWidth>
-						<ValueWidth type="int">200</ValueWidth>
+						<ValueWidth type="int">162</ValueWidth>
 						<Value2Width type="int">0</Value2Width>
 						<MinMaxWidth type="int">0</MinMaxWidth>
 					</ViewSrv>
 					<NETFrameMode type="int">81920</NETFrameMode>
-					<NETFrameSaveIndex type="int">1</NETFrameSaveIndex>
+					<NETFrameSaveIndex type="int">4</NETFrameSaveIndex>
 					<FrameUserTitle type="string"></FrameUserTitle>
 				</OPEN_VIEW>
 				<SAVED_VIEW type="int">0</SAVED_VIEW>
 			</StdUDELocalsWin>
 			<StdUDEWatchWin type="key">
-				<SAVED_VIEW_OBJS type="int">1</SAVED_VIEW_OBJS>
 				<OPEN_VIEW00 type="key">
-					<FrameCreated type="string">07.05.2026 18:45:53:552</FrameCreated>
+					<FrameCreated type="string">04.08.2025 09:10:48:446</FrameCreated>
 					<ViewSrv type="key">
-						<TopIndex type="int">0</TopIndex>
+						<TopIndex type="int">28</TopIndex>
 						<CaretIndex type="int">0</CaretIndex>
-						<NameWidth type="int">172</NameWidth>
+						<NameWidth type="int">270</NameWidth>
 						<AddressWidth type="int">0</AddressWidth>
-						<ValueWidth type="int">117</ValueWidth>
+						<ValueWidth type="int">193</ValueWidth>
 						<Value2Width type="int">0</Value2Width>
 						<MinMaxWidth type="int">0</MinMaxWidth>
 						<Watches type="key">
@@ -1977,72 +2019,166 @@ End Sub</ScriptSource>
 							<FloatFormatForValue2 type="int">3</FloatFormatForValue2>
 							<RefreshPeriodGlobalEnable type="int">1</RefreshPeriodGlobalEnable>
 							<Watch1 type="key">
-								<Name type="string">g_eraseTotalTimeMs (global)</Name>
+								<Name type="string">StepperMotorSwitch (global)</Name>
 							</Watch1>
 							<Watch2 type="key">
-								<Name type="string">Node0Readmsg (global) @1</Name>
-								<Status type="string">#0#0,1$0,0$#0,2#0,2,0$1,1$#0,2,1$1,1$#0,3$0,2$</Status>
-								<Status2 type="string">#0,2,0$1,1$#0,2,1$1,1$</Status2>
-								<RunningPeriod2 type="int">25</RunningPeriod2>
-								<HoldedPeriod2 type="int">100</HoldedPeriod2>
+								<Name type="string">onlyFlag (global)</Name>
 							</Watch2>
 							<Watch3 type="key">
-								<Name type="string">resetReason (global) @1</Name>
-								<RunningPeriod3 type="int">25</RunningPeriod3>
-								<HoldedPeriod3 type="int">100</HoldedPeriod3>
+								<Name type="string">PwmCount (global)</Name>
 							</Watch3>
 							<Watch4 type="key">
-								<Name type="string">isPowerOnReset (global) @1</Name>
-								<RunningPeriod4 type="int">25</RunningPeriod4>
-								<HoldedPeriod4 type="int">100</HoldedPeriod4>
+								<Name type="string">errCount (global)</Name>
 							</Watch4>
 							<Watch5 type="key">
-								<Name type="string">gs_DownloadCRC [E:\workFiles\IEBS\tc234bootloader\BootLoader_dualBank\AppSw\Tricore\App_UDS\uds_app.c] @1</Name>
-								<Status type="string">#0$1,1$</Status>
-								<Status2 type="string">#0$1,1$</Status2>
-								<RunningPeriod5 type="int">25</RunningPeriod5>
-								<HoldedPeriod5 type="int">100</HoldedPeriod5>
+								<Name type="string">actangle (global)</Name>
 							</Watch5>
+							<Watch6 type="key">
+								<Name type="string">theoryangle (global)</Name>
+							</Watch6>
+							<Watch7 type="key">
+								<Name type="string">AngleEnum (global)</Name>
+							</Watch7>
+							<Watch8 type="key">
+								<Name type="string">Tle5012_data (global)</Name>
+							</Watch8>
+							<Watch9 type="key">
+								<Name type="string">zhenchuan_002h (global)</Name>
+							</Watch9>
+							<Watch10 type="key">
+								<Name type="string">tempangle (global)</Name>
+							</Watch10>
+							<Watch11 type="key">
+								<Name type="string">tle5012Channels (global)</Name>
+							</Watch11>
+							<Watch12 type="key">
+								<Name type="string">MotorParameters (global)</Name>
+							</Watch12>
+							<Watch13 type="key">
+								<Name type="string">ZeroIdentify (global)</Name>
+							</Watch13>
+							<Watch14 type="key">
+								<Name type="string">lsw (global)</Name>
+							</Watch14>
+							<Watch15 type="key">
+								<Name type="string">lsw_cnt (global)</Name>
+							</Watch15>
+							<Watch16 type="key">
+								<Name type="string">pi_id (global)</Name>
+							</Watch16>
+							<Watch17 type="key">
+								<Name type="string">CAN_Board_001h_cntr (global)</Name>
+							</Watch17>
+							<Watch18 type="key">
+								<Name type="string">tle5012_sfr (global)</Name>
+							</Watch18>
+							<Watch19 type="key">
+								<Name type="string">tle5012_sfrBD (global)</Name>
+							</Watch19>
+							<Watch20 type="key">
+								<Name type="string">SystemPower (global)</Name>
+							</Watch20>
+							<Watch21 type="key">
+								<Name type="string">App_TPwm (global)</Name>
+							</Watch21>
+							<Watch22 type="key">
+								<Name type="string">tle9183SelfTest (global)</Name>
+							</Watch22>
+							<Watch23 type="key">
+								<Name type="string">gs_tle35584_selfTest (global)</Name>
+							</Watch23>
+							<Watch24 type="key">
+								<Name type="string">faultCode_all (global)</Name>
+							</Watch24>
+							<Watch25 type="key">
+								<Name type="string">chipSelfDetectInfo (global)</Name>
+							</Watch25>
+							<Watch26 type="key">
+								<Name type="string">pi_pos (global)</Name>
+							</Watch26>
+							<Watch27 type="key">
+								<Name type="string">pi_iq (global)</Name>
+							</Watch27>
+							<Watch28 type="key">
+								<Name type="string">InverterPara (global)</Name>
+							</Watch28>
+							<Watch29 type="key">
+								<Name type="string">DetaTime (global) @1</Name>
+								<Status type="string">#0#0,0#</Status>
+								<RunningPeriod29 type="int">25</RunningPeriod29>
+								<HoldedPeriod29 type="int">100</HoldedPeriod29>
+							</Watch29>
+							<Watch30 type="key">
+								<Name type="string">g_count1ms (global)</Name>
+							</Watch30>
+							<Watch31 type="key">
+								<Name type="string">xxi (global)</Name>
+							</Watch31>
+							<Watch32 type="key">
+								<Name type="string">TLE9183selfTestResult (global)</Name>
+							</Watch32>
+							<Watch33 type="key">
+								<Name type="string">TemperatureTlf35584Analog_Org (global)</Name>
+							</Watch33>
+							<Watch34 type="key">
+								<Name type="string">VoltageSample (global)</Name>
+							</Watch34>
+							<Watch35 type="key">
+								<Name type="string">TempChannels (global)</Name>
+							</Watch35>
+							<Watch36 type="key">
+								<Name type="string">g_measuredPwmCount (global)</Name>
+							</Watch36>
+							<Watch37 type="key">
+								<Name type="string">g_measuredPwmFreq_Hz (global)</Name>
+							</Watch37>
+							<Watch38 type="key">
+								<Name type="string">g_measuredPwmDutyCycle (global)</Name>
+							</Watch38>
+							<Watch39 type="key">
+								<Name type="string">SendPwmStopFlag (global)</Name>
+							</Watch39>
+							<Watch40 type="key">
+								<Name type="string">g_MulticanBasic (global) @1</Name>
+								<RunningPeriod40 type="int">25</RunningPeriod40>
+								<HoldedPeriod40 type="int">100</HoldedPeriod40>
+							</Watch40>
+							<Watch41 type="key">
+								<Name type="string">Node0Readmsg (global) @1</Name>
+								<Status type="string">#0#0,0$1,1$#0,1$-1,0$#0,2#0,2,0$1,1$#0,3$0,2$</Status>
+								<Status2 type="string">#0,0$1,1$#0,2,0$1,1$</Status2>
+								<RunningPeriod41 type="int">25</RunningPeriod41>
+								<HoldedPeriod41 type="int">100</HoldedPeriod41>
+							</Watch41>
+							<Watch42 type="key">
+								<Name type="string">gl_rxDataQueue (global) @1</Name>
+								<RunningPeriod42 type="int">25</RunningPeriod42>
+								<HoldedPeriod42 type="int">100</HoldedPeriod42>
+							</Watch42>
+							<Watch43 type="key">
+								<Name type="string">m_DetaTime [E:\workFiles\IEBS\tc234bootloader\App_dualBank\Cpu0_Main.c]:{MainProgram} @1</Name>
+								<RunningPeriod43 type="int">25</RunningPeriod43>
+								<HoldedPeriod43 type="int">100</HoldedPeriod43>
+							</Watch43>
+							<Watch44 type="key">
+								<Name type="string">gs_stUdsInfo [E:\workFiles\IEBS\tc234bootloader\App_dualBank\AppSw\Tricore\App_UDS\uds_app.c] @1</Name>
+								<Status type="string">#0#0,0$0,2$#0,1$0,2$#0,2$0,2$</Status>
+								<RunningPeriod44 type="int">25</RunningPeriod44>
+								<HoldedPeriod44 type="int">100</HoldedPeriod44>
+							</Watch44>
+							<RunningPeriod0 type="int">25</RunningPeriod0>
+							<HoldedPeriod0 type="int">100</HoldedPeriod0>
 						</Watches>
 					</ViewSrv>
 					<NETFrameMode type="int">82176</NETFrameMode>
-					<NETFrameSaveIndex type="int">17</NETFrameSaveIndex>
+					<NETFrameSaveIndex type="int">16</NETFrameSaveIndex>
 					<FrameUserTitle type="string"></FrameUserTitle>
 				</OPEN_VIEW00>
-				<OPEN_VIEW01 type="key">
-					<FrameCreated type="string">07.05.2026 18:46:40:840</FrameCreated>
-					<ViewSrv type="key">
-						<TopIndex type="int">0</TopIndex>
-						<CaretIndex type="int">0</CaretIndex>
-						<NameWidth type="int">402</NameWidth>
-						<AddressWidth type="int">0</AddressWidth>
-						<ValueWidth type="int">268</ValueWidth>
-						<Value2Width type="int">0</Value2Width>
-						<MinMaxWidth type="int">0</MinMaxWidth>
-					</ViewSrv>
-					<NETFrameMode type="int">73728</NETFrameMode>
-					<FrameUserTitle type="string"></FrameUserTitle>
-				</OPEN_VIEW01>
+				<SAVED_VIEW_OBJS type="int">1</SAVED_VIEW_OBJS>
 				<SAVED_VIEW00 type="int">0</SAVED_VIEW00>
 			</StdUDEWatchWin>
 			<StdUDESimIOWin type="key">
-				<SAVED_VIEW_OBJS type="int">1</SAVED_VIEW_OBJS>
-				<OPEN_VIEW type="key">
-					<FrameCreated type="string">09.05.2026 17:07:07:651</FrameCreated>
-					<ViewSrv type="key">
-						<TerminalSettings type="bin" size="36">AQAAAAAAAAAAAAAAAAAAAAEAAAABAAAAAAAAAFAAAAD0AQAA</TerminalSettings>
-						<SerialCOMSettings type="bin" size="32">//////////8A+A+QAAAAAAAAAAAAAAAACAAAAIAlAAA=</SerialCOMSettings>
-						<SerialCOMPort type="string">COM0</SerialCOMPort>
-						<FlagCOMConnected type="flag">0</FlagCOMConnected>
-						<DefParaFormat type="bin" size="156">nAAAAD8AAYAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</DefParaFormat>
-					</ViewSrv>
-					<NETFrameMode type="int">90112</NETFrameMode>
-					<NETFrameSaveIndex type="int">15</NETFrameSaveIndex>
-					<FrameUserTitle type="string"></FrameUserTitle>
-				</OPEN_VIEW>
-				<SAVED_VIEW type="int">0</SAVED_VIEW>
+				<SAVED_VIEW_OBJS type="int">0</SAVED_VIEW_OBJS>
 			</StdUDESimIOWin>
 			<StdUDEHtmlDocWin type="key">
 				<SAVED_VIEW_OBJS type="int">0</SAVED_VIEW_OBJS>
@@ -2058,29 +2194,6 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</DefParaFormat>
 			</UDEProfilingWin>
 			<StdUDEMemWin type="key">
 				<SAVED_VIEW_OBJS type="int">0</SAVED_VIEW_OBJS>
-				<OPEN_VIEW00 type="key">
-					<FrameCreated type="string">11.05.2026 14:19:17:679</FrameCreated>
-					<ViewSrv type="key">
-						<AnimateQueue type="key">
-							<RunningPeriod type="int">0</RunningPeriod>
-							<HoldedPeriod type="int">0</HoldedPeriod>
-						</AnimateQueue>
-						<version type="int">0x00000001</version>
-						<Mode type="string">hex32bit</Mode>
-						<ASCII type="flag">1</ASCII>
-						<AutoSize type="flag">0</AutoSize>
-						<Dec type="flag">0</Dec>
-						<AutoWrite type="flag">1</AutoWrite>
-						<VerifyAfterWrite type="flag">1</VerifyAfterWrite>
-						<Width type="int">0x00000004</Width>
-						<Address type="int">1879229824</Address>
-						<AddressMin type="int">0</AddressMin>
-						<AddressMax type="int">4294967295</AddressMax>
-						<AddressWidth type="int">0x00000020</AddressWidth>
-					</ViewSrv>
-					<NETFrameMode type="int">81921</NETFrameMode>
-					<FrameUserTitle type="string"></FrameUserTitle>
-				</OPEN_VIEW00>
 			</StdUDEMemWin>
 			<UDEStackWin type="key">
 				<SAVED_VIEW_OBJS type="int">0</SAVED_VIEW_OBJS>
@@ -2090,7 +2203,11 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</DefParaFormat>
 			<INI_SECTION type="key">
 				<System type="key">
 					<DEFAULT_HW_BREAKPOINT type="string">ON</DEFAULT_HW_BREAKPOINT>
+					<PROGRAM101_SERVICE_MODE type="int">1</PROGRAM101_SERVICE_MODE>
 				</System>
+				<Monitor type="key">
+					<PROGRAM101_CRC_CHECK type="int">2</PROGRAM101_CRC_CHECK>
+				</Monitor>
 			</INI_SECTION>
 			<UDESTK.TriCoreArchSrv type="key">
 				<UDESTK.Tc2CoreTargIntf type="key">
@@ -2226,33 +2343,120 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</DefParaFormat>
 						<Enabled type="flag">0</Enabled>
 						<NumOfRanges type="int">0</NumOfRanges>
 					</DcacheHandling>
+					<Setup type="key">
+						<PortType type="string">DAS</PortType>
+						<CommDevSel type="string"></CommDevSel>
+						<TargetPort type="string">Default</TargetPort>
+						<MaxJtagClk type="int">5000</MaxJtagClk>
+						<CheckJtagId type="flag">0</CheckJtagId>
+						<ScanJTAG type="flag">0</ScanJTAG>
+						<Ocds1ViaPod type="flag">0</Ocds1ViaPod>
+						<EtksArbiterMode type="string">None</EtksArbiterMode>
+						<RefreshJtag type="flag">0</RefreshJtag>
+						<RefreshHarr type="flag">0</RefreshHarr>
+						<ReenableOcds type="flag">1</ReenableOcds>
+						<ReduceJtagClock type="flag">0</ReduceJtagClock>
+						<UseDap type="flag">0</UseDap>
+						<DapMode type="string">2PIN</DapMode>
+						<ConnOption type="string">Default</ConnOption>
+						<SetDebugEnableAb1DisablePin type="flag">0</SetDebugEnableAb1DisablePin>
+						<ResetWaitTime type="int">500</ResetWaitTime>
+						<ResetMode type="string">Default</ResetMode>
+						<OpenDrainReset type="flag">0</OpenDrainReset>
+						<DiswdtOnReset type="flag">0</DiswdtOnReset>
+						<ExecInitCmds type="flag">1</ExecInitCmds>
+						<InitScript type="string">SET 0xF80020A8 0x8000
+SET 0xF80020AC 0x8000
+
+</InitScript>
+						<ExecOnConnectCmds type="flag">0</ExecOnConnectCmds>
+						<OnConnectScript type="string"></OnConnectScript>
+						<ExecOnExtRstCmds type="flag">0</ExecOnExtRstCmds>
+						<ResetPulseLen type="int">10</ResetPulseLen>
+						<AddResetDelay type="int">0</AddResetDelay>
+						<ExecEmemInitOnReset type="int">0x00000000</ExecEmemInitOnReset>
+						<UnlockInterface type="flag">0</UnlockInterface>
+						<BootPasswd0 type="int">0x00000000</BootPasswd0>
+						<BootPasswd1 type="int">0x00000000</BootPasswd1>
+						<BootPasswd2 type="int">0x00000000</BootPasswd2>
+						<BootPasswd3 type="int">0x00000000</BootPasswd3>
+						<BootPasswd4 type="int">0x00000000</BootPasswd4>
+						<BootPasswd5 type="int">0x00000000</BootPasswd5>
+						<BootPasswd6 type="int">0x00000000</BootPasswd6>
+						<BootPasswd7 type="int">0x00000000</BootPasswd7>
+						<PasswordFile type="string"></PasswordFile>
+						<HandleBmiHeader type="flag">0</HandleBmiHeader>
+						<SetAutOkOnConnect type="flag">0</SetAutOkOnConnect>
+						<DontUseWdtSusp type="flag">0</DontUseWdtSusp>
+						<InitCore0RamOnConnect type="flag">0</InitCore0RamOnConnect>
+						<IgnoreFailedHaltAfterResetOnConnect type="flag">0</IgnoreFailedHaltAfterResetOnConnect>
+						<TrySystemResetAfterFailedHardwareReset type="flag">0</TrySystemResetAfterFailedHardwareReset>
+						<RunStabilityTestOnConnect type="flag">0</RunStabilityTestOnConnect>
+						<RunStabilityTestCycles type="int">10</RunStabilityTestCycles>
+						<IgnoreFailedEnableOcdsOnConnect type="flag">0</IgnoreFailedEnableOcdsOnConnect>
+						<UseLbistAwareConnect type="flag">0</UseLbistAwareConnect>
+						<MaxTry type="int">1</MaxTry>
+						<UseDflashAccessFilter type="flag">1</UseDflashAccessFilter>
+						<DetectResetWhileHalted type="flag">1</DetectResetWhileHalted>
+						<UseTranslateAddr type="flag">1</UseTranslateAddr>
+						<DownloadToAllRams type="flag">0</DownloadToAllRams>
+						<HaltAfterReset type="flag">1</HaltAfterReset>
+						<HaltAfterHardwareReset type="flag">0</HaltAfterHardwareReset>
+						<TargetAppHandshakeMode type="string">None</TargetAppHandshakeMode>
+						<TargetAppHandshakeTimeout type="int">100</TargetAppHandshakeTimeout>
+						<TargetAppHandshakeParameter0 type="int">0x00000000</TargetAppHandshakeParameter0>
+						<TargetAppHandshakeParameter1 type="int">0x00000000</TargetAppHandshakeParameter1>
+						<TargetAppHandshakeParameter2 type="int">0x00000000</TargetAppHandshakeParameter2>
+						<TargetAppHandshakeParameter3 type="int">0x00000000</TargetAppHandshakeParameter3>
+						<SimioAddr type="string">g_JtagSimioAccess</SimioAddr>
+						<UseStmForPtm type="int">1</UseStmForPtm>
+						<ExecOnStartCmds type="flag">0</ExecOnStartCmds>
+						<OnStartScript type="string"></OnStartScript>
+						<ExecOnHaltCmds type="flag">0</ExecOnHaltCmds>
+						<OnHaltScript type="string"></OnHaltScript>
+						<ExecOnHaltCmdsWhileHaltedPeriod type="int">0</ExecOnHaltCmdsWhileHaltedPeriod>
+						<UseTriggerToBreak type="flag">1</UseTriggerToBreak>
+						<UseTL2OnHalt type="flag">1</UseTL2OnHalt>
+						<UseOstateStable type="flag">1</UseOstateStable>
+						<AllowJtagResetWhileRunning type="flag">1</AllowJtagResetWhileRunning>
+						<MaxAccRetry type="int">1</MaxAccRetry>
+						<AccRetryDelay type="int">10</AccRetryDelay>
+						<DebugResetOnDisconnect type="flag">0</DebugResetOnDisconnect>
+						<ReadPmcsrWhileRunning type="flag">1</ReadPmcsrWhileRunning>
+						<IvIcacheOnHalt type="flag">1</IvIcacheOnHalt>
+						<IvPlbOnHalt type="flag">1</IvPlbOnHalt>
+						<SuspendSlaveCores type="flag">0</SuspendSlaveCores>
+						<FilterMemAcc type="flag">1</FilterMemAcc>
+						<DasDllPath type="string">das_api.dll</DasDllPath>
+						<DasHost type="string"></DasHost>
+						<DasTryStartSrv type="flag">1</DasTryStartSrv>
+						<DasSrvPath type="string">servers\udas\udas.exe</DasSrvPath>
+						<DasStopSrv type="flag">1</DasStopSrv>
+						<DasResetHelperBreakAddr type="string">main</DasResetHelperBreakAddr>
+						<DasResetMode type="int">2</DasResetMode>
+						<DasRemoveLogFile type="flag">0</DasRemoveLogFile>
+						<DasForwardSerNum type="flag">0</DasForwardSerNum>
+						<DasSrvSel type="int">4294967295</DasSrvSel>
+						<DasPortType type="int">0</DasPortType>
+						<DasPortSel type="int">0</DasPortSel>
+						<DasCmdTimeout type="int">1000</DasCmdTimeout>
+						<DasWaitAfterConnect type="int">0</DasWaitAfterConnect>
+						<DasDisconnectSrv type="flag">0</DasDisconnectSrv>
+					</Setup>
+					<SetupSaveMode type="int">1</SetupSaveMode>
 				</UDESTK.Tc2CoreTargIntf>
 			</UDESTK.TriCoreArchSrv>
 			<UDESTK.UDESymbol type="key">
 				<BinaryFiles type="key">
 					<Number type="int">1</Number>
 					<BinaryFile1 type="key">
-						<FullPath type="string">Debug\BootLoader20250714_UDS_tasking62.elf</FullPath>
+						<FullPath type="string">Debug\IEBS_wulin_DiagnosisTest_20250209.elf</FullPath>
 						<SourceAliases type="key">
 							<FullPath1 type="string">&lt;Section&gt;</FullPath1>
-							<EntryInFile1 type="string">E:\workFiles\IEBS\zhenChuangCode\ZhenchuangTest\BootLoader20250714_UDS_tasking622\IfxCpu_CStart0.c</EntryInFile1>
-							<Number type="int">9</Number>
-							<FullPath2 type="string">E:\workFiles\IEBS\IEBSBootloader\BootLoader20250714_UDS_tasking622\iLLD_1_0_1_11_0\Src\BaseSw\iLLD\TC23A\Tricore\Cpu\Trap\IfxCpu_Trap.c</FullPath2>
-							<EntryInFile2 type="string">E:\workFiles\IEBS\zhenChuangCode\ZhenchuangTest\BootLoader20250714_UDS_tasking622\iLLD_1_0_1_11_0\Src\BaseSw\iLLD\TC23A\Tricore\Cpu\Trap\IfxCpu_Trap.c</EntryInFile2>
-							<FullPath3 type="string">E:\workFiles\IEBS\IEBSBootloader\BootLoader20250714_UDS_tasking622\AppSw\Tricore\App_UDS\uds_app.c</FullPath3>
-							<EntryInFile3 type="string">E:\workFiles\IEBS\zhenChuangCode\ZhenchuangTest\BootLoader20250714_UDS_tasking622\AppSw\Tricore\App_UDS\uds_app.c</EntryInFile3>
-							<FullPath4 type="string">E:\workFiles\IEBS\IEBSBootloader\BootLoader20250714_UDS_tasking622\AppSw\Tricore\App_bootloader\App_bootloader.c</FullPath4>
-							<EntryInFile4 type="string">E:\workFiles\IEBS\zhenChuangCode\ZhenchuangTest\BootLoader20250714_UDS_tasking622\AppSw\Tricore\App_bootloader\App_bootloader.c</EntryInFile4>
-							<FullPath5 type="string">E:\workFiles\IEBS\IEBSBootloader\BootLoader20250714_UDS_tasking622\AppSw\Tricore\Main\Cpu0_Main.c</FullPath5>
-							<EntryInFile5 type="string">E:\workFiles\IEBS\zhenChuangCode\ZhenchuangTest\BootLoader20250714_UDS_tasking622\AppSw\Tricore\Main\Cpu0_Main.c</EntryInFile5>
-							<FullPath6 type="string">E:\workFiles\IEBS\IEBSBootloader\BootLoader20250714_UDS_tasking622\AppSw\Tricore\App_UDS\tool_class.c</FullPath6>
-							<EntryInFile6 type="string">E:\workFiles\IEBS\zhenChuangCode\ZhenchuangTest\BootLoader20250714_UDS_tasking622\AppSw\Tricore\App_UDS\tool_class.c</EntryInFile6>
-							<FullPath7 type="string">E:\workFiles\IEBS\IEBSBootloader\BootLoader20250714_UDS_tasking622\AppSw\Tricore\Communication\CANRxTxInterface.c</FullPath7>
-							<EntryInFile7 type="string">E:\workFiles\IEBS\zhenChuangCode\ZhenchuangTest\BootLoader20250714_UDS_tasking622\AppSw\Tricore\Communication\CANRxTxInterface.c</EntryInFile7>
-							<FullPath8 type="string">E:\workFiles\IEBS\IEBSBootloader\BootLoader20250714_UDS_tasking622\AppSw\Tricore\App_bootloader\Boot_DualBank.c</FullPath8>
-							<EntryInFile8 type="string">E:\workFiles\IEBS\zhenChuangCode\ZhenchuangTest\BootLoader20250714_UDS_tasking622\AppSw\Tricore\App_bootloader\Boot_DualBank.c</EntryInFile8>
-							<FullPath9 type="string">E:\workFiles\IEBS\IEBSBootloader\BootLoader20250714_UDS_tasking622\iLLD_1_0_1_11_0\Src\BaseSw\iLLD\TC23A\Tricore\Cpu\Std\IfxCpu.h</FullPath9>
-							<EntryInFile9 type="string">E:\workFiles\IEBS\zhenChuangCode\ZhenchuangTest\BootLoader20250714_UDS_tasking622\iLLD_1_0_1_11_0\Src\BaseSw\iLLD\TC23A\Tricore\Cpu\Std\IfxCpu.h</EntryInFile9>
+							<EntryInFile1 type="string">E:\IEBSmotor\IEBS_wulin_DiagnosisTest_20250723\IfxCpu_CStart0.c</EntryInFile1>
+							<Number type="int">2</Number>
+							<FullPath2 type="string">E:\keil5Workspace\ZhenchuangTest\IEBS_wulin_DiagnosisTest_20250723\AppSw\System_Application\MotorSpeedControl\MotorSpeedCalculation.c</FullPath2>
+							<EntryInFile2 type="string">E:\IEBSmotor\IEBS_wulin_DiagnosisTest_20250723\AppSw\System_Application\MotorSpeedControl\MotorSpeedCalculation.c</EntryInFile2>
 						</SourceAliases>
 					</BinaryFile1>
 					<BinaryFile-1 type="key"></BinaryFile-1>
@@ -2261,7 +2465,7 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</DefParaFormat>
 					<Number type="int">0</Number>
 				</ExpressionClipboard>
 				<MultiCoreLoader type="key">
-					<TargetFile1 type="string">Debug\BootLoader20250714_UDS_tasking62.elf</TargetFile1>
+					<TargetFile1 type="string">Debug\IEBS_wulin_DiagnosisTest_20250209.elf</TargetFile1>
 					<TargetFileActive1 type="string">1</TargetFileActive1>
 					<TargetFileMapping1 type="string">3</TargetFileMapping1>
 					<TargetFileOptions1 type="string">00000000</TargetFileOptions1>
@@ -2286,7 +2490,9 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</DefParaFormat>
 					<FlashMod_PFLASH0 type="key">
 						<Enabled type="flag">1</Enabled>
 					</FlashMod_PFLASH0>
-					<FlashMod_DF_EEPROM type="key"></FlashMod_DF_EEPROM>
+					<FlashMod_DF_EEPROM type="key">
+						<Enabled type="flag">1</Enabled>
+					</FlashMod_DF_EEPROM>
 					<Frontend type="key">
 						<LastModule type="int">0</LastModule>
 						<VerifyProt type="flag">0</VerifyProt>
@@ -2309,13 +2515,28 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</DefParaFormat>
 			</CommQueueHndlStg>
 			<TargetStateHndlStg type="key"></TargetStateHndlStg>
 			<breakpointsV3 type="key">
-				<collectionStr type="string">_0,_1,_2,_6,_7,_8,_3,_4,_5,</collectionStr>
+				<collectionStr type="string">_16,_0,</collectionStr>
 				<collection type="key">
+					<_16 type="key">
+						<breakpointType type="string">code</breakpointType>
+						<label type="string">'UDS_MainFun {E:\workFiles\IEBS\tc234bootloader\App_dualBank\AppSw\Tricore\App_UDS\uds_app.c} .521';uds_app.c;1;13;;</label>
+						<enable type="flag">0</enable>
+						<address type="string">'UDS_MainFun {E:\workFiles\IEBS\tc234bootloader\App_dualBank\AppSw\Tricore\App_UDS\uds_app.c} .521';uds_app.c;1;13;;</address>
+						<multiCore type="flag">0</multiCore>
+						<enableCondition type="flag">0</enableCondition>
+						<condition type="string"></condition>
+						<enableLoopCounter type="flag">0</enableLoopCounter>
+						<loopCounter type="string">0</loopCounter>
+						<loopGoal type="string">0</loopGoal>
+						<enableMacro type="flag">0</enableMacro>
+						<macro type="string"></macro>
+						<codeBreakpointType type="string">hardware</codeBreakpointType>
+					</_16>
 					<_0 type="key">
 						<breakpointType type="string">code</breakpointType>
-						<label type="string">'core0_main {E:\workFiles\IEBS\tc234bootloader\BootLoader_dualBank\AppSw\Tricore\Main\Cpu0_Main.c} .110';Cpu0_Main.c;1;30;;</label>
-						<enable type="flag">0</enable>
-						<address type="string">'core0_main {E:\workFiles\IEBS\tc234bootloader\BootLoader_dualBank\AppSw\Tricore\Main\Cpu0_Main.c} .110';Cpu0_Main.c;1;30;;</address>
+						<label type="string">'core0_main {E:\workFiles\IEBS\tc234bootloader\App_dualBank\Cpu0_Main.c} .151';Cpu0_Main.c;1;27;;</label>
+						<enable type="flag">1</enable>
+						<address type="string">'core0_main {E:\workFiles\IEBS\tc234bootloader\App_dualBank\Cpu0_Main.c} .151';Cpu0_Main.c;1;27;;</address>
 						<multiCore type="flag">0</multiCore>
 						<enableCondition type="flag">0</enableCondition>
 						<condition type="string"></condition>
@@ -2326,126 +2547,6 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</DefParaFormat>
 						<macro type="string"></macro>
 						<codeBreakpointType type="string">hardware</codeBreakpointType>
 					</_0>
-					<_1 type="key">
-						<breakpointType type="string">code</breakpointType>
-						<label type="string">'Boot_DualBank_SelectAndJump {E:\workFiles\IEBS\tc234bootloader\BootLoader_dualBank\AppSw\Tricore\App_bootloader\Boot_DualBank.c} .644';Boot_DualBank.c;1;22;;</label>
-						<enable type="flag">0</enable>
-						<address type="string">'Boot_DualBank_SelectAndJump {E:\workFiles\IEBS\tc234bootloader\BootLoader_dualBank\AppSw\Tricore\App_bootloader\Boot_DualBank.c} .644';Boot_DualBank.c;1;22;;</address>
-						<multiCore type="flag">0</multiCore>
-						<enableCondition type="flag">0</enableCondition>
-						<condition type="string"></condition>
-						<enableLoopCounter type="flag">0</enableLoopCounter>
-						<loopCounter type="string">0</loopCounter>
-						<loopGoal type="string">0</loopGoal>
-						<enableMacro type="flag">0</enableMacro>
-						<macro type="string"></macro>
-						<codeBreakpointType type="string">hardware</codeBreakpointType>
-					</_1>
-					<_2 type="key">
-						<breakpointType type="string">code</breakpointType>
-						<label type="string">'Boot_DualBank_VerifyBank {E:\workFiles\IEBS\tc234bootloader\BootLoader_dualBank\AppSw\Tricore\App_bootloader\Boot_DualBank.c} .404';Boot_DualBank.c;1;35;;</label>
-						<enable type="flag">0</enable>
-						<address type="string">'Boot_DualBank_VerifyBank {E:\workFiles\IEBS\tc234bootloader\BootLoader_dualBank\AppSw\Tricore\App_bootloader\Boot_DualBank.c} .404';Boot_DualBank.c;1;35;;</address>
-						<multiCore type="flag">0</multiCore>
-						<enableCondition type="flag">0</enableCondition>
-						<condition type="string"></condition>
-						<enableLoopCounter type="flag">0</enableLoopCounter>
-						<loopCounter type="string">0</loopCounter>
-						<loopGoal type="string">0</loopGoal>
-						<enableMacro type="flag">0</enableMacro>
-						<macro type="string"></macro>
-						<codeBreakpointType type="string">hardware</codeBreakpointType>
-					</_2>
-					<_6 type="key">
-						<breakpointType type="string">code</breakpointType>
-						<label type="string">'Boot_DualBank_CalculateCRC {E:\workFiles\IEBS\tc234bootloader\BootLoader_dualBank\AppSw\Tricore\App_bootloader\Boot_DualBank.c} .362';Boot_DualBank.c;1;2;;</label>
-						<enable type="flag">0</enable>
-						<address type="string">'Boot_DualBank_CalculateCRC {E:\workFiles\IEBS\tc234bootloader\BootLoader_dualBank\AppSw\Tricore\App_bootloader\Boot_DualBank.c} .362';Boot_DualBank.c;1;2;;</address>
-						<multiCore type="flag">0</multiCore>
-						<enableCondition type="flag">0</enableCondition>
-						<condition type="string"></condition>
-						<enableLoopCounter type="flag">0</enableLoopCounter>
-						<loopCounter type="string">0</loopCounter>
-						<loopGoal type="string">0</loopGoal>
-						<enableMacro type="flag">0</enableMacro>
-						<macro type="string"></macro>
-						<codeBreakpointType type="string">hardware</codeBreakpointType>
-					</_6>
-					<_7 type="key">
-						<breakpointType type="string">code</breakpointType>
-						<label type="string">'core0_main {E:\workFiles\IEBS\tc234bootloader\BootLoader_dualBank\AppSw\Tricore\Main\Cpu0_Main.c} .80';Cpu0_Main.c;1;0;;</label>
-						<enable type="flag">0</enable>
-						<address type="string">'core0_main {E:\workFiles\IEBS\tc234bootloader\BootLoader_dualBank\AppSw\Tricore\Main\Cpu0_Main.c} .80';Cpu0_Main.c;1;0;;</address>
-						<multiCore type="flag">0</multiCore>
-						<enableCondition type="flag">0</enableCondition>
-						<condition type="string"></condition>
-						<enableLoopCounter type="flag">0</enableLoopCounter>
-						<loopCounter type="string">0</loopCounter>
-						<loopGoal type="string">0</loopGoal>
-						<enableMacro type="flag">0</enableMacro>
-						<macro type="string"></macro>
-						<codeBreakpointType type="string">hardware</codeBreakpointType>
-					</_7>
-					<_8 type="key">
-						<breakpointType type="string">code</breakpointType>
-						<label type="string">'core0_main {E:\workFiles\IEBS\tc234bootloader\BootLoader_dualBank\AppSw\Tricore\Main\Cpu0_Main.c} .81';Cpu0_Main.c;1;1;;</label>
-						<enable type="flag">0</enable>
-						<address type="string">'core0_main {E:\workFiles\IEBS\tc234bootloader\BootLoader_dualBank\AppSw\Tricore\Main\Cpu0_Main.c} .81';Cpu0_Main.c;1;1;;</address>
-						<multiCore type="flag">0</multiCore>
-						<enableCondition type="flag">0</enableCondition>
-						<condition type="string"></condition>
-						<enableLoopCounter type="flag">0</enableLoopCounter>
-						<loopCounter type="string">0</loopCounter>
-						<loopGoal type="string">0</loopGoal>
-						<enableMacro type="flag">0</enableMacro>
-						<macro type="string"></macro>
-						<codeBreakpointType type="string">hardware</codeBreakpointType>
-					</_8>
-					<_3 type="key">
-						<breakpointType type="string">code</breakpointType>
-						<label type="string">'core0_main {E:\workFiles\IEBS\tc234bootloader\BootLoader_dualBank\AppSw\Tricore\Main\Cpu0_Main.c} .85';Cpu0_Main.c;1;5;;</label>
-						<enable type="flag">1</enable>
-						<address type="string">'core0_main {E:\workFiles\IEBS\tc234bootloader\BootLoader_dualBank\AppSw\Tricore\Main\Cpu0_Main.c} .85';Cpu0_Main.c;1;5;;</address>
-						<multiCore type="flag">0</multiCore>
-						<enableCondition type="flag">0</enableCondition>
-						<condition type="string"></condition>
-						<enableLoopCounter type="flag">0</enableLoopCounter>
-						<loopCounter type="string">0</loopCounter>
-						<loopGoal type="string">0</loopGoal>
-						<enableMacro type="flag">0</enableMacro>
-						<macro type="string"></macro>
-						<codeBreakpointType type="string">hardware</codeBreakpointType>
-					</_3>
-					<_4 type="key">
-						<breakpointType type="string">code</breakpointType>
-						<label type="string">'core0_main {E:\workFiles\IEBS\tc234bootloader\BootLoader_dualBank\AppSw\Tricore\Main\Cpu0_Main.c} .135';Cpu0_Main.c;1;59;;</label>
-						<enable type="flag">1</enable>
-						<address type="string">'core0_main {E:\workFiles\IEBS\tc234bootloader\BootLoader_dualBank\AppSw\Tricore\Main\Cpu0_Main.c} .135';Cpu0_Main.c;1;59;;</address>
-						<multiCore type="flag">0</multiCore>
-						<enableCondition type="flag">0</enableCondition>
-						<condition type="string"></condition>
-						<enableLoopCounter type="flag">0</enableLoopCounter>
-						<loopCounter type="string">0</loopCounter>
-						<loopGoal type="string">0</loopGoal>
-						<enableMacro type="flag">0</enableMacro>
-						<macro type="string"></macro>
-						<codeBreakpointType type="string">hardware</codeBreakpointType>
-					</_4>
-					<_5 type="key">
-						<breakpointType type="string">code</breakpointType>
-						<label type="string">'Boot_DualBank_SelectAndJump {E:\workFiles\IEBS\tc234bootloader\BootLoader_dualBank\AppSw\Tricore\App_bootloader\Boot_DualBank.c} .737';Boot_DualBank.c;1;77;;</label>
-						<enable type="flag">1</enable>
-						<address type="string">'Boot_DualBank_SelectAndJump {E:\workFiles\IEBS\tc234bootloader\BootLoader_dualBank\AppSw\Tricore\App_bootloader\Boot_DualBank.c} .737';Boot_DualBank.c;1;77;;</address>
-						<multiCore type="flag">0</multiCore>
-						<enableCondition type="flag">0</enableCondition>
-						<condition type="string"></condition>
-						<enableLoopCounter type="flag">0</enableLoopCounter>
-						<loopCounter type="string">0</loopCounter>
-						<loopGoal type="string">0</loopGoal>
-						<enableMacro type="flag">0</enableMacro>
-						<macro type="string"></macro>
-						<codeBreakpointType type="string">hardware</codeBreakpointType>
-					</_5>
 				</collection>
 			</breakpointsV3>
 		</UDESTK.StdDbgSrv>
@@ -2455,6 +2556,8 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</DefParaFormat>
 		<SaveAndCopyWithoutTimeStamps type="flag">0</SaveAndCopyWithoutTimeStamps>
 	</Logging>
 	<TargetInfoFile type="string">C:\Users\Public\Documents\pls\UDESTK 2021\Targets\TriBoard_TC23xA.cfg</TargetInfoFile>
+	<UseWspCnt type="int">1</UseWspCnt>
+	<RecentlyUsedRootNode type="key"></RecentlyUsedRootNode>
 	<TargInfoFlags type="key">
 		<Controller0 type="key">
 			<Core0 type="key">
