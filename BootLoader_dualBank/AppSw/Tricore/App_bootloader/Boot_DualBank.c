@@ -17,7 +17,7 @@
 #include "custom_delay.h"     /* for delay_ms() */
 #include "Can.h"              /* for CAN_deinit() */
 #include "Tmr.h"              /* for TMR_deinit() */
-/* SW_Reset() is defined in App_bootloader.c */
+ /* SW_Reset() is defined in App_bootloader.c */
 extern void SW_Reset(void);
 
 /*********************************************************************************************************************/
@@ -49,24 +49,24 @@ void MeasureEraseBankA_Time(void)
 
     for (i = BANKA_SECTOR_START; i <= BANKA_SECTOR_END; i++)
     {
-        uint32 addr  = IfxFlash_pFlashTableLog[i].start;
-        uint32 size  = IfxFlash_pFlashTableLog[i].end - addr + 1;
+        uint32 addr = IfxFlash_pFlashTableLog[i].start;
+        uint32 size = IfxFlash_pFlashTableLog[i].end - addr + 1;
         int    result;
         uint32 elapsedMs;
 
         tStart = now();
         result = Flash_erasePFlash_port(addr);
-        tEnd   = now();
+        tEnd = now();
 
         /* Convert ticks to milliseconds */
-        elapsedMs = (uint32)((tEnd - tStart) / TimeConst_1ms);
+        elapsedMs = (uint32) ((tEnd - tStart) / TimeConst_1ms);
 
         if (logIdx < BANKA_SECTOR_COUNT)
         {
             g_eraseTimeLog[logIdx].sectorIndex = i;
-            g_eraseTimeLog[logIdx].sectorSize  = size;
+            g_eraseTimeLog[logIdx].sectorSize = size;
             g_eraseTimeLog[logIdx].eraseTimeMs = elapsedMs;
-            g_eraseTimeLog[logIdx].result      = (result == 0) ? 0u : 1u;
+            g_eraseTimeLog[logIdx].result = (result == 0) ? 0u : 1u;
             logIdx++;
         }
 
@@ -132,76 +132,76 @@ static const uint32 s_crc32Table[256] = {
 /*---------------------------------------------Private Functions-----------------------------------------------------*/
 /*********************************************************************************************************************/
 
-static uint32 Boot_CRC32(const uint8 *data, uint32 length)
+static uint32 Boot_CRC32(const uint8* data, uint32 length)
 {
     uint32 crc = 0xFFFFFFFFu;
     uint32 i;
     for (i = 0; i < length; i++)
     {
-        crc = (crc >> 8u) ^ s_crc32Table[(crc ^ (uint32)data[i]) & 0xFFu];
+        crc = (crc >> 8u) ^ s_crc32Table[(crc ^ (uint32) data[i]) & 0xFFu];
     }
     return crc ^ 0xFFFFFFFFu;
 }
 
 /* Incremental CRC32 update (used during TransferData streaming) */
-uint32 Boot_CRC32_Update(uint32 crc, const uint8 *data, uint32 length)
+uint32 Boot_CRC32_Update(uint32 crc, const uint8* data, uint32 length)
 {
     uint32 i;
     for (i = 0; i < length; i++)
     {
-        crc = (crc >> 8u) ^ s_crc32Table[(crc ^ (uint32)data[i]) & 0xFFu];
+        crc = (crc >> 8u) ^ s_crc32Table[(crc ^ (uint32) data[i]) & 0xFFu];
     }
     return crc;
 }
 
 /* Calculate CRC over main flag structure (excluding crc32 field itself) */
-static uint32 Boot_CalcFlagCRC(const BootFlagMain_t *flag)
+static uint32 Boot_CalcFlagCRC(const BootFlagMain_t* flag)
 {
     BootFlagMain_t tmp;
     memcpy(&tmp, flag, sizeof(BootFlagMain_t));
     tmp.crc32 = 0u;  /* zero out crc32 field before calculating CRC over the whole struct */
-    return Boot_CRC32((const uint8 *)&tmp, sizeof(BootFlagMain_t));
+    return Boot_CRC32((const uint8*) &tmp, sizeof(BootFlagMain_t));
 }
 
 /* Copy main flag fields to shadow structure */
-static void Boot_CopyMainToShadow(const BootFlagMain_t *main, BootFlagShadow_t *shadow)
+static void Boot_CopyMainToShadow(const BootFlagMain_t* main, BootFlagShadow_t* shadow)
 {
-    shadow->shadow_magic           = main->magic;
-    shadow->shadow_activeBank      = main->activeBank;
-    shadow->shadow_bankA_valid     = main->bankA_valid;
-    shadow->shadow_bankB_valid     = main->bankB_valid;
-    shadow->shadow_bankA_version   = main->bankA_version;
-    shadow->shadow_bankB_version   = main->bankB_version;
-    shadow->shadow_bootAttempts    = main->bootAttempts;
-    shadow->shadow_flags           = main->flags;
-    shadow->shadow_sequence        = main->sequence;
-    shadow->shadow_crc32           = main->crc32;
+    shadow->shadow_magic = main->magic;
+    shadow->shadow_activeBank = main->activeBank;
+    shadow->shadow_bankA_valid = main->bankA_valid;
+    shadow->shadow_bankB_valid = main->bankB_valid;
+    shadow->shadow_bankA_version = main->bankA_version;
+    shadow->shadow_bankB_version = main->bankB_version;
+    shadow->shadow_bootAttempts = main->bootAttempts;
+    shadow->shadow_flags = main->flags;
+    shadow->shadow_sequence = main->sequence;
+    shadow->shadow_crc32 = main->crc32;
     shadow->shadow_targetWriteBank = main->targetWriteBank;
-    shadow->shadow_bankA_codeSize  = main->bankA_codeSize;
-    shadow->shadow_bankB_codeSize  = main->bankB_codeSize;
+    shadow->shadow_bankA_codeSize = main->bankA_codeSize;
+    shadow->shadow_bankB_codeSize = main->bankB_codeSize;
 }
 
 /* Copy shadow flag fields back to main structure */
-static void Boot_CopyShadowToMain(const BootFlagShadow_t *shadow, BootFlagMain_t *main)
+static void Boot_CopyShadowToMain(const BootFlagShadow_t* shadow, BootFlagMain_t* main)
 {
-    main->magic           = shadow->shadow_magic;
-    main->activeBank      = shadow->shadow_activeBank;
-    main->bankA_valid     = shadow->shadow_bankA_valid;
-    main->bankB_valid     = shadow->shadow_bankB_valid;
-    main->bankA_version   = shadow->shadow_bankA_version;
-    main->bankB_version   = shadow->shadow_bankB_version;
-    main->bootAttempts    = shadow->shadow_bootAttempts;
-    main->flags           = shadow->shadow_flags;
-    main->sequence        = shadow->shadow_sequence;
-    main->crc32           = shadow->shadow_crc32;
+    main->magic = shadow->shadow_magic;
+    main->activeBank = shadow->shadow_activeBank;
+    main->bankA_valid = shadow->shadow_bankA_valid;
+    main->bankB_valid = shadow->shadow_bankB_valid;
+    main->bankA_version = shadow->shadow_bankA_version;
+    main->bankB_version = shadow->shadow_bankB_version;
+    main->bootAttempts = shadow->shadow_bootAttempts;
+    main->flags = shadow->shadow_flags;
+    main->sequence = shadow->shadow_sequence;
+    main->crc32 = shadow->shadow_crc32;
     main->targetWriteBank = shadow->shadow_targetWriteBank;
-    main->bankA_codeSize  = shadow->shadow_bankA_codeSize;
-    main->bankB_codeSize  = shadow->shadow_bankB_codeSize;
+    main->bankA_codeSize = shadow->shadow_bankA_codeSize;
+    main->bankB_codeSize = shadow->shadow_bankB_codeSize;
 }
 /* Write flags to DFlash with dual-backup strategy:
  * 1. Erase main sector  2. Write main  3. Erase shadow sector  4. Write shadow
  */
-static boolean Boot_WriteFlagsToDFlash(const DualBankFlags_t *flags)
+static boolean Boot_WriteFlagsToDFlash(const DualBankFlags_t* flags)
 {
     DualBankFlags_t writeBuf;
     uint32 i;
@@ -217,7 +217,7 @@ static boolean Boot_WriteFlagsToDFlash(const DualBankFlags_t *flags)
     Boot_CopyMainToShadow(&writeBuf.main, &writeBuf.shadow);
 
     flagSize = sizeof(DualBankFlags_t);
-    pageCnt  = (flagSize + DFLASH_PAGE_LENGTH - 1u) / DFLASH_PAGE_LENGTH;
+    pageCnt = (flagSize + DFLASH_PAGE_LENGTH - 1u) / DFLASH_PAGE_LENGTH;
 
     /* Step 1: Erase DFlash sector (both main and shadow are within same 8KB sector) */
     Flash_eraseDFlash_port(DFLASH_FLAG_ADDR);
@@ -227,12 +227,12 @@ static boolean Boot_WriteFlagsToDFlash(const DualBankFlags_t *flags)
     IfxScuWdt_serviceCpuWatchdog(wdtPwd);
 
     /* Step 2: Write main flag area */
-    Flash_writeDFlash_port(DFLASH_FLAG_ADDR, (uint32 *)&writeBuf.main, sizeof(BootFlagMain_t));
+    Flash_writeDFlash_port(DFLASH_FLAG_ADDR, (uint32*) &writeBuf.main, sizeof(BootFlagMain_t));
 
     /* Step 3: Write shadow flag area */
     Flash_writeDFlash_port(DFLASH_FLAG_ADDR + DFLASH_FLAG_SHADOW_OFFSET,
-                           (uint32 *)&writeBuf.shadow,
-                           sizeof(BootFlagShadow_t));
+        (uint32*) &writeBuf.shadow,
+        sizeof(BootFlagShadow_t));
 
     /* Wait for all DFlash writes to complete before reset */
     IfxFlash_waitUnbusy(FLASH_MODULE, IfxFlash_FlashType_D0);
@@ -269,16 +269,16 @@ void Boot_DualBank_Init(void)
     {
         /* First boot or flag area corrupted: initialize defaults */
         memset(&flags, 0, sizeof(DualBankFlags_t));
-        flags.main.magic           = FLAG_MAGIC;
-        flags.main.activeBank      = BANK_A;
-        flags.main.bankA_valid     = 0u;
-        flags.main.bankB_valid     = 0u;
-        flags.main.bankA_version   = 0u;
-        flags.main.bankB_version   = 0u;
-        flags.main.bootAttempts    = 0u;
-        flags.main.flags           = 0u;
-        flags.main.sequence        = FLAG_SEQUENCE_INIT;
-        flags.main.crc32           = 0u;
+        flags.main.magic = FLAG_MAGIC;
+        flags.main.activeBank = BANK_A;
+        flags.main.bankA_valid = 0u;
+        flags.main.bankB_valid = 0u;
+        flags.main.bankA_version = 0u;
+        flags.main.bankB_version = 0u;
+        flags.main.bootAttempts = 0u;
+        flags.main.flags = 0u;
+        flags.main.sequence = FLAG_SEQUENCE_INIT;
+        flags.main.crc32 = 0u;
         flags.main.targetWriteBank = BANK_B;  /* 默认写入 Bank B */
 
         Boot_CopyMainToShadow(&flags.main, &flags.shadow);
@@ -292,12 +292,12 @@ void Boot_DualBank_Init(void)
  * @brief Read dual bank flags from DFlash with redundancy check.
  * @return TRUE if valid flags read, FALSE if both main and shadow corrupted.
  */
-boolean Boot_DualBank_ReadFlags(DualBankFlags_t *flags)
+boolean Boot_DualBank_ReadFlags(DualBankFlags_t* flags)
 {
-    const BootFlagMain_t  *pMain   = (const BootFlagMain_t *)DFLASH_FLAG_ADDR;
-    const BootFlagShadow_t *pShadow = (const BootFlagShadow_t *)(DFLASH_FLAG_ADDR + DFLASH_FLAG_SHADOW_OFFSET);
+    const BootFlagMain_t* pMain = (const BootFlagMain_t*) DFLASH_FLAG_ADDR;
+    const BootFlagShadow_t* pShadow = (const BootFlagShadow_t*) (DFLASH_FLAG_ADDR + DFLASH_FLAG_SHADOW_OFFSET);
 
-    boolean mainOk   = FALSE;
+    boolean mainOk = FALSE;
     boolean shadowOk = FALSE;
     uint32 mainCRC, shadowCRC;
 
@@ -359,7 +359,7 @@ boolean Boot_DualBank_ReadFlags(DualBankFlags_t *flags)
  * @brief Write dual bank flags to DFlash.
  * @return TRUE if write successful, FALSE otherwise.
  */
-boolean Boot_DualBank_WriteFlags(const DualBankFlags_t *flags)
+boolean Boot_DualBank_WriteFlags(const DualBankFlags_t* flags)
 {
     return Boot_WriteFlagsToDFlash(flags);
 }
@@ -372,7 +372,7 @@ uint32 Boot_DualBank_CalculateCRC(uint32 startAddr, uint32 size)
 {
     uint32 uncachedAddr = (startAddr & 0x00FFFFFFu) | 0xA0000000u;
     __dsync();
-    return Boot_CRC32((const uint8 *)uncachedAddr, size);
+    return Boot_CRC32((const uint8*) uncachedAddr, size);
 }
 
 /**
@@ -442,12 +442,12 @@ BankStatus_t Boot_DualBank_VerifyBankWithCrc(uint32 bank, uint32 expectedCrc)
     if (bank == BANK_A)
     {
         startAddr = BANK_A_START_ADDR;
-        bankSize  = BANK_APP_A_SIZE;
+        bankSize = BANK_APP_A_SIZE;
     }
     else if (bank == BANK_B)
     {
         startAddr = BANK_B_START_ADDR;
-        bankSize  = BANK_APP_B_SIZE;
+        bankSize = BANK_APP_B_SIZE;
     }
     else
     {
@@ -518,14 +518,14 @@ void Boot_DualBank_MarkBankValid(uint32 bank, uint32 version, uint32 codeSize)
     {
         if (bank == BANK_A)
         {
-            flags.main.bankA_valid    = crc;
-            flags.main.bankA_version  = version;
+            flags.main.bankA_valid = crc;
+            flags.main.bankA_version = version;
             flags.main.bankA_codeSize = codeSize;
         }
         else
         {
-            flags.main.bankB_valid    = crc;
-            flags.main.bankB_version  = version;
+            flags.main.bankB_valid = crc;
+            flags.main.bankB_version = version;
             flags.main.bankB_codeSize = codeSize;
         }
         flags.main.sequence++;
@@ -538,13 +538,13 @@ void Boot_DualBank_MarkBankValid(uint32 bank, uint32 version, uint32 codeSize)
  * @note  This function does NOT return if jump is successful.
  *        It reads the vector table at bank start, sets MSP, and jumps to Reset_Handler.
  */
-/**
- * @brief Set CPU vector tables (BIV/BTV) to APP's vector table base.
- * @note  OEM requirement: before jumping to APP, Bootloader must restore
- *        CPU vector table pointers so that interrupts/traps in APP land
- *        in APP's handlers, not Bootloader's.
- *        INTTAB/TRAPTAB offsets must match APP linker configuration.
- */
+ /**
+  * @brief Set CPU vector tables (BIV/BTV) to APP's vector table base.
+  * @note  OEM requirement: before jumping to APP, Bootloader must restore
+  *        CPU vector table pointers so that interrupts/traps in APP land
+  *        in APP's handlers, not Bootloader's.
+  *        INTTAB/TRAPTAB offsets must match APP linker configuration.
+  */
 void Boot_DualBank_SetAppVectors(uint32 bankStartAddr)
 {
     uint32 appBiv;
@@ -565,84 +565,90 @@ void Boot_DualBank_SetAppVectors(uint32 bankStartAddr)
 
 void Boot_DualBank_JumpToBank(uint32 bank)
 {
-     uint32 startAddr;
-     uint32 entryAddr;
+    uint32 startAddr;
+    uint32 entryAddr;
 
-     g_bootPhase = BOOT_PHASE_JUMP_EXEC;
+    g_bootPhase = BOOT_PHASE_JUMP_EXEC;
 
-     if (bank == BANK_A)
-     {
-         startAddr = BANK_A_START_ADDR;   /* 0x80020000 cached */
-     }
-     else
-     {
-         startAddr = BANK_B_START_ADDR;   /* 0x80100000 cached */
-     }
+    if (bank == BANK_A)
+    {
+        startAddr = BANK_A_START_ADDR;   /* 0x80020000 cached */
+    }
+    else
+    {
+        startAddr = BANK_B_START_ADDR;   /* 0x80100000 cached */
+    }
 
-     /* Basic sanity check: _START should not be 0xFFFFFFFF or 0x00000000 */
-     if ((*(volatile uint32 *)(startAddr + 0x20u) == 0xFFFFFFFFu) ||
-         (*(volatile uint32 *)(startAddr + 0x20u) == 0x00000000u))
-     {
-         g_bootPhase = BOOT_PHASE_BL_ENTRY;
-         return; /* Invalid entry point, do not jump */
-     }
+    /* Basic sanity check: _START should not be 0xFFFFFFFF or 0x00000000 */
+    if ((*(volatile uint32*) (startAddr + 0x20u) == 0xFFFFFFFFu) ||
+        (*(volatile uint32*) (startAddr + 0x20u) == 0x00000000u))
+    {
+        g_bootPhase = BOOT_PHASE_BL_ENTRY;
+        return; /* Invalid entry point, do not jump */
+    }
 
-     /* Disable interrupts before jumping */
-     IfxCpu_disableInterrupts();
+    /* Disable interrupts before jumping */
+    IfxCpu_disableInterrupts();
+    __dsync();  /* Ensure interrupt disable completes before subsequent ops */
 
-     /* Deinitialize peripherals to leave a clean state for APP */
-//     CAN_deinit();
-//     TMR_deinit();
+    /* Deinitialize peripherals to leave a clean state for APP */
+    /* TODO: Add CAN/TMR de-init if needed. Keep commented until correct API is identified. */
+    /* CAN_deInit(); */
+    /* TMR_deInit(); */
+//    CAN_deinit();
 
-     /* ========== Disable ECC Trap to prevent spurious ECC traps on freshly written Flash ========== */
-     {
-         uint16 pwd = IfxScuWdt_getCpuWatchdogPassword();
-         IfxScuWdt_clearCpuEndinit(pwd);
-         FLASH0_MARP.B.TRAPDIS = 1;  /* PFLSH Disable ECC TRAP */
-         FLASH0_MARD.B.TRAPDIS = 1;  /* DFLSH Disable ECC TRAP */
-         IfxScuWdt_setCpuEndinit(pwd);
-     }
+    /* ========== Disable ECC Trap to prevent spurious ECC traps on freshly written Flash ========== */
+//    uint16 pwd = IfxScuWdt_getSafetyWatchdogPassword();
+//    IfxScuWdt_clearSafetyEndinit(pwd);
+//    FLASH0_MARP.B.TRAPDIS = 1;
+//    FLASH0_MARD.B.TRAPDIS = 1;
+//    IfxScuWdt_setSafetyEndinit(pwd);
+    uint16 pwd = IfxScuWdt_getCpuWatchdogPassword();
+    IfxScuWdt_clearCpuEndinit(pwd);
+    FLASH0_MARP.B.TRAPDIS = 1;
+    FLASH0_MARD.B.TRAPDIS = 1;
+    IfxScuWdt_setCpuEndinit(pwd);
 
-     /* ========== Disable Data Cache and Program Cache before jump ========== */
-     IfxCpu_setDataCache(0);      /* Disable data cache */
-     IfxCpu_setProgramCache(0);   /* Disable program cache (critical) */
-    
-     __dsync();                   /* Data synchronization barrier */
-     __isync();                   /* Instruction synchronization barrier */
+    /* ========== Disable Data Cache and Program Cache before jump ========== */
+    IfxCpu_setDataCache(0);      /* Disable data cache */
+    IfxCpu_setProgramCache(0);   /* Disable program cache (critical) */
 
-     /* TriCore: _START is at offset 0x20 from bank base (BMHD occupies 0x00~0x1F) */
-     /* Use uncached address (0xA0xxxxxx) to avoid cache coherency issues after flash write */
-     {
-         uint32 uncachedStart = (startAddr & 0x00FFFFFFu) | 0xA0000000u;
-         entryAddr = uncachedStart + 0x20u;
-     }
+    __dsync();                   /* Data synchronization barrier */
+    __isync();                   /* Instruction synchronization barrier */
 
-     /* === OEM: Set APP vector tables (BIV/BTV) before jump === */
-     Boot_DualBank_SetAppVectors(startAddr);
+    /* TriCore: _START is at offset 0x20 from bank base (BMHD occupies 0x00~0x1F) */
+    /* Use uncached address (0xA0xxxxxx) to avoid cache coherency issues after flash write */
+    {
+        uint32 uncachedStart = (startAddr & 0x00FFFFFFu) | 0xA0000000u;
+        entryAddr = uncachedStart + 0x20u;
+    }
 
-     /*
-      * CRITICAL FIX: Do NOT use C function call (appEntry()).
-      * TriCore 'call' instruction implicitly saves upper context into CSA,
-      * updates PCXI, A11 (RA) and PSW.CDC. If Bootloader's context is left
-      * behind, APP's function returns will corrupt the CSA list and access
-      * invalid CSA addresses (e.g. 0x466 in PSPR), causing Bus Error Trap.
-      *
-      * Correct approach: perform a raw jump (ji) and manually cut the context
-      * link chain by clearing PCXI, so APP's _start runs as if from reset.
-      */
+    /* === OEM: Set APP vector tables (BIV/BTV) before jump === */
+    Boot_DualBank_SetAppVectors(startAddr);
+
+    /*
+     * CRITICAL FIX: Do NOT use C function call (appEntry()).
+     * TriCore 'call' instruction implicitly saves upper context into CSA,
+     * updates PCXI, A11 (RA) and PSW.CDC. If Bootloader's context is left
+     * behind, APP's function returns will corrupt the CSA list and access
+     * invalid CSA addresses (e.g. 0x466 in PSPR), causing Bus Error Trap.
+     *
+     * Correct approach: perform a raw jump (ji) and manually cut the context
+     * link chain by clearing PCXI, so APP's _start runs as if from reset.
+     */
      /* Load entryAddr to A15 */
-     __asm("mov   d15, %0" : : "d"(entryAddr) : "d15");
-     __asm("mov.a a15, d15" : : : "a15");
-     
-     /* Clear PCXI: cut context chain from Bootloader */
-     __mtcr(CPU_PCXI, 0);
-     __isync();
-     
-     /* Clear Return Address (A11) */
-     __asm("mov.a a11, #0" : : : "a11");
-     
-     /* Jump indirect: no context save, no link, no RA */
-     __asm("ji    a15" : : : "a15");
+    __asm("mov   d15, %0" : : "d"(entryAddr) : "d15");
+    __asm("mov.a a15, d15" : : : "a15");
+
+    /* Clear PCXI: cut context chain from Bootloader */
+    __mtcr(CPU_PCXI, 0);
+    __isync();
+
+    /* Clear Return Address (A11) */
+    __asm("mov.a a11, #0" : : : "a11");
+
+    /* Jump indirect: no context save, no link, no RA */
+    __asm("ji    a15" : : : "a15");
 
 
 
@@ -673,13 +679,13 @@ void Boot_DualBank_SelectAndJump(void)
     }
 
     targetBank = flags.main.activeBank;
-    
+
     /* Sanity check */
     if ((targetBank != BANK_A) && (targetBank != BANK_B))
     {
         return;
     }
-    
+
     fallbackBank = (targetBank == BANK_A) ? BANK_B : BANK_A;
 
     targetStatus = Boot_DualBank_VerifyBank(targetBank);
@@ -769,9 +775,9 @@ void Boot_DualBank_SwitchBank(uint32 targetBank)
     DualBankFlags_t flags;
     if (Boot_DualBank_ReadFlags(&flags) == TRUE)
     {
-        flags.main.activeBank   = targetBank;
+        flags.main.activeBank = targetBank;
         flags.main.bootAttempts = 0u;
-        flags.main.flags        = 0u;  /* clear stage flags for fresh start */
+        flags.main.flags = 0u;  /* clear stage flags for fresh start */
         flags.main.sequence++;
         Boot_DualBank_WriteFlags(&flags);
 
@@ -790,9 +796,9 @@ void Boot_DualBank_SetActiveBank(uint32 targetBank)
     DualBankFlags_t flags;
     if (Boot_DualBank_ReadFlags(&flags) == TRUE)
     {
-        flags.main.activeBank   = targetBank;
+        flags.main.activeBank = targetBank;
         flags.main.bootAttempts = 0u;
-        flags.main.flags        = 0u;  /* clear stage flags for fresh start */
+        flags.main.flags = 0u;  /* clear stage flags for fresh start */
         flags.main.sequence++;
         Boot_DualBank_WriteFlags(&flags);
         g_activeBank = targetBank;

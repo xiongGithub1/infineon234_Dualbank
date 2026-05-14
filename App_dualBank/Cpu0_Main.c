@@ -81,10 +81,10 @@ void MainProgram(void)
         AppUds_main();
 
         /* Stage 2: Mark bank stable after 5 seconds of main loop running
-         * (g_LoopFlag increments every 0.5ms, so 10000 = 5s).
+         * (g_LoopFlag increments every 0.5ms, so 4000 = 2s).
          * Once stage 2 is passed, Bootloader treats subsequent resets as
          * runtime faults and gives extra chances before rollback. */
-        if (!stage2Done && (g_LoopFlag >= 10000u))
+        if (!stage2Done && (g_LoopFlag >= 4000u))
         {
             Boot_DualBank_MarkStage2Pass();
             stage2Done = TRUE;
@@ -133,21 +133,42 @@ void core0_main(void)
      * !!WATCHDOG0 AND SAFETY WATCHDOG ARE DISABLED HERE!!
      * Enable the watchdog in the demo if it is required and also service the watchdog periodically
      * */
-    IfxScuWdt_disableCpuWatchdog(IfxScuWdt_getCpuWatchdogPassword());
+    /*
+     * Enable CPU Watchdog to prevent runaway after Trap.
+     * Explicitly set reload=0x7FFF (~5.3s @ 100MHz/16384) to safely cover
+     * DFlash/PFlash operations. Default UCB reload may be too short.
+     * Safety WDT is disabled to simplify bootloader handling.
+     *单次递减时间 = 16384 / 100MHz
+             = 16384 / 100,000,000
+             = 163.84 μs
+
+      总超时时间   = 18310 × 163.84 μs
+             = 5,368,000 μs
+             ≈ 2.99 s
+     * */
+    {
+        IfxScuWdt_Config wdtConfig;
+        IfxScuWdt_initConfig(&wdtConfig);
+        wdtConfig.password = IfxScuWdt_getCpuWatchdogPassword();
+        wdtConfig.reload = 0x4786;  /* ~3s, safe for all flash operations */
+        IfxScuWdt_initCpuWatchdog(&MODULE_SCU.WDTCPU[0], &wdtConfig);
+    }
     IfxScuWdt_disableSafetyWatchdog(IfxScuWdt_getSafetyWatchdogPassword());
 
-    /* OEM: Record reset reason for diagnostic and fault analysis */
-    resetReason = ResetStatus_Previous();
-    isPowerOnReset = (resetReason & 0x01) != 0;
-
     IfxCpu_disableInterrupts();
-
+    /* OEM: Record reset reason for diagnostic and fault analysis */
+    // resetReason = ResetStatus_Previous();
+    // isPowerOnReset = (resetReason & 0x01) != 0;
     IfxScuClock_init();
 
     delay_init();
 
     IfxStm_init();    /* Initialize STM timer before using Stm_GetSystemClock */
 
+    /* Stage 1: All risky peripheral init done, interrupts enabled.
+     * Clear boot attempts and mark stage 1 pass. */
+    Boot_DualBank_ClearBootAttempts();
+    Boot_DualBank_MarkStage1Pass();
     /* === APP Phase: Peripheral Initialization === */
     g_appPhase = APP_PHASE_PERIPH;
 
@@ -157,20 +178,19 @@ void core0_main(void)
 	UdsInit(UDS_FUN_ADDR_ID,UDS_PHY_ADDR_ID,UDS_RESP_ADDR_ID);
     //
 
-    g_BaseTime = Stm_GetSystemClock();
-    IfxCpu_enableInterrupts();
+    
 
-    /* Stage 1: All risky peripheral init done, interrupts enabled.
-     * Clear boot attempts and mark stage 1 pass. */
-    Boot_DualBank_ClearBootAttempts();
-    Boot_DualBank_MarkStage1Pass();
+
+
 
     /* === APP Phase: Main Loop Running === */
     g_appPhase = APP_PHASE_RUN;
-
+    g_BaseTime = Stm_GetSystemClock();
+    IfxCpu_enableInterrupts();
     while (TRUE)
     {
         MainProgram();
-        BrdLed_main();
+        // BrdLed_main();
+        IfxScuWdt_serviceCpuWatchdog(IfxScuWdt_getCpuWatchdogPassword());
     }
 }

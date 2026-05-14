@@ -625,7 +625,7 @@
 								<inputType id="com.tasking.ctc.asmInputType.102169351" name="ASM" superClass="com.tasking.ctc.asmInputType"/>
 							</tool>
 							<tool command="cctc" commandLinePattern="${COMMAND} ${FLAGS} ${OUTPUT_FLAG} ${OUTPUT_PREFIX}${OUTPUT} ${INPUTS}" errorParsers="com.tasking.managedbuilder.TskRegexErrorParser" id="com.tasking.ctc.lk.abs.debug.179828309" name="Linker" superClass="com.tasking.ctc.lk.abs.debug">
-								<option id="com.tasking.ctc.lk.lslFile.1164014929" name="Linker script file:" superClass="com.tasking.ctc.lk.lslFile" value="E:\workFiles\IEBS\tc234bootloader\App_dualBank\App_dualBank_a.lsl" valueType="string"/>
+								<option id="com.tasking.ctc.lk.lslFile.1164014929" name="Linker script file:" superClass="com.tasking.ctc.lk.lslFile" value="E:\workFiles\IEBS\tc234bootloader\App_dualBank\App_dualbank_b.lsl" valueType="string"/>
 								<option id="com.tasking.ctc.lk.definedSymbols.1136606010" name="Defined symbols" superClass="com.tasking.ctc.lk.definedSymbols"/>
 								<option id="com.tasking.ctc.lk.outputFormat.ihex.1790769685" name="Generate Intel Hex format file" superClass="com.tasking.ctc.lk.outputFormat.ihex" value="true" valueType="boolean"/>
 								<option id="com.tasking.ctc.lk.outputFormat.fileForEachMemoryChip.1845497789" name="Create file for each memory chip" superClass="com.tasking.ctc.lk.outputFormat.fileForEachMemoryChip" value="false" valueType="boolean"/>

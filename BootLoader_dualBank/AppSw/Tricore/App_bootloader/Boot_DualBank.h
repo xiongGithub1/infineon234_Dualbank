@@ -10,7 +10,7 @@
 
 #include "Std_Types.h"
 #include "IfxFlash.h"
-
+#include "IfxCan_reg.h"
  /* DFlash flag area */
 #define DFLASH_FLAG_ADDR                0xAF000000u
 #define DFLASH_FLAG_SHADOW_OFFSET       0x100u
@@ -100,9 +100,9 @@ typedef struct
     uint32 bankB_version;
     uint16 bootAttempts;
     uint16 flags;
-    uint32 sequence;        // +0x1C  (4 bytes)  д�����кţ�������/���ٲã�
-    uint32 crc32;           // +0x20  (4 bytes)  ���ṹ��� CRC32���������ֶΣ�
-    uint32 targetWriteBank; // +0x24  (4 bytes)  ��λ��Ŀ��ˢдBank (BANK_A / BANK_B)
+    uint32 sequence;        // +0x1C  (4 bytes)  写锟斤拷锟斤拷锟叫号ｏ拷锟斤拷锟斤拷锟斤拷/锟斤拷锟劫裁ｏ拷
+    uint32 crc32;           // +0x20  (4 bytes)  锟斤拷锟结构锟斤拷锟� CRC32锟斤拷锟斤拷锟斤拷锟斤拷锟街段ｏ拷
+    uint32 targetWriteBank; // +0x24  (4 bytes)  锟斤拷位锟斤拷目锟斤拷刷写Bank (BANK_A / BANK_B)
     uint32 bankA_codeSize;  // Actual downloaded code size for Bank A (0 = use BANK_APP_A_SIZE)
     uint32 bankB_codeSize;  // Actual downloaded code size for Bank B (0 = use BANK_APP_B_SIZE)
 } BootFlagMain_t;
@@ -122,7 +122,7 @@ typedef struct
     uint32 shadow_targetWriteBank; // 4 bytes
     uint32 shadow_bankA_codeSize;  // 4 bytes
     uint32 shadow_bankB_codeSize;  // 4 bytes
-} BootFlagShadow_t;                // = 48 bytes �ܼ�
+} BootFlagShadow_t;                // = 48 bytes 锟杰硷拷
 
 
 

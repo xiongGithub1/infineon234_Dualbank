@@ -44,16 +44,14 @@ uint32 gPageData[8];
 
 /*
  ** ============================================================================
- ** @Function    ��
- ** @Description ��      ����һ������      ��PSPR������
- ** @Parameters  ��
- ** @Returns     ��
- ** @Date        ��
+ ** @Function    锛�
+ ** @Description 锛�      鎿﹂櫎涓�涓墖鍖�      鍦≒SPR涓繍琛�
+ ** @Parameters  锛�
+ ** @Returns     锛�
+ ** @Date        锛�
  ** ============================================================================
  */
-#if defined(__TASKING__)
-#pragma section code "psram_cpu0"
-#endif
+
 void Flash_erasePFLASH(uint32 sectorAddr)
 {
     /* Get the current password of the Safety WatchDog module */
@@ -71,11 +69,11 @@ void Flash_erasePFLASH(uint32 sectorAddr)
 }
 /*
  ** ============================================================================
- ** @Function    ��
- ** @Description ��
- ** @Parameters  ��
- ** @Returns     ��
- ** @Date        ��
+ ** @Function    锛�
+ ** @Description 锛�
+ ** @Parameters  锛�
+ ** @Returns     锛�
+ ** @Date        锛�
  ** ============================================================================
  */
 void Flash_writePFlashPage(uint32 startingAddr, uint32 *data, uint32 byteLength)
@@ -117,17 +115,14 @@ void Flash_writePFlashPage(uint32 startingAddr, uint32 *data, uint32 byteLength)
     return ;
 }
 
-#if defined(__TASKING__)
-#pragma section code restore
-#endif
 
 /*
  ** ============================================================================
- ** @Function    ��
- ** @Description ��       example
- ** @Parameters  ��
- ** @Returns     ��
- ** @Date        ��
+ ** @Function    锛�
+ ** @Description 锛�       example
+ ** @Parameters  锛�
+ ** @Returns     锛�
+ ** @Date        锛�
  ** ============================================================================
  */
 #if 0
@@ -172,17 +167,14 @@ void writePFlashPage(uint32 startingAddr, uint32 *data, uint32 byteLength)
 
 /*
  ** ============================================================================
- ** @Function    ��
- ** @Description ��
- ** @Parameters  ��          refresh bl
- ** @Returns     ��
- ** @Date        ��
+ ** @Function    锛�
+ ** @Description 锛�
+ ** @Parameters  锛�          refresh bl
+ ** @Returns     锛�
+ ** @Date        锛�
  ** ============================================================================
  */
 
-#if defined(__TASKING__)
-#pragma section code "psram_cpu0"
-#endif
 int     Flash_writePFlashPage_main(uint32 addr,  uint32 length,  uint32 *data)
 {
     boolean interruptState = IfxCpu_disableInterrupts(); /* Get the current state of the interrupts and disable them*/
@@ -202,22 +194,21 @@ int     Flash_writePFlashPage_main(uint32 addr,  uint32 length,  uint32 *data)
     return 0;
 }
 
-#if defined(__TASKING__)
-#pragma section code restore
-#endif
+
+
 
 /*
  ** ============================================================================
- ** @Function    ��
- ** @Description ��
+ ** @Function    锛�
+ ** @Description 锛�
  *              D-Flash
  *              LOGIC sector=8kb=0x2000b
  *              1 page = 8 bytes
- ** @Parameters  ��
+ ** @Parameters  锛�
  **             addr
  **
- ** @Returns     ��
- ** @Date        ��
+ ** @Returns     锛�
+ ** @Date        锛�
  ** ============================================================================
  */
 void  Flash_writeDataFlashPage(uint32 pageaddr,   uint32 *data)
@@ -256,11 +247,11 @@ void  Flash_writeDataFlashPage(uint32 pageaddr,   uint32 *data)
 
 /*
  ** ============================================================================
- ** @Function    ��
- ** @Description ��
- ** @Parameters  ��      length : unit :bytes
- ** @Returns     ��
- ** @Date        ��
+ ** @Function    锛�
+ ** @Description 锛�
+ ** @Parameters  锛�      length : unit :bytes
+ ** @Returns     锛�
+ ** @Date        锛�
  ** ============================================================================
  */
 void Flash_verifyFlashData(uint32 flashAddr,  uint32 *data ,  uint32 length)
@@ -288,16 +279,16 @@ void Flash_verifyFlashData(uint32 flashAddr,  uint32 *data ,  uint32 length)
 
 /*
  ** ============================================================================
- ** @Function    ����������������ͳ������̸��Ƶ�CPU0��program scratche - pad SRAM (PSPR)�У���������ָ�븳�����ǡ�
- ** @Description ��
+ ** @Function    锛氳繖涓嚱鏁板皢鎿﹂櫎鍜岀▼搴忎緥绋嬪鍒跺埌CPU0鐨刾rogram scratche - pad SRAM (PSPR)涓紝骞跺皢鍑芥暟鎸囬拡璧嬬粰瀹冧滑銆�
+ ** @Description 锛�
  **          This function copies the erase and program routines to the Program Scratch-Pad SRAM (PSPR) of the CPU0 and assigns
  * function pointers to them.
- ** @Parameters  ��
- ** @Returns     ��
- ** @Date        ��
+ ** @Parameters  锛�
+ ** @Returns     锛�
+ ** @Date        锛�
  ** ============================================================================
  */
-// ��κ����Ĺ����ǰ���غ����ĳ������ݿ�����CPU0��program scratche-pad SRAM (PSPR)�У���ʱ�洢�����Ա���ڿ��Կ��ٵĵ������У�����20220725
+// 杩欐鍑芥暟鐨勫姛鑳芥槸鎶婄浉鍏冲嚱鏁扮殑绋嬪簭鏁版嵁鎷疯礉鍒癈PU0鐨刾rogram scratche-pad SRAM (PSPR)涓紝涓存椂瀛樺偍绋嬪簭锛屼互渚垮悗鏈熷彲浠ュ揩閫熺殑璋冪敤杩愯锛屾浘鍐�20220725
 void Flash_copyFunctionsToPSPR(void)
 {
 	/* Copy the IfxFlash_eraseMultipleSectors() routine and assign it to a function pointer */
@@ -320,10 +311,14 @@ void Flash_copyFunctionsToPSPR(void)
     memcpy((void *)WRITEPAGE_ADDR, (const void *)IfxFlash_writePage, WRITEPAGE_LEN);
     g_commandFromPSPR.writePage = (void *)WRITEPAGE_ADDR;
 
-    /* Flash_erasePFLASH and Flash_writePFlashPage are now linked into .text.psram_cpu0,
-       no need for runtime memcpy. Directly use their addresses. */
-    g_commandFromPSPR.eraseFlash = (void *)Flash_erasePFLASH;
-    g_commandFromPSPR.writeFlash = (void *)Flash_writePFlashPage;
+    /* Copy the erasePFLASH() routine and assign it to a function pointer */
+    memcpy((void *)ERASEPFLASH_ADDR, (const void *)Flash_erasePFLASH, ERASEPFLASH_LEN);
+    g_commandFromPSPR.eraseFlash = (void *)ERASEPFLASH_ADDR;
+
+    /* Copy the writeFlash() routine and assign it to a function pointer */
+    memcpy((void *)WRITEPFLASH_ADDR, (const void *)Flash_writePFlashPage, WRITEPFLASH_LEN);
+//    memcpy((void *)WRITEPFLASH_ADDR, (const void *)writePFlashPage, WRITEPFLASH_LEN);
+    g_commandFromPSPR.writeFlash = (void *)WRITEPFLASH_ADDR;
 
     return;
 }
@@ -331,11 +326,11 @@ void Flash_copyFunctionsToPSPR(void)
 
 /*
  ** ============================================================================
- ** @Function    ����ʼ��Flash
- ** @Description ��
- ** @Parameters  ��
- ** @Returns     ��
- ** @Date        ��
+ ** @Function    锟斤拷锟斤拷始锟斤拷Flash
+ ** @Description 锟斤拷
+ ** @Parameters  锟斤拷
+ ** @Returns     锟斤拷
+ ** @Date        锟斤拷
  ** ============================================================================
  */
 void Flash_init(void)
@@ -347,16 +342,13 @@ void Flash_init(void)
 
 /*
  ** ============================================================================
- ** @Function    ��
- ** @Description ��
- ** @Parameters  ��
- ** @Returns     ��
- ** @Date        ��
+ ** @Function    锛�
+ ** @Description 锛�
+ ** @Parameters  锛�
+ ** @Returns     锛�
+ ** @Date        锛�
  ** ============================================================================
  */
-#if defined(__TASKING__)
-#pragma section code "psram_cpu0"
-#endif
 int Flash_erasePFlash_port(uint32 flashAddr)
 {
     boolean interruptState = IfxCpu_disableInterrupts(); /* Get the current state of the interrupts and disable them*/
@@ -369,21 +361,21 @@ int Flash_erasePFlash_port(uint32 flashAddr)
     IfxScuWdt_serviceCpuWatchdog(wdtPassword);
 
     /* Check PFlash erase error flags: EVER (erase verify), OPER (operation), SQER (sequence), PROER (protection) */
-    if (FLASH0_FSR.B.EVER || FLASH0_FSR.B.OPER || FLASH0_FSR.B.SQER || FLASH0_FSR.B.PROER)
-    {
-        return -1;  /* Erase error detected */
-    }
+//    if (FLASH0_FSR.B.EVER || FLASH0_FSR.B.OPER || FLASH0_FSR.B.SQER || FLASH0_FSR.B.PROER)
+//    {
+//        return -1;  /* Erase error detected */
+//    }
     return 0;
 }
 
 /*
  ** ============================================================================
- ** @Function    ����PFLASH��������д��
- ** @Description ��
- **                 ÿ��д1page=32bytes
- ** @Parameters  ��
- ** @Returns     ��
- ** @Date        ��
+ ** @Function    锛氬線PFLASH杩涜鏁版嵁鍐欏叆
+ ** @Description 锛�
+ **                 姣忔鍐�1page=32bytes
+ ** @Parameters  锛�
+ ** @Returns     锛�
+ ** @Date        锛�
  ** ============================================================================
  */
 int  Flash_writePFlash_port(uint32 flashAddr, uint32 *data, uint32 bytelength)
@@ -403,10 +395,10 @@ int  Flash_writePFlash_port(uint32 flashAddr, uint32 *data, uint32 bytelength)
     IfxPort_setPinState(LED2, IfxPort_State_low);
 
     /* Check PFlash program error flags: PVER (program verify), OPER, SQER, PROER */
-    if (FLASH0_FSR.B.PVER || FLASH0_FSR.B.OPER || FLASH0_FSR.B.SQER || FLASH0_FSR.B.PROER)
-    {
-        return -1;  /* Write error detected */
-    }
+//    if (FLASH0_FSR.B.PVER || FLASH0_FSR.B.OPER || FLASH0_FSR.B.SQER || FLASH0_FSR.B.PROER)
+//    {
+//        return -1;  /* Write error detected */
+//    }
     return 0;
 }
 
@@ -417,9 +409,10 @@ uint32 min(uint32 var1,uint32 var2)
 	else
 		return var2;
 }
-uint8 s_remainBuffer[32] = {0};  // �ݴ治��32�ֽڵ�����
-uint32 s_remainAddr = 0;   // �ݴ����ݵ���ʼ��ַ
-uint32 s_remainSize = 0;   // ��ǰ�ݴ�����ݳ���
+uint8 s_remainBuffer[32] = {0};  // 鏆傚瓨涓嶈冻32瀛楄妭鐨勬暟鎹�
+uint32 s_remainAddr = 0;   // 鏆傚瓨鏁版嵁鐨勮捣濮嬪湴鍧�
+uint32 s_remainSize = 0;   // 褰撳墠鏆傚瓨鐨勬暟鎹暱搴�
+
 
 /**
  * @brief Write a 32-byte PFlash page and verify by reading back.
@@ -441,28 +434,23 @@ static int Flash_writeAndVerifyPage(uint32 addr, uint8 *data)
     return 1;
 }
 
-int Flash_ForceWriteRemaining(void)//����32λ��ֱ��д�룬��������������
+void Flash_ForceWriteRemaining(void)//涓嶈冻32浣嶇殑鐩存帴鍐欏叆锛屼繚瀛樼殑鏁扮粍鐨勬暟鎹�
 {
 //	static uint32 s_remainBuffer32[8] = {0};
     if (s_remainSize > 0)
     {
-        // ���ʣ�ಿ��Ϊ0xFF
-        memset(s_remainBuffer + s_remainSize, 0x00, 32 - s_remainSize);//����32λ�ģ�û���ݵĶ���д0����Ȼ������һЩ����
+        // 濉厖鍓╀綑閮ㄥ垎涓�0xFF
+        memset(s_remainBuffer + s_remainSize, 0x00, 32 - s_remainSize);//涓嶆弧32浣嶇殑锛屾病鏁版嵁鐨勯兘濉啓0锛屼笉鐒朵細涔卞叆涓�浜涙暟鎹�
 
-        // д��������32�ֽڿ顢����֤
-        if (Flash_writeAndVerifyPage(s_remainAddr, s_remainBuffer) == 0)
-        {
-            s_remainSize = 0;
-            return 0;  /* Force write failed */
-        }
+        // 鍐欏叆瀹屾暣鐨�32瀛楄妭鍧�
+        g_commandFromPSPR.writeFlash(s_remainAddr, s_remainBuffer, 32);
 
-        // ����״̬
+        // 閲嶇疆鐘舵��
         s_remainSize = 0;
     }
-    return 1;
 }
 
-int Flash_writePFlash_portex(uint32 flashAddr, uint8 *data, uint32 byteLength)//��32λ����д��
+int Flash_writePFlash_portex(uint32 flashAddr, uint8 *data, uint32 byteLength)//鎸�32浣嶈繘琛屽啓鍏�
 {
     boolean interruptState = IfxCpu_disableInterrupts(); /* Disable interrupts during flash operation */
     uint16 wdtPassword = IfxScuWdt_getCpuWatchdogPassword();
@@ -470,67 +458,65 @@ int Flash_writePFlash_portex(uint32 flashAddr, uint8 *data, uint32 byteLength)//
     uint32 offset = 0;
     uint32 currentAddr = flashAddr;//0xa0020040+126=0xa00200be
 
-    // 1. ����Ƿ���Ҫ���ݴ�����ƴ��
+    // 1. 妫�鏌ユ槸鍚﹂渶瑕佷笌鏆傚瓨鏁版嵁鎷兼帴
     if (s_remainSize > 0)
     {
-    	//����ַ�Ƿ��뻺�������
-		if (currentAddr == (s_remainAddr + s_remainSize))//������128���ȵ�����->0xa00200be=0xa00200a0+30
+    	//妫�鏌ュ湴鍧�鏄惁涓庣紦瀛樺潡杩炵画
+		if (currentAddr == (s_remainAddr + s_remainSize))//杩炵画瓒�128闀垮害鐨勬暟鎹�->0xa00200be=0xa00200a0+30
     	{
-            uint32 needed = 32 - s_remainSize;  // ��Ҫ������ֽ���
+            uint32 needed = 32 - s_remainSize;  // 闇�瑕佽ˉ鍏呯殑瀛楄妭鏁�
             uint32 copySize = min(needed, byteLength);
 
-            // ��ϳ�������32�ֽڿ�
-            memcpy(s_remainBuffer + s_remainSize, data, copySize);//(0xa00200be,ǰ�������ݣ�2)
+            // 缁勫悎鎴愬畬鏁寸殑32瀛楄妭鍧�
+            memcpy(s_remainBuffer + s_remainSize, data, copySize);//(0xa00200be,鍓嶄袱涓暟鎹紝2)
 
-            // ����д������ҳ��ʹ�û����ַ����֤
-			if (Flash_writeAndVerifyPage(s_remainAddr, s_remainBuffer) == 0)
-			{
-				result = 0;  /* Write-verify failed */
-				goto flash_write_exit;
-			}
+            // 绔嬪嵆鍐欏叆瀹屾暣椤碉紙浣跨敤缂撳瓨鍦板潃锛�
+			// g_commandFromPSPR.writeFlash(s_remainAddr, s_remainBuffer, 32);//(0xa00200a0,32涓暟鎹紝32)
+            if(Flash_writeAndVerifyPage(s_remainAddr, s_remainBuffer) == 0)
+            {
+                result = 0;
+//                goto flash_write_exit;
+            }
 
-			offset += copySize;//offset->0+2=2
+            offset += copySize;//offset->0+2=2
 			currentAddr += copySize;//0xa00200be+2=0xa00200c0
 			s_remainSize = 0;
         }
-		else//������������
+		else//闈炶繛缁殑鏁版嵁
         {
 			if((s_remainAddr + 32) < currentAddr)
 			{
-				// ��ַ��������ǿ��д��ɻ���
-				if (Flash_ForceWriteRemaining() == 0)
-					{
-						result = 0;  /* Force write-verify failed */
-						goto flash_write_exit;
-					}
+				// 鍦板潃涓嶈繛缁紝寮哄埗鍐欏叆鏃х紦瀛�
+				Flash_ForceWriteRemaining();
 			}
 			else //if((s_remainAddr + 32) > currentAddr)
 			{
-				//����֮ǰ���صĵ�ַΪ��s_remainAddr��0x800451E0 + 0x20�����ȣ� = 0x80045200 > 0x800451F4
-				//֮ǰ���µ������ֽ���ֻ�У�s_remainSize��10�������һ���������ĵ�ַΪ��0x800451E0 + 0xA = 0x800451EA
-				//���µ�ַΪ0x800451F4����ô0x80045200 - 0x800451F4 =  0xC����ΪneedBetysLength
-				//(s_remainBuffer + 32 - needBetysLength) = 0x800451E0 + 0x20 -0xC = 0x800451F4���¿��������ݴ�0x800451F4��ʼ
-				//�����¿�������ֻ��4������byteLength����ô�����ֽڻ�Ӧ��8������ռ�õ��ֽ�Ӧ��32-8=24,
-				//��ô32 - (needBetysLength - byteLength) = 24���������ƶϣ�Ӧ����ȷ�ģ�����20250717
+				//鍋囪涔嬪墠涓嬭浇鐨勫湴鍧�涓猴細s_remainAddr锛�0x800451E0 + 0x20锛堥暱搴︼級 = 0x80045200 > 0x800451F4
+				//涔嬪墠浣欎笅鐨勬暟鎹瓧鑺傛暟鍙湁锛歴_remainSize锛�10锛屽洜姝や笂涓�娆′笅杞藉畬鍚庣殑鍦板潃涓猴細0x800451E0 + 0xA = 0x800451EA
+				//鑰屾柊鍦板潃涓�0x800451F4锛岄偅涔�0x80045200 - 0x800451F4 =  0xC锛屽嵆涓簄eedBetysLength
+				//(s_remainBuffer + 32 - needBetysLength) = 0x800451E0 + 0x20 -0xC = 0x800451F4锛屾柊鎷疯礉鐨勬暟鎹粠0x800451F4寮�濮�
+				//鍋囪鏂版嫹璐濇暟鎹彧鏈�4涓紝鍗砨yteLength锛岄偅涔堢┖浣欏瓧鑺傝繕搴斾綑8涓紝宸插崰鐢ㄧ殑瀛楄妭搴旀槸32-8=24,
+				//閭ｄ箞32 - (needBetysLength - byteLength) = 24绗﹀悎涓婇潰鎺ㄦ柇锛屽簲鏄纭殑锛屾浘鍐�20250717
 				uint32 needBetysLength = s_remainAddr + 32 - currentAddr;
 				// 0x80045200 + 0x20 = 0x80045220 - 0x80045208 = 24
-				uint32 copySize2 = min(needBetysLength, byteLength);	// ���� byteLength = 4����needBetysLength = 12
+				uint32 copySize2 = min(needBetysLength, byteLength);	// 鍋囪 byteLength = 4锛岃�宯eedBetysLength = 12
 				if((32 - needBetysLength) > s_remainSize)
 				{
 					memcpy((s_remainBuffer + 32 - needBetysLength), data, copySize2);
 					//(s_remainBuffer + 32 - needBetysLength)
 					if(needBetysLength <= byteLength)
-					{
-						if (Flash_writeAndVerifyPage(s_remainAddr, s_remainBuffer) == 0)
+                    {
+                        // g_commandFromPSPR.writeFlash(s_remainAddr, s_remainBuffer, 32);//(0xa00200a0,32涓暟鎹紝32)
+                        if (Flash_writeAndVerifyPage(s_remainAddr, s_remainBuffer) == 0)
 							{
 								result = 0;  /* Write-verify failed */
-								goto flash_write_exit;
-							}//(0xa00200a0,32�����ݣ�32)
+//								goto flash_write_exit;
+							}//(0xa00200a0,32锟斤拷锟斤拷锟捷ｏ拷32)
 						offset += copySize2;//offset->0+2=2
 						currentAddr += copySize2;//0xa00200be+2=0xa00200c0
 						s_remainSize = 0;
 					}
-					else // ��Ϊ����һҳ���ȴ���һ��ѭ��
+					else // 锟斤拷为锟斤拷锟斤拷一页锟斤拷锟饺达拷锟斤拷一锟斤拷循锟斤拷
 					{
 						s_remainSize = 32 - (needBetysLength - byteLength);	//
 					}
@@ -538,24 +524,25 @@ int Flash_writePFlash_portex(uint32 flashAddr, uint8 *data, uint32 byteLength)//
 				else
 				{
 					result = 0;
-					goto flash_write_exit;
+//					goto flash_write_exit;
 				}
 			}
     	}
     }
 
-    // 2. д��������32�ֽڿ�
-    //��168�����Ƚ��о�����
-    //��һ��0x36���͵����ݳ�����126��
-    //��a0020040->a0020060(32)->offset=(0->32)
-    //��a0020060->a0020080(32)->offset=(32->64)
-	//��a0020080->a00200a0(32)->offset=(64->96)
-    //��a00200a0->a00200c0(32)->offset=96+32<126����ִ�У�offset=96->�������ƴ��32д����
-    //�ڶ���0x36���͵����ݳ�����42��
-    //��a00200c0->a00200e0(32)->offset=(2->34)
-    //��a00200e0->a00200f0(8)->offset=34+32=66<42����offset=34
+    // 2. 鍐欏叆瀹屾暣鐨�32瀛楄妭鍧�
+    //鎷�168涓暱搴﹁繘琛屼妇渚嬶紝
+    //绗竴娆�0x36鍙戦�佺殑鏁版嵁闀垮害鏄�126涓�
+    //鈶燼0020040->a0020060(32)->offset=(0->32)
+    //鈶0020060->a0020080(32)->offset=(32->64)
+	//鈶0020080->a00200a0(32)->offset=(64->96)
+    //鈶00200a0->a00200c0(32)->offset=96+32<126脳涓嶆墽琛岋紝offset=96->鍦ㄤ笂闈㈢殑鎷兼帴32鍐欏叆浜�
+    //绗簩娆�0x36鍙戦�佺殑鏁版嵁闀垮害鏄�42涓�
+    //鈶燼00200c0->a00200e0(32)->offset=(2->34)
+    //鈶00200e0->a00200f0(8)->offset=34+32=66<42脳锛宱ffset=34
     while (offset + 32 <= byteLength) //126
     {
+	    // g_commandFromPSPR.writeFlash(currentAddr, data + offset, 32);//鍐欏叆涓�椤�
         if (Flash_writeAndVerifyPage(currentAddr, data + offset) == 0)
         {
             s_remainSize = 0;  /* Clear buffer state on error */
@@ -563,29 +550,23 @@ int Flash_writePFlash_portex(uint32 flashAddr, uint8 *data, uint32 byteLength)//
             goto flash_write_exit;
         }
         offset += 32;
-        currentAddr += 32; // �ؼ���ÿ��д������32
+        currentAddr += 32; // 鍏抽敭锛氭瘡娆″啓鍏ュ悗閫掑32
     }
 
-    // 3. ����ʣ�಻��32�ֽڵ�����
-    if ((offset < byteLength)&&(s_remainSize == 0)) //��96<126  ��66<42
+    // 3. 澶勭悊鍓╀綑涓嶈冻32瀛楄妭鐨勬暟鎹�
+    if ((offset < byteLength)&&(s_remainSize == 0)) //鈶�96<126  鈶�66<42
     {
-		// ��������ַ��32�ֽڱ߽磩
-		s_remainAddr = currentAddr;//��0xa00200a0  ��a00200e0
-		// �洢ʣ������
-		s_remainSize = byteLength - offset;//��126-96=30  ��42-2-32=8
+		// 璁＄畻瀵归綈鍦板潃锛�32瀛楄妭杈圭晫锛�
+		s_remainAddr = currentAddr;//鈶�0xa00200a0  鈶00200e0
+		// 瀛樺偍鍓╀綑鏁版嵁
+		s_remainSize = byteLength - offset;//鈶�126-96=30  鈶�42-2-32=8
 		for(uint8 i = 0;i<32;i++)
 		{
 			s_remainBuffer[i]=0;
 		}
-		memcpy(s_remainBuffer, data + offset, s_remainSize);//��(s_remainBuffer,data+96,30)  ��(s_remainBuffer,data+34,8)
+		memcpy(s_remainBuffer, data + offset, s_remainSize);//鈶�(s_remainBuffer,data+96,30)  鈶�(s_remainBuffer,data+34,8)
     }
 
-    /* Check PFlash program error flags after all write operations */
-    if (FLASH0_FSR.B.PVER || FLASH0_FSR.B.OPER || FLASH0_FSR.B.SQER || FLASH0_FSR.B.PROER)
-    {
-        s_remainSize = 0;  /* Clear buffer state on error */
-        result = 0;          /* Write error detected */
-    }
 
 flash_write_exit:
     IfxScuWdt_serviceCpuWatchdog(wdtPassword);
@@ -593,17 +574,15 @@ flash_write_exit:
     return result;
 }
 
-#if defined(__TASKING__)
-#pragma section code restore
-#endif
+
 
 /*
  ** ============================================================================
- ** @Function    ��
- ** @Description ��
- ** @Parameters  ��
- ** @Returns     ��
- ** @Date        ��
+ ** @Function    锛�
+ ** @Description 锛�
+ ** @Parameters  锛�
+ ** @Returns     锛�
+ ** @Date        锛�
  ** ============================================================================
  */
 int Flash_eraseDFlash_port(uint32 flashAddr)
@@ -622,12 +601,12 @@ int Flash_eraseDFlash_port(uint32 flashAddr)
 
 /*
  ** ============================================================================
- ** @Function    ��
- ** @Description ��
- **                 ÿ��д1page=8bytes
- ** @Parameters  ��
- ** @Returns     ��
- ** @Date        ��
+ ** @Function    锛�
+ ** @Description 锛�
+ **                 姣忔鍐�1page=8bytes
+ ** @Parameters  锛�
+ ** @Returns     锛�
+ ** @Date        锛�
  ** ============================================================================
  */
 int  Flash_writeDFlash_port(uint32 flashAddr, uint32 *data, uint32 bytelength )

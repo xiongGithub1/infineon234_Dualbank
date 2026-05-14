@@ -5,7 +5,7 @@
 	<ProdInfo type="bin" size="52">vQTv/gAAAQAKAAMA4SADAAEA5QcAAAAAPwAAAAAAAAAEAAAAAgAAAAAAAAAAAAAAAAAAAA==</ProdInfo>
 	<ProdInfoString type="string">2021</ProdInfoString>
 	<CreationDate type="string">04.08.2025 09:09:02:000</CreationDate>
-	<LastWriteDate type="string">11.05.2026 19:08:25:000</LastWriteDate>
+	<LastWriteDate type="string">14.05.2026 10:25:58:000</LastWriteDate>
 	<MainFrame type="key">
 		<NETPlacementRoot type="key">
 			<FormsData type="innerxml">
@@ -47,7 +47,7 @@
 							<UniqueIdentifier>MainFrame.StdTargetManagerWin.OPEN_VIEW</UniqueIdentifier>
 						</UniqueControlIdDockingControlData>
 						<UniqueControlIdDockingControlData>
-							<DockedDimension>1384</DockedDimension>
+							<DockedDimension>1385</DockedDimension>
 							<Cancelled>false</Cancelled>
 							<DockingType>Bottom</DockingType>
 							<FloatingBounds>
@@ -65,7 +65,7 @@
 							<UniqueIdentifier>MainFrame.StdUDEMessageWin.OPEN_VIEW</UniqueIdentifier>
 						</UniqueControlIdDockingControlData>
 						<UniqueControlIdDockingControlData>
-							<DockedDimension>534</DockedDimension>
+							<DockedDimension>533</DockedDimension>
 							<Cancelled>false</Cancelled>
 							<DockingType>Bottom</DockingType>
 							<FloatingBounds>
@@ -133,7 +133,7 @@
 							<DockingIndex>8</DockingIndex>
 							<PanelIndex>-1</PanelIndex>
 							<ContainerType>TabbedDocument</ContainerType>
-							<Selected>true</Selected>
+							<Selected>false</Selected>
 							<UniqueIdentifier>Core0.ViewSrv.StdUDEProgWin.OPEN_VIEW00</UniqueIdentifier>
 						</UniqueControlIdDockingControlData>
 						<UniqueControlIdDockingControlData>
@@ -205,7 +205,7 @@
 							<DockingIndex>5</DockingIndex>
 							<PanelIndex>-1</PanelIndex>
 							<ContainerType>TabbedDocument</ContainerType>
-							<Selected>false</Selected>
+							<Selected>true</Selected>
 							<UniqueIdentifier>Core0.ViewSrv.StdUDEProgWin.OPEN_VIEW08</UniqueIdentifier>
 						</UniqueControlIdDockingControlData>
 						<UniqueControlIdDockingControlData>
@@ -1186,7 +1186,7 @@
 									<ToolItemPersistData>
 										<Name></Name>
 										<Visible>true</Visible>
-										<Text>ERROR: Read memory block 0x00000000A000001C-0x00000000A000041B failed !</Text>
+										<Text>Ready</Text>
 										<DisplayStyle>ImageAndText</DisplayStyle>
 										<AppendAccelerator>false</AppendAccelerator>
 									</ToolItemPersistData>
@@ -1207,7 +1207,7 @@
 									<ToolItemPersistData>
 										<Name></Name>
 										<Visible>true</Visible>
-										<Text>Core0 running</Text>
+										<Text>Core0 halted by internal breakpoint</Text>
 										<DisplayStyle>ImageAndText</DisplayStyle>
 										<AppendAccelerator>false</AppendAccelerator>
 									</ToolItemPersistData>
@@ -1348,7 +1348,7 @@
 			<OPEN_VIEW type="key">
 				<FrameCreated type="string">04.08.2025 09:09:11:000</FrameCreated>
 				<ViewSrv type="key">
-					<_ExtentX type="bin" size="8">xzYAAA==</_ExtentX>
+					<_ExtentX type="bin" size="8">rDYAAA==</_ExtentX>
 					<_ExtentY type="bin" size="8">ZhIAAA==</_ExtentY>
 					<_StockProps type="bin" size="8">AAAAAA==</_StockProps>
 					<Columns type="bin" size="8">CAAAAA==</Columns>
@@ -1449,7 +1449,7 @@
 		<UDESTK.Script type="key">
 			<MacroGuiEntries type="key">
 				<LastScriptFilePath type="string">C:\Users\Public\Documents\pls\UDESTK 2021</LastScriptFilePath>
-				<Macro_11_05_26_17_45_17_0 type="key">
+				<Macro_14_05_26_09_20_52_0 type="key">
 					<ScriptDescription type="string">The script contains a collection of macros to save memory content into different file formats 
 and fill target memory ranges</ScriptDescription>
 					<ScriptPath type="string">V:\UDE\AddOns\Macro\MacroLibrary\StdMacros1.dsm</ScriptPath>
@@ -1729,7 +1729,7 @@ End Sub</ScriptSource>
 					<ScriptFromStg type="flag">1</ScriptFromStg>
 					<LocalComputerName type="string">WS_CORE_DUO</LocalComputerName>
 					<ExternalScriptPath type="string"></ExternalScriptPath>
-					<NextNodeName type="string">Macro_11_05_26_19_08_25_0</NextNodeName>
+					<NextNodeName type="string">Macro_14_05_26_10_25_58_0</NextNodeName>
 					<UnAss type="key">
 						<GUIEntry type="key">
 							<MenuID type="int">10</MenuID>
@@ -1786,7 +1786,7 @@ End Sub</ScriptSource>
 						<GUIEntryDescription type="string"></GUIEntryDescription>
 					</FillDWord>
 					<NoOfFunctions type="int">5</NoOfFunctions>
-				</Macro_11_05_26_17_45_17_0>
+				</Macro_14_05_26_09_20_52_0>
 			</MacroGuiEntries>
 			<LastSelectedMacro type="string"></LastSelectedMacro>
 		</UDESTK.Script>
@@ -1837,7 +1837,7 @@ End Sub</ScriptSource>
 							<HoldedPeriod type="int">0</HoldedPeriod>
 						</AnimateQueue>
 					</ViewSrv>
-					<SourceFile type="string">code &lt;0x8010001C-0x8010041B&gt;</SourceFile>
+					<SourceFile type="string">code &lt;0x8002250C-0x8002290B&gt;</SourceFile>
 					<SourceFileInstFlag type="int">4</SourceFileInstFlag>
 					<NETFrameMode type="int">73728</NETFrameMode>
 					<NETFrameSaveIndex type="int">6</NETFrameSaveIndex>
@@ -2490,7 +2490,9 @@ SET 0xF80020AC 0x8000
 					<FlashMod_PFLASH0 type="key">
 						<Enabled type="flag">1</Enabled>
 					</FlashMod_PFLASH0>
-					<FlashMod_DF_EEPROM type="key"></FlashMod_DF_EEPROM>
+					<FlashMod_DF_EEPROM type="key">
+						<Enabled type="flag">1</Enabled>
+					</FlashMod_DF_EEPROM>
 					<Frontend type="key">
 						<LastModule type="int">0</LastModule>
 						<VerifyProt type="flag">0</VerifyProt>
@@ -2513,7 +2515,7 @@ SET 0xF80020AC 0x8000
 			</CommQueueHndlStg>
 			<TargetStateHndlStg type="key"></TargetStateHndlStg>
 			<breakpointsV3 type="key">
-				<collectionStr type="string">_16,</collectionStr>
+				<collectionStr type="string">_16,_0,</collectionStr>
 				<collection type="key">
 					<_16 type="key">
 						<breakpointType type="string">code</breakpointType>
@@ -2530,6 +2532,21 @@ SET 0xF80020AC 0x8000
 						<macro type="string"></macro>
 						<codeBreakpointType type="string">hardware</codeBreakpointType>
 					</_16>
+					<_0 type="key">
+						<breakpointType type="string">code</breakpointType>
+						<label type="string">'core0_main {E:\workFiles\IEBS\tc234bootloader\App_dualBank\Cpu0_Main.c} .151';Cpu0_Main.c;1;27;;</label>
+						<enable type="flag">1</enable>
+						<address type="string">'core0_main {E:\workFiles\IEBS\tc234bootloader\App_dualBank\Cpu0_Main.c} .151';Cpu0_Main.c;1;27;;</address>
+						<multiCore type="flag">0</multiCore>
+						<enableCondition type="flag">0</enableCondition>
+						<condition type="string"></condition>
+						<enableLoopCounter type="flag">0</enableLoopCounter>
+						<loopCounter type="string">0</loopCounter>
+						<loopGoal type="string">0</loopGoal>
+						<enableMacro type="flag">0</enableMacro>
+						<macro type="string"></macro>
+						<codeBreakpointType type="string">hardware</codeBreakpointType>
+					</_0>
 				</collection>
 			</breakpointsV3>
 		</UDESTK.StdDbgSrv>

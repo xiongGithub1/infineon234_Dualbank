@@ -86,12 +86,19 @@ void core0_main(void)
      * Explicitly set reload=0x7FFF (~5.3s @ 100MHz/16384) to safely cover
      * DFlash/PFlash operations. Default UCB reload may be too short.
      * Safety WDT is disabled to simplify bootloader handling.
+     *单次递减时间 = 16384 / 100MHz
+             = 16384 / 100,000,000
+             = 163.84 μs
+
+      总超时时间   = 18310 × 163.84 μs
+             = 5,368,000 μs
+             ≈ 2.99 s
      * */
     {
         IfxScuWdt_Config wdtConfig;
         IfxScuWdt_initConfig(&wdtConfig);
         wdtConfig.password = IfxScuWdt_getCpuWatchdogPassword();
-        wdtConfig.reload   = 0x7FFF;  /* ~5.3s, safe for all flash operations */
+        wdtConfig.reload = 0x4786;  /* ~3s, safe for all flash operations */
         IfxScuWdt_initCpuWatchdog(&MODULE_SCU.WDTCPU[0], &wdtConfig);
     }
     IfxScuWdt_disableSafetyWatchdog(IfxScuWdt_getSafetyWatchdogPassword());
@@ -101,7 +108,7 @@ void core0_main(void)
     isPowerOnReset = ((resetReason & 0x01u) != 0u) ? TRUE : FALSE;
 
     //    IfxCpu_disableInterrupts();
-	/* app init*/
+    /* app init*/
 
     IfxScuClock_init();
 
@@ -114,11 +121,11 @@ void core0_main(void)
 
     /* === OEM Phase: Check if APP requested bootloader mode via RAM flag === */
     {
-        uint16 ramBootMode = *(uint16 *)RAM_BOOT_MODE_Addr;
+        uint16 ramBootMode = *(uint16*) RAM_BOOT_MODE_Addr;
         if (ramBootMode == RAM_BOOT_MODE_APP)
         {
             /* APP requested bootloader: clear flag and stay in bootloader for flashing */
-            *(uint16 *)RAM_BOOT_MODE_Addr = RAM_BOOT_MODE_NORMAL;
+            *(uint16*) RAM_BOOT_MODE_Addr = RAM_BOOT_MODE_NORMAL;
             g_bootPhase = BOOT_PHASE_BL_ENTRY;
             /* Fall through to AppBL_init() without attempting jump */
         }

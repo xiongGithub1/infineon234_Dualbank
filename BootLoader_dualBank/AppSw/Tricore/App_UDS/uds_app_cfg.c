@@ -118,7 +118,7 @@ void RequestMoreTime(const uint8 UDSServiceID, void (*pcallback)(uint8))
     ASSERT(NULL_PTR == pcallback);
 
     stMsgBuf.xUdsId = TP_GetConfigTxMsgID();
-    SetNegativeErroCode(UDSServiceID, NRC_SERVICE_BUSY, &stMsgBuf);
+    SetNegativeErroCode(UDSServiceID, NRC_RESPONSE_PENDING, &stMsgBuf);
     stMsgBuf.pfUDSTxMsgServiceCallBack = &RequestMoreTimeCallback;
     gs_pfFlashOperateMoreTimecallback = pcallback;
 

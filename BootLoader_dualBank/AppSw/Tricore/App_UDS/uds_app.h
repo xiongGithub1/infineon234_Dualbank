@@ -2,7 +2,7 @@
  * \file    uds.h
  * \brief
  * \version V1.0.0
- * \date    2021Äê11ÔÂ26ÈÕ
+ * \date    2021ï¿½ï¿½11ï¿½ï¿½26ï¿½ï¿½
  * \author  Administrator
  *********************************************************************************************************************/
 #ifndef UDSDIAGNOSTIC_UDS_APP_H_
@@ -66,35 +66,48 @@ typedef struct
     uint32 DataLen;   /* Data len */
 } tDowloadDataInfo;
 
-/* UDS negative response code */
+/* UDS negative response code (ISO 14229-1:2020) */
 enum __UDS_NRC__
 {
     NRC_GENERAL_REJECT                           = 0x10,
     NRC_SERVICE_NOT_SUPPORTED                    = 0x11,
     NRC_SUBFUNCTION_NOT_SUPPORTED                = 0x12,
     NRC_INVALID_MESSAGE_LENGTH_OR_FORMAT         = 0x13,
+    NRC_RESPONSE_TOO_LONG                        = 0x14,
     NRC_BUSY_REPEAT_REQUEST                      = 0x21,
     NRC_CONDITIONS_NOT_CORRECT                   = 0x22,
     NRC_REQUEST_SEQUENCE_ERROR                   = 0x24,
+    NRC_NO_RESPONSE_FROM_SUBNET_COMPONENT        = 0x25,
+    NRC_FAILURE_PREVENTS_EXECUTION               = 0x26,
     NRC_REQUEST_OUT_OF_RANGE                     = 0x31,
     NRC_SECURITY_ACCESS_DENIED                   = 0x33,
     NRC_INVALID_KEY                              = 0x35,
     NRC_EXCEEDED_NUMBER_OF_ATTEMPTS              = 0x36,
     NRC_REQUIRED_TIME_DELAY_NOT_EXPIRED          = 0x37,
+    NRC_SECURE_DATA_TRANSMISSION_REQUIRED        = 0x38,
+    NRC_SECURE_DATA_TRANSMISSION_NOT_ALLOWED     = 0x39,
+    NRC_SECURE_DATA_VERIFICATION_FAILED          = 0x3A,
+    NRC_UPLOAD_DOWNLOAD_NOT_ACCEPTED             = 0x70,
+    NRC_TRANSFER_DATA_SUSPENDED                  = 0x71,
     NRC_GENERAL_PROGRAMMING_FAILURE              = 0x72,
-    NRC_SERVICE_BUSY                             = 0x78, /* Request correctly received and response pending */
+    NRC_WRONG_BLOCK_SEQUENCE_COUNTER             = 0x73,
+    NRC_RESPONSE_PENDING                         = 0x78,
+    NRC_SUBFUNCTION_NOT_SUPPORTED_IN_ACTIVE_SESSION = 0x7E,
     NRC_SERVICE_NOT_SUPPORTED_IN_ACTIVE_SESSION  = 0x7F,
+    /* Vehicle-condition related (0x81 - 0x93) */
+    NRC_VOLTAGE_TOO_HIGH                         = 0x92,
+    NRC_VOLTAGE_TOO_LOW                          = 0x93,
 };
 #define NEGTIVE_RESPONSE_ID (0x7Fu)
 
 
 typedef enum{
     RESET_NONE = 0,
-    HARD_RESET = 1,//Ó²¼þ¸´Î»
-    KEY_OFF_ON_RESET = 2,//¿ª¹Ø¸´Î»
-    SOFT_RESET = 3,//Èí¼þ¸´Î»
-    ENABLE_RAPID_POWER_SHUTDOWN = 4,//ÆôÓÃ¿ìËÙ¹Ø»ú
-    DISABLE_RAPID_POWER_SHUTDOWN = 5,//½ûÓÃ¿ìËÙ¹Ø»ú
+    HARD_RESET = 1,//Ó²ï¿½ï¿½ï¿½ï¿½Î»
+    KEY_OFF_ON_RESET = 2,//ï¿½ï¿½ï¿½Ø¸ï¿½Î»
+    SOFT_RESET = 3,//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î»
+    ENABLE_RAPID_POWER_SHUTDOWN = 4,//ï¿½ï¿½ï¿½Ã¿ï¿½ï¿½Ù¹Ø»ï¿½
+    DISABLE_RAPID_POWER_SHUTDOWN = 5,//ï¿½ï¿½ï¿½Ã¿ï¿½ï¿½Ù¹Ø»ï¿½
 }tUdsEcuResetType;
 
 typedef struct
@@ -181,9 +194,9 @@ typedef struct
 	tUDSRwDataRWMode rw_mode;
 	tUDSRwDataStoreMode rw_store;
 	tUDSRwDataType dataType;
-    uint32 p_entry;//Êý¾ÝÈë¿ÚµØÖ·
-    uint8 dlc;//×Ö½ÚÊý
-    uint8 dlc_max;//×î´ó¿É´æ´¢µÄ×Ö½ÚÊýÁ¿
+    uint32 p_entry;//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Úµï¿½Ö·
+    uint8 dlc;//ï¿½Ö½ï¿½ï¿½ï¿½
+    uint8 dlc_max;//ï¿½ï¿½ï¿½É´æ´¢ï¿½ï¿½ï¿½Ö½ï¿½ï¿½ï¿½ï¿½ï¿½
 
 }tUDSRwDataTable;
 
@@ -198,11 +211,11 @@ typedef enum
 
 
 typedef struct {
-    uint8 upgrade_flag;     // Éý¼¶±êÖ¾Î»
-    uint32 app_size;        // Ó¦ÓÃ³ÌÐò´óÐ¡
-    uint8 md5[16];          // MD5Ð£ÑéÖµ
-    uint32 retry_count;     // ÖØÊÔ¼ÆÊýÆ÷
-    uint8 reserved[11];     // ±£ÁôÇøÓò
+    uint8 upgrade_flag;     // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¾Î»
+    uint32 app_size;        // Ó¦ï¿½Ã³ï¿½ï¿½ï¿½ï¿½Ð¡
+    uint8 md5[16];          // MD5Ð£ï¿½ï¿½Öµ
+    uint32 retry_count;     // ï¿½ï¿½ï¿½Ô¼ï¿½ï¿½ï¿½ï¿½ï¿½
+    uint8 reserved[11];     // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 } BootloaderParams;
 
 static uint32 gs_DownloadCRC ;
@@ -219,7 +232,7 @@ static void ReadDTCInformation0x19(struct UDSServiceInfo *i_pstUDSServiceInfo, t
 static void ClearDTCInformation0x14(struct UDSServiceInfo *i_pstUDSServiceInfo, tUdsAppMsgInfo *m_pstPDUMsg);
 static void CommunicationControl0x28(struct UDSServiceInfo *i_pstUDSServiceInfo, tUdsAppMsgInfo *m_pstPDUMsg);
 static void ReadDataByIdentifier0x22(struct UDSServiceInfo *i_pstUDSServiceInfo, tUdsAppMsgInfo *m_pstPDUMsg);
-static void ReadDataByAddress0x23(struct UDSServiceInfo *i_pstUDSServiceInfo,tUdsAppMsgInfo *m_pstPDUMsg);//°´µØÖ·¶ÁÈ¡Êý¾Ý£¬20250328
+static void ReadDataByAddress0x23(struct UDSServiceInfo *i_pstUDSServiceInfo,tUdsAppMsgInfo *m_pstPDUMsg);//ï¿½ï¿½ï¿½ï¿½Ö·ï¿½ï¿½È¡ï¿½ï¿½ï¿½Ý£ï¿½20250328
 static void WriteDataByIdentifier0x2E(struct UDSServiceInfo *i_pstUDSServiceInfo, tUdsAppMsgInfo *m_pstPDUMsg);
 static void RequestDownload0x34(struct UDSServiceInfo *i_pstUDSServiceInfo, tUdsAppMsgInfo *m_pstPDUMsg);
 static void TransferData0x36(struct UDSServiceInfo *i_pstUDSServiceInfo, tUdsAppMsgInfo *m_pstPDUMsg);

@@ -581,7 +581,7 @@ void UDS_MainFun(void)
 			else
 			{
 
-				SetNegativeErroCode(stUdsAppMsg.aDataBuf[0u], 4, &stUdsAppMsg);
+				SetNegativeErroCode(stUdsAppMsg.aDataBuf[0u], NRC_CONDITIONS_NOT_CORRECT, &stUdsAppMsg);
 			}
 
 			break;
@@ -1232,7 +1232,7 @@ static void ReadDataByIdentifier0x22(struct UDSServiceInfo* i_pstUDSServiceInfo,
 	}
 	else
 	{
-		SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_CONDITIONS_NOT_CORRECT, m_pstPDUMsg);
+		SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_REQUEST_OUT_OF_RANGE, m_pstPDUMsg);
 	}
 }
 
@@ -1326,7 +1326,7 @@ static void WriteDataByIdentifier0x2E(struct UDSServiceInfo* i_pstUDSServiceInfo
 	}
 	else
 	{
-		SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_CONDITIONS_NOT_CORRECT, m_pstPDUMsg);
+		SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_REQUEST_OUT_OF_RANGE, m_pstPDUMsg);
 	}
 }
 
@@ -1468,7 +1468,7 @@ static void RequestDownload0x34(struct UDSServiceInfo* i_pstUDSServiceInfo,
 
 	if (TRUE == Ret)
 	{
-
+		/*set wait transfer data step(0x34 service)*/
 		Flash_SetNextDownloadStep(FL_TRANSFER_STEP);
 
 		/* Initialise streaming CRC at the start of a new download sequence */
@@ -1657,11 +1657,11 @@ static void RoutineControl0x31(struct UDSServiceInfo* i_pstUDSServiceInfo, tUdsA
 	{
 		case 0x01:
 			{
-				if (Flash_ForceWriteRemaining() == 0)
-					{
-						SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_CONDITIONS_NOT_CORRECT, m_pstPDUMsg);
-						break;
-					}
+//				if (Flash_ForceWriteRemaining() == 0)
+//					{
+//						SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_CONDITIONS_NOT_CORRECT, m_pstPDUMsg);
+//						break;
+//					}
 
 				if (m_pstPDUMsg->xDataLen < 4)
 				{
