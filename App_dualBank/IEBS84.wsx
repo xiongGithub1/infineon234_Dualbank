@@ -5,7 +5,7 @@
 	<ProdInfo type="bin" size="52">vQTv/gAAAQAKAAMA4SADAAEA5QcAAAAAPwAAAAAAAAAEAAAAAgAAAAAAAAAAAAAAAAAAAA==</ProdInfo>
 	<ProdInfoString type="string">2021</ProdInfoString>
 	<CreationDate type="string">04.08.2025 09:09:02:000</CreationDate>
-	<LastWriteDate type="string">14.05.2026 10:25:58:000</LastWriteDate>
+	<LastWriteDate type="string">15.05.2026 09:35:20:000</LastWriteDate>
 	<MainFrame type="key">
 		<NETPlacementRoot type="key">
 			<FormsData type="innerxml">
@@ -47,7 +47,7 @@
 							<UniqueIdentifier>MainFrame.StdTargetManagerWin.OPEN_VIEW</UniqueIdentifier>
 						</UniqueControlIdDockingControlData>
 						<UniqueControlIdDockingControlData>
-							<DockedDimension>1385</DockedDimension>
+							<DockedDimension>1386</DockedDimension>
 							<Cancelled>false</Cancelled>
 							<DockingType>Bottom</DockingType>
 							<FloatingBounds>
@@ -65,7 +65,7 @@
 							<UniqueIdentifier>MainFrame.StdUDEMessageWin.OPEN_VIEW</UniqueIdentifier>
 						</UniqueControlIdDockingControlData>
 						<UniqueControlIdDockingControlData>
-							<DockedDimension>533</DockedDimension>
+							<DockedDimension>532</DockedDimension>
 							<Cancelled>false</Cancelled>
 							<DockingType>Bottom</DockingType>
 							<FloatingBounds>
@@ -424,7 +424,7 @@
 									<Width>111</Width>
 									<Height>25</Height>
 								</Bounds>
-								<Name>Show Toolbar</Name>
+								<Name>Window Toolbar</Name>
 								<AlwaysUnvisible>false</AlwaysUnvisible>
 								<Visible>false</Visible>
 								<ToolItemData>
@@ -541,7 +541,7 @@
 									<Width>111</Width>
 									<Height>25</Height>
 								</Bounds>
-								<Name>Window Toolbar</Name>
+								<Name>Show Toolbar</Name>
 								<AlwaysUnvisible>false</AlwaysUnvisible>
 								<Visible>false</Visible>
 								<ToolItemData>
@@ -1186,7 +1186,7 @@
 									<ToolItemPersistData>
 										<Name></Name>
 										<Visible>true</Visible>
-										<Text>Ready</Text>
+										<Text>ERROR: Unable to establish connection . To correct the situation, check configuration file entries and try again.</Text>
 										<DisplayStyle>ImageAndText</DisplayStyle>
 										<AppendAccelerator>false</AppendAccelerator>
 									</ToolItemPersistData>
@@ -1207,7 +1207,7 @@
 									<ToolItemPersistData>
 										<Name></Name>
 										<Visible>true</Visible>
-										<Text>Core0 halted by internal breakpoint</Text>
+										<Text>Core0 running</Text>
 										<DisplayStyle>ImageAndText</DisplayStyle>
 										<AppendAccelerator>false</AppendAccelerator>
 									</ToolItemPersistData>
@@ -1348,7 +1348,7 @@
 			<OPEN_VIEW type="key">
 				<FrameCreated type="string">04.08.2025 09:09:11:000</FrameCreated>
 				<ViewSrv type="key">
-					<_ExtentX type="bin" size="8">rDYAAA==</_ExtentX>
+					<_ExtentX type="bin" size="8">kjYAAA==</_ExtentX>
 					<_ExtentY type="bin" size="8">ZhIAAA==</_ExtentY>
 					<_StockProps type="bin" size="8">AAAAAA==</_StockProps>
 					<Columns type="bin" size="8">CAAAAA==</Columns>
@@ -1449,7 +1449,7 @@
 		<UDESTK.Script type="key">
 			<MacroGuiEntries type="key">
 				<LastScriptFilePath type="string">C:\Users\Public\Documents\pls\UDESTK 2021</LastScriptFilePath>
-				<Macro_14_05_26_09_20_52_0 type="key">
+				<Macro_14_05_26_10_25_58_0 type="key">
 					<ScriptDescription type="string">The script contains a collection of macros to save memory content into different file formats 
 and fill target memory ranges</ScriptDescription>
 					<ScriptPath type="string">V:\UDE\AddOns\Macro\MacroLibrary\StdMacros1.dsm</ScriptPath>
@@ -1729,7 +1729,7 @@ End Sub</ScriptSource>
 					<ScriptFromStg type="flag">1</ScriptFromStg>
 					<LocalComputerName type="string">WS_CORE_DUO</LocalComputerName>
 					<ExternalScriptPath type="string"></ExternalScriptPath>
-					<NextNodeName type="string">Macro_14_05_26_10_25_58_0</NextNodeName>
+					<NextNodeName type="string">Macro_15_05_26_09_35_20_0</NextNodeName>
 					<UnAss type="key">
 						<GUIEntry type="key">
 							<MenuID type="int">10</MenuID>
@@ -1786,7 +1786,7 @@ End Sub</ScriptSource>
 						<GUIEntryDescription type="string"></GUIEntryDescription>
 					</FillDWord>
 					<NoOfFunctions type="int">5</NoOfFunctions>
-				</Macro_14_05_26_09_20_52_0>
+				</Macro_14_05_26_10_25_58_0>
 			</MacroGuiEntries>
 			<LastSelectedMacro type="string"></LastSelectedMacro>
 		</UDESTK.Script>
@@ -1837,7 +1837,7 @@ End Sub</ScriptSource>
 							<HoldedPeriod type="int">0</HoldedPeriod>
 						</AnimateQueue>
 					</ViewSrv>
-					<SourceFile type="string">code &lt;0x8002250C-0x8002290B&gt;</SourceFile>
+					<SourceFile type="string">code &lt;0x80022658-0x80022A57&gt;</SourceFile>
 					<SourceFileInstFlag type="int">4</SourceFileInstFlag>
 					<NETFrameMode type="int">73728</NETFrameMode>
 					<NETFrameSaveIndex type="int">6</NETFrameSaveIndex>
@@ -2003,7 +2003,7 @@ End Sub</ScriptSource>
 				<OPEN_VIEW00 type="key">
 					<FrameCreated type="string">04.08.2025 09:10:48:446</FrameCreated>
 					<ViewSrv type="key">
-						<TopIndex type="int">28</TopIndex>
+						<TopIndex type="int">16</TopIndex>
 						<CaretIndex type="int">0</CaretIndex>
 						<NameWidth type="int">270</NameWidth>
 						<AddressWidth type="int">0</AddressWidth>
@@ -2104,7 +2104,6 @@ End Sub</ScriptSource>
 							</Watch28>
 							<Watch29 type="key">
 								<Name type="string">DetaTime (global) @1</Name>
-								<Status type="string">#0#0,0#</Status>
 								<RunningPeriod29 type="int">25</RunningPeriod29>
 								<HoldedPeriod29 type="int">100</HoldedPeriod29>
 							</Watch29>
@@ -2145,7 +2144,7 @@ End Sub</ScriptSource>
 							</Watch40>
 							<Watch41 type="key">
 								<Name type="string">Node0Readmsg (global) @1</Name>
-								<Status type="string">#0#0,0$1,1$#0,1$-1,0$#0,2#0,2,0$1,1$#0,3$0,2$</Status>
+								<Status type="string">#0#0,0$1,1$#0,1$0,0$#0,2#0,2,0$1,1$#0,3$0,2$</Status>
 								<Status2 type="string">#0,0$1,1$#0,2,0$1,1$</Status2>
 								<RunningPeriod41 type="int">25</RunningPeriod41>
 								<HoldedPeriod41 type="int">100</HoldedPeriod41>
@@ -2515,7 +2514,7 @@ SET 0xF80020AC 0x8000
 			</CommQueueHndlStg>
 			<TargetStateHndlStg type="key"></TargetStateHndlStg>
 			<breakpointsV3 type="key">
-				<collectionStr type="string">_16,_0,</collectionStr>
+				<collectionStr type="string">_16,</collectionStr>
 				<collection type="key">
 					<_16 type="key">
 						<breakpointType type="string">code</breakpointType>
@@ -2532,21 +2531,6 @@ SET 0xF80020AC 0x8000
 						<macro type="string"></macro>
 						<codeBreakpointType type="string">hardware</codeBreakpointType>
 					</_16>
-					<_0 type="key">
-						<breakpointType type="string">code</breakpointType>
-						<label type="string">'core0_main {E:\workFiles\IEBS\tc234bootloader\App_dualBank\Cpu0_Main.c} .151';Cpu0_Main.c;1;27;;</label>
-						<enable type="flag">1</enable>
-						<address type="string">'core0_main {E:\workFiles\IEBS\tc234bootloader\App_dualBank\Cpu0_Main.c} .151';Cpu0_Main.c;1;27;;</address>
-						<multiCore type="flag">0</multiCore>
-						<enableCondition type="flag">0</enableCondition>
-						<condition type="string"></condition>
-						<enableLoopCounter type="flag">0</enableLoopCounter>
-						<loopCounter type="string">0</loopCounter>
-						<loopGoal type="string">0</loopGoal>
-						<enableMacro type="flag">0</enableMacro>
-						<macro type="string"></macro>
-						<codeBreakpointType type="string">hardware</codeBreakpointType>
-					</_0>
 				</collection>
 			</breakpointsV3>
 		</UDESTK.StdDbgSrv>

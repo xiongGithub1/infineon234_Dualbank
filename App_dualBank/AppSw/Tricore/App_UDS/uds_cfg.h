@@ -24,39 +24,54 @@
 
 
 /*****************************************************************************/
-/* DTC ���� */
-#define DTC_CODE_MAX_NUM (8u)
-//#define DTC_FORMAT_15031                  (0x00)
-//#define DTC_FORMAT_14229                  (0x01)
+/* DTC Configuration - ISO 14229-1 / OEM Standard */
+#define DTC_CODE_MAX_NUM                  (8u)
 #define DTC_AVAILABILITY_STATUS_MASK      (0x7F)
 
-#define DTC_DID_MAX_NUM					(8u)		// ֧�ֵ�DTC DID����
-#define SANP_EEPROM_BASE_ADDR			(0xA000u)	// �������ݵĿ�ʼ��ַ
-#define SANP_RECORD_MAX_NUM				(4u)		// ÿ��dtc did���洢����������
-#define SANP_DATA_DID_NUM				(8u)		// ÿ�����մ洢����������
-#define SANP_DATA_PER_SIZE				(SANP_DATA_DID_NUM * 4)		// ÿ�����յ����ݳ���=�������� * 4(4��ʾdid + data��32λ)
-#define VIN_F190						"W0L00043MB541326"	// ����VIN��
-#define BSID_F180						"1.2.3.4"			// �����汾��
-// ������
+#define DTC_DID_MAX_NUM                   (8u)        /* Max supported DTC entries */
+#define SANP_EEPROM_BASE_ADDR             (0xA000u)   /* Snapshot EEPROM base address */
+#define SANP_RECORD_MAX_NUM               (4u)        /* Snapshot records per DTC */
+#define SANP_DATA_DID_NUM                 (8u)        /* DID entries per snapshot */
+#define SANP_DATA_PER_SIZE                (SANP_DATA_DID_NUM * 4)
+
+/* OEM Standard DTC Definitions (ISO 15031-6 / ISO 14229-1)
+ * Encoding: [Category][Digit][Group][Fault]
+ * U=Network, P=Powertrain, B=Body, C=Chassis
+ */
 typedef enum
 {
-	P150019 = 0x00150019u,
-	P150101 = 0x00150101u,
-	P150201 = 0x00150201u,
-	P150417 = 0x00150417u
-}dtc_did_name;
-// ����ID
+	/* Network Communication DTCs */
+	DTC_U0100 = 0x0000C100u,   /* Lost Communication with ECM/PCM (CAN BusOff) */
+	DTC_U0121 = 0x0000C121u,   /* Lost Communication with ABS (CAN Ack Error) */
+
+	/* Powertrain DTCs */
+	DTC_P0601 = 0x00000601u,   /* Internal Control Module Memory Checksum Error */
+	DTC_P0605 = 0x00000605u,   /* Internal Control Module Read Only Memory Error */
+
+	/* Body DTCs */
+	DTC_B1000 = 0x00009000u,   /* ECU Boot Failure Recorded */
+	DTC_B1001 = 0x00009001u,   /* ECU Software Version Mismatch */
+
+	/* Reserved / Placeholder */
+	DTC_RESERVED_1 = 0x00000000u,
+	DTC_RESERVED_2 = 0x00000000u
+} dtc_did_name;
+
+/* Snapshot DID Definitions (Freeze Frame data identifiers) */
 typedef enum
 {
-	B001 = 0xB001u,
-	B002 = 0xB002u,
-	B003 = 0xB003u,
-	B004 = 0xB004u,
-	B005 = 0xB005u,
-	B006 = 0xB006u,
-	B007 = 0xB007u,
-	B008 = 0xB008u
-}snap_did_name;
+	SNAP_DID_SYS_VOLTAGE   = 0xF442u,   /* System Voltage (mV) */
+	SNAP_DID_AMB_TEMP      = 0xF446u,   /* Ambient Temperature (0.1C) */
+	SNAP_DID_CAN_STATUS    = 0xF501u,   /* CAN Bus Status */
+	SNAP_DID_RUN_TIME      = 0xF50Au,   /* ECU Run Time (s) */
+	SNAP_DID_BANK_STATUS   = 0xF510u,   /* Active Bank Status */
+	SNAP_DID_BOOT_CNT      = 0xF511u,   /* Boot Attempt Counter */
+	SNAP_DID_SW_VERSION    = 0xF188u,   /* Software Version */
+	SNAP_DID_HW_VERSION    = 0xF193u    /* Hardware Version */
+} snap_did_name;
+
+#define VIN_F190                          "W0L00043MB541326"
+#define BSID_F180                         "1.2.3.4"
 
 /* 22����Ķ�дDID */
 typedef enum

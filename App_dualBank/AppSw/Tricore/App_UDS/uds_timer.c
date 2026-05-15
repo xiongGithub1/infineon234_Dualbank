@@ -2,7 +2,7 @@
  * \file    timer_hal.c
  * \brief
  * \version V1.0.0
- * \date    2021年11月23日
+ * \date    2021锟斤拷11锟斤拷23锟斤拷
  * \author  Administrator
  *********************************************************************************************************************/
 #include <uds_timer.h>
@@ -15,9 +15,9 @@
 //IfxStm_CompareConfig g_STMConf;                                 /* STM configuration structure                      */
 //Ifx_TickTime g_ticksFor1ms;                                   /* Variable to store the number of ticks to wait    */
 
-//Ifx_STM *stmSfr = &MODULE_STM0;	//定时器结构体句柄
-//uint32 stmTimeInverval = 1;// 定时时间,单位ms
-//IfxStm_CompareConfig stmConfig;// 定时器配置结构体
+//Ifx_STM *stmSfr = &MODULE_STM0;	//锟斤拷时锟斤拷锟结构锟斤拷锟斤拷
+//uint32 stmTimeInverval = 1;// 锟斤拷时时锟斤拷,锟斤拷位ms
+//IfxStm_CompareConfig stmConfig;// 锟斤拷时锟斤拷锟斤拷锟矫结构锟斤拷
 
 static int gs_1msCnt = 0;
 static int gs_100msCnt = 0;
@@ -118,23 +118,20 @@ uint8 uds_timer_Is100msTickTimeout(void)
 
     return result;
 }
-/* Get timer tick cnt for random seed. 获取定时器值作为随机值种子*/
+/* Get timer tick cnt for random seed. */
 uint32 uds_timer_GetTimerTickCnt(void)
 {
-    /* This two variables not init before used, because it used for generate random */
     uint32 hardwareTimerTickCnt;
 #if 1
-    /* For S32K1xx get timer counter(LPTIMER), get timer count will trigger the period incorrect. */
     hardwareTimerTickCnt = (uint32)nowWithoutCriticalSection();
 #endif
-//#pragma GCC diagnostic ignored "-Wuninitialized"
-    //timerTickCnt = ((hardwareTimerTickCnt & 0xFFFFu)) | (timerTickCnt << 16u);
     return hardwareTimerTickCnt;
+}
 
-    //IfxStm_getTicksFromMilliseconds();
-
-    //可以获取系统tick
-    //return getSystemTick();
+/* Get 1ms counter for DTC test period management */
+uint32 uds_timer_Get1msCnt(void)
+{
+    return (uint32)gs_1msCnt;
 }
 /*FUNCTION**********************************************************************
  *

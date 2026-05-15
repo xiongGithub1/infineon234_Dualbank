@@ -2,7 +2,7 @@
  * \file    uds.h
  * \brief
  * \version V1.0.0
- * \date    2021Äê11ÔÂ26ÈÕ
+ * \date    2021ï¿½ï¿½11ï¿½ï¿½26ï¿½ï¿½
  * \author  Administrator
  *********************************************************************************************************************/
 #ifndef UDSDIAGNOSTIC_UDS_APP_H_
@@ -90,18 +90,19 @@ enum __UDS_NRC__
 
 typedef enum{
     RESET_NONE = 0,
-    HARD_RESET = 1,//Ó²¼þ¸´Î»
-    KEY_OFF_ON_RESET = 2,//¿ª¹Ø¸´Î»
-    SOFT_RESET = 3,//Èí¼þ¸´Î»
-    ENABLE_RAPID_POWER_SHUTDOWN = 4,//ÆôÓÃ¿ìËÙ¹Ø»ú
-    DISABLE_RAPID_POWER_SHUTDOWN = 5,//½ûÓÃ¿ìËÙ¹Ø»ú
+    HARD_RESET = 1,//Ó²ï¿½ï¿½ï¿½ï¿½Î»
+    KEY_OFF_ON_RESET = 2,//ï¿½ï¿½ï¿½Ø¸ï¿½Î»
+    SOFT_RESET = 3,//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î»
+    ENABLE_RAPID_POWER_SHUTDOWN = 4,//ï¿½ï¿½ï¿½Ã¿ï¿½ï¿½Ù¹Ø»ï¿½
+    DISABLE_RAPID_POWER_SHUTDOWN = 5,//ï¿½ï¿½ï¿½Ã¿ï¿½ï¿½Ù¹Ø»ï¿½
 }tUdsEcuResetType;
 
 typedef struct
 {
     tUdsId xUdsId;
     tUdsLen xDataLen;//250627
-    uint8 aDataBuf[150u];
+#define UDS_DATA_BUF_SIZE   (150u)
+    uint8 aDataBuf[UDS_DATA_BUF_SIZE];
 //    uint8 aDataBuf[4096u];//250627
 
     void (*pfUDSTxMsgServiceCallBack)(uint8); /* TX message callback */
@@ -181,9 +182,9 @@ typedef struct
 	tUDSRwDataRWMode rw_mode;
 	tUDSRwDataStoreMode rw_store;
 	tUDSRwDataType dataType;
-    uint32 p_entry;//Êý¾ÝÈë¿ÚµØÖ·
-    uint8 dlc;//×Ö½ÚÊý
-    uint8 dlc_max;//×î´ó¿É´æ´¢µÄ×Ö½ÚÊýÁ¿
+    uint32 p_entry;//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Úµï¿½Ö·
+    uint8 dlc;//ï¿½Ö½ï¿½ï¿½ï¿½
+    uint8 dlc_max;//ï¿½ï¿½ï¿½É´æ´¢ï¿½ï¿½ï¿½Ö½ï¿½ï¿½ï¿½ï¿½ï¿½
 
 }tUDSRwDataTable;
 
@@ -198,11 +199,11 @@ typedef enum
 
 
 typedef struct {
-    uint8 upgrade_flag;     // Éý¼¶±êÖ¾Î»
-    uint32 app_size;        // Ó¦ÓÃ³ÌÐò´óÐ¡
-    uint8 md5[16];          // MD5Ð£ÑéÖµ
-    uint32 retry_count;     // ÖØÊÔ¼ÆÊýÆ÷
-    uint8 reserved[11];     // ±£ÁôÇøÓò
+    uint8 upgrade_flag;     // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¾Î»
+    uint32 app_size;        // Ó¦ï¿½Ã³ï¿½ï¿½ï¿½ï¿½Ð¡
+    uint8 md5[16];          // MD5Ð£ï¿½ï¿½Öµ
+    uint32 retry_count;     // ï¿½ï¿½ï¿½Ô¼ï¿½ï¿½ï¿½ï¿½ï¿½
+    uint8 reserved[11];     // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 } BootloaderParams;
 
 
@@ -218,7 +219,7 @@ static void ReadDTCInformation0x19(struct UDSServiceInfo *i_pstUDSServiceInfo, t
 static void ClearDTCInformation0x14(struct UDSServiceInfo *i_pstUDSServiceInfo, tUdsAppMsgInfo *m_pstPDUMsg);
 static void CommunicationControl0x28(struct UDSServiceInfo *i_pstUDSServiceInfo, tUdsAppMsgInfo *m_pstPDUMsg);
 static void ReadDataByIdentifier0x22(struct UDSServiceInfo *i_pstUDSServiceInfo, tUdsAppMsgInfo *m_pstPDUMsg);
-static void ReadDataByAddress0x23(struct UDSServiceInfo *i_pstUDSServiceInfo,tUdsAppMsgInfo *m_pstPDUMsg);//°´µØÖ·¶ÁÈ¡Êý¾Ý£¬20250328
+static void ReadDataByAddress0x23(struct UDSServiceInfo *i_pstUDSServiceInfo,tUdsAppMsgInfo *m_pstPDUMsg);//ï¿½ï¿½ï¿½ï¿½Ö·ï¿½ï¿½È¡ï¿½ï¿½ï¿½Ý£ï¿½20250328
 static void WriteDataByIdentifier0x2E(struct UDSServiceInfo *i_pstUDSServiceInfo, tUdsAppMsgInfo *m_pstPDUMsg);
 static void RequestDownload0x34(struct UDSServiceInfo *i_pstUDSServiceInfo, tUdsAppMsgInfo *m_pstPDUMsg);
 static void TransferData0x36(struct UDSServiceInfo *i_pstUDSServiceInfo, tUdsAppMsgInfo *m_pstPDUMsg);

@@ -1,6 +1,7 @@
 eclipse.preferences.version=1
 encoding//AppSw/Tricore/App_UDS/uds_alg.c=UTF-8
 encoding//AppSw/Tricore/App_UDS/uds_app.c=UTF-8
+encoding//AppSw/Tricore/App_UDS/uds_app.h=UTF-8
 encoding//AppSw/Tricore/App_bootloader/Boot_DualBank.c=UTF-8
 encoding//AppSw/Tricore/App_bootloader/Boot_DualBank.h=UTF-8
 encoding//AppSw/Tricore/Tc234_Modules/Flash/Flash.c=UTF-8

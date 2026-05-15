@@ -2,7 +2,7 @@
  * \file    timer_hal.h
  * \brief
  * \version V1.0.0
- * \date    2021Äê11ÔÂ23ÈÕ
+ * \date    2021ï¿½ï¿½11ï¿½ï¿½23ï¿½ï¿½
  * \author  Administrator
  *********************************************************************************************************************/
 #ifndef _UDS_TIMER_H_
@@ -32,6 +32,8 @@ uint8 uds_timer_Is1msTickTimeout(void);
 uint8 uds_timer_Is100msTickTimeout(void);
 /* Get timer tick cnt for random seed. */
 uint32 uds_timer_GetTimerTickCnt(void);
+/* Get 1ms counter for DTC test period management */
+uint32 uds_timer_Get1msCnt(void);
 /*FUNCTION**********************************************************************
  *
  * Function Name : TIMER_HAL_Deinit

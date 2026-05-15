@@ -16,8 +16,9 @@
 5. [ZcanProDll 安全访问库](#5-zcanprodll-安全访问库)
 6. [shuaxie.py 刷写脚本](#6-shuaxiepy-刷写脚本)
 7. [刷写流程实操](#7-刷写流程实操)
-8. [常见问题与故障排查](#8-常见问题与故障排查)
-9. [附录](#9-附录)
+8. [后编程阶段详解](#8-后编程阶段详解-车企标准)
+9. [常见问题与故障排查](#9-常见问题与故障排查)
+10. [附录](#10-附录)
 
 ---
 
@@ -138,8 +139,10 @@ while(1) { AppBL_main(); }    <- UDS 诊断主循环，等待刷写
 |  阶段 1: 预编程 (Extended Session)                              |
 +----------------------------------------------------------------+
 |  10 03                    -> 进入 Extended Session               |
+|  28 03 03                 -> 禁用通信 (Disable Rx/Tx)             |
 |  85 02                    -> 关闭 DTC 记录                       |
 |  27 01 / 27 02 Key        -> 解锁 Security Level 1               |
+|  31 01 02 03              -> 预编程条件检查                        |
 |  2E F1 5A ...             -> 写入刷写设备指纹                    |
 +----------------------------------------------------------------+
 |  阶段 2: 编程 (Programming Session)                             |
@@ -151,12 +154,16 @@ while(1) { AppBL_main(); }    <- UDS 诊断主循环，等待刷写
 |  36 01 data...            -> TransferData (SN 严格递增)          |
 |  36 02 data...            -> ...                                 |
 |  37                       -> RequestTransferExit                 |
+|  31 01 DFFF               -> VerifyBank CRC + MarkValid + SetActive|
+|  31 01 FF 01              -> CheckProgrammingDependencies        |
 +----------------------------------------------------------------+
-|  阶段 3: 后编程 (校验 + 激活 + 复位)                             |
+|  阶段 3: 后编程 (恢复 + 清除 + 复位)                              |
 +----------------------------------------------------------------+
-|  31 01 DFFF               -> VerifyBank CRC + MarkValid          |
-|  31 01 0203               -> CheckProgrammingDependency          |
-|                              (Verify -> MarkValid -> SetActive)   |
+|  10 03                    -> 回到 Extended Session               |
+|  28 00 03                 -> 恢复通信 (Enable Tx/Rx)              |
+|  85 01                    -> 恢复 DTC 记录                       |
+|  14 FF FF FF              -> 清除所有 DTC                        |
+|  10 01                    -> 回到 Default Session                |
 |  11 03                    -> SoftReset -> 启动新 Bank             |
 +----------------------------------------------------------------+
 ```
@@ -207,6 +214,8 @@ BootLoader_dualBank/
 | 0x22 | ReadDataByIdentifier | 读取 DID | Any | None |
 | 0x23 | ReadMemoryByAddress | 按地址读取内存 | Extended+ | L1+ |
 | 0x27 | SecurityAccess | 安全访问 (Seed/Key) | Extended+ | None |
+| 0x14 | ClearDiagnosticInformation | 清除 DTC | Any | None |
+| 0x19 | ReadDTCInformation | 读取 DTC (0x01/0x02/0x0A) | Any | None |
 | 0x28 | CommunicationControl | 通信控制 | Extended+ | L1+ |
 | 0x2E | WriteDataByIdentifier | 写入 DID (指纹) | Extended+ | L1+ |
 | 0x31 | RoutineControl | 例程控制 (擦除/校验/跳转) | Programming | L2 |
@@ -260,8 +269,109 @@ NRC_SERVICE_NOT_SUPPORTED_IN_ACTIVE_SESSION     = 0x7F,
 **RoutineControl (0x31)**:
 - `0xFF 00`: 擦除 Sector，保护 Bootloader 区 (S0~S7) -> NRC 0xFC
 - `0xDFFF`: 全 Bank CRC32 校验 + 标记有效 + 切换激活
-- `0x0203`: CheckProgrammingDependency (Verify -> MarkValid -> SetActive)
+- `0x0203`: CheckProgrammingPreconditions (预编程条件检查，返回 canFlash + targetBank)
+- `0xFF 01`: CheckProgrammingDependencies (验证目标 Bank 有效性)
 - `0x02 JumpToApp`: 正响应发送完成后回调跳转
+
+**ClearDiagnosticInformation (0x14)**:
+- 支持清除所有 DTC (groupOfDTC = FF FF FF)
+- 调用 `clearDTCByGroup(0xFFFFFF)` 真正清除 DTC 记录
+- 其他 groupOfDTC 返回 NRC 0x31
+- 后编程阶段标准步骤
+
+**ReadDTCInformation (0x19)**:
+- `0x01`: reportNumberOfDTCByStatusMask — 返回符合状态掩码的 DTC 数量
+- `0x02`: reportDTCByStatusMask — 返回 DTC 列表 (DTC编码 + Status)
+- `0x0A`: reportSupportedDTC — 返回所有支持的 DTC
+- 其他子功能返回 NRC 0x12 (subFunctionNotSupported)
+
+**CommunicationControl (0x28)**:
+- 预编程阶段发送 `28 03 03` 禁用应用报文和诊断响应
+- 后编程阶段发送 `28 00 03` 恢复通信
+
+**ControlDTCSetting (0x85)**:
+- 预编程阶段发送 `85 02` 禁用 DTC 记录，避免刷写过程误报故障
+- 后编程阶段发送 `85 01` 恢复 DTC 记录
+
+### 3.2.4 DTC 管理（车企标准 ISO 14229-1 / ISO 15031-6）
+
+#### DTC 编码定义
+
+| DTC 编码 | 标准名称 | 类型 | 描述 | 检测方式 |
+|:---------|:---------|:-----|:-----|:---------|
+| `U0100` | Lost Communication with ECM/PCM | U-网络 | CAN Bus-Off 通信丢失 | 周期性检测 `can_node1_error==1` |
+| `U0121` | Lost Communication with ABS | U-网络 | CAN Ack Error 通信异常 | 周期性检测 `can_node1_error==2` |
+| `P0601` | Internal Control Module Memory Checksum Error | P-动力 | 内部存储器校验和错误 | 启动时 Bank CRC 校验 |
+| `B1000` | ECU Boot Failure Recorded | B-车身 | ECU 启动故障记录 | 启动时 `bootAttempts>=3` |
+
+#### DTC 状态字节（8 位，ISO 14229-1）
+
+```
+bit0: TestFailed                    - 当前测试周期结果
+bit1: TestFailedThisMonitoringCycle - 本监控周期是否失败过
+bit2: PendingDTC                    - 等待确认（防抖计数器）
+bit3: ConfirmedDTC                  - 已确认（FDT 达到阈值或老化）
+bit4: TestNotCompleteSinceLastClear - 自上次清除后未完成过测试
+bit5: TestFailedSinceLastClear      - 自上次清除后失败过
+bit6: TestNotCompleteThisMonitoringCycle - 本监控周期未完成
+bit7: WarningIndicatorRequested     - 警告灯请求（Confirmed 时置位）
+```
+
+#### FDT（Fault Detection Counter）机制
+
+```
+测试失败: FDT += 2    (步进值)
+测试通过: FDT -= 1    (愈合值)
+ConfirmedDTC=1: 当 FDT >= +127
+ConfirmedDTC=0: 当 FDT <= -128 (老化或连续通过)
+```
+
+#### 老化计数器（Aging Counter）
+
+```
+ConfirmedDTC=1 且测试通过时，agingCounter++
+agingCounter >= 40 (AGN_MAX) 时:
+  - ConfirmedDTC = 0
+  - WarningIndicatorRequested = 0
+  - FDT 清零
+```
+
+#### 快照数据（Freeze Frame）
+
+故障确认时自动记录以下 DID：
+
+| DID | 描述 |
+|:----|:-----|
+| `0xF442` | System Voltage（系统电压） |
+| `0xF446` | Ambient Temperature（环境温度） |
+| `0xF501` | CAN Bus Status（CAN 总线状态） |
+| `0xF50A` | ECU Run Time（运行时间） |
+| `0xF510` | Active Bank Status（激活 Bank） |
+| `0xF511` | Boot Attempt Counter（启动尝试计数） |
+| `0xF188` | Software Version（软件版本） |
+| `0xF193` | Hardware Version（硬件版本） |
+
+#### 扩展数据（Extended Data）
+
+| 字段 | 说明 |
+|:-----|:-----|
+| `occurrenceCounter` | 故障总发生次数（生命周期计数器，不清除） |
+| `agingCounter` | 老化计数器（0~40） |
+| `faultOccurrenceSinceClear` | 自上次清除后的故障次数 |
+| `fdt_cnt` | FDT 计数器（-128 ~ +127） |
+
+#### 故障检测周期
+
+| DTC | 检测周期 | 类型 |
+|:-----|:---------|:-----|
+| U0100 | 100ms | 周期性（CAN BusOff） |
+| U0121 | 100ms | 周期性（CAN Ack Error） |
+| P0601 | 一次性 | 启动时检测（Bank CRC） |
+| B1000 | 一次性 | 启动时检测（Boot 失败） |
+
+**WriteDataByIdentifier (0x2E)**:
+- `F1 5A`: 编程指纹 (ProgrammingData)，记录刷写日期、诊断仪ID、软件版本
+- 通常在预编程阶段写入，后编程阶段可补充更新
 
 **SecurityAccess (0x27)**:
 - 连续失败 3 次后锁定 10 秒 (NRC 0x36)
@@ -582,10 +692,23 @@ BANK_APP_B_SIZE   = 1024 * 1024
 | `session_control(uds, session_type)` | 10 服务：诊断会话控制 |
 | `security_access(uds, level)` | 27 服务：安全访问 |
 | `erase_target_bank(uds)` | 31 01 FF 00：逐个擦除目标 Bank Sector |
-| `file_download(uds)` | 34/36/37：文件下载 |
+| `file_download(uds)` | 34/36/37：文件下载（内置 CRC 校验） |
 | `uds_request(uds, sid, data)` | 通用 UDS 请求发送与响应检查 |
 
-### 6.4 HEX 对齐预处理
+### 6.4 完整刷写流程（三阶段）
+
+```
+阶段 1: 预编程
+  10 01 -> 10 03 -> 28 03 03 -> 85 02 -> 27 01/02 -> 31 01 02 03 -> 2E F1 5A
+
+阶段 2: 主编程
+  10 02 -> 27 03/04 -> 31 01 FF 00 -> 34/36/37 -> 31 01 DFFF -> 31 01 FF 01
+
+阶段 3: 后编程
+  10 03 -> 28 00 03 -> 85 01 -> 14 FF FF FF -> 10 01 -> 11 03
+```
+
+### 6.5 HEX 对齐预处理
 
 由于 TC234 PFlash 要求 32 字节对齐写入，若 hex 文件地址未对齐，需先用 `align_hex.py` 预处理：
 
@@ -604,13 +727,20 @@ python align_hex.py input.hex output_aligned.hex 32
 ```
 1. ECU 上电，两 Bank 均无效 -> 进入 Bootloader
 2. 运行 shuaxie.py（或手动发送 UDS）:
-   10 03 -> 85 02 -> 27 01/02 -> 2E F15A
+   10 03 -> 28 03 03 -> 85 02 -> 27 01/02 -> 2E F15A
    10 02 -> 27 03/04
+   31 01 02 03 (预编程条件检查)
    31 01 FF 00 (擦除 S8~S22)
    34 00 44 80 02 00 00 00 00 0E 00 00  (Bank A, 896KB)
    36 01 ... -> 36 02 ... -> ... -> 37
    31 01 DFFF  (CRC 校验 + 标记有效)
-   11 03  (SoftReset)
+   31 01 FF 01 (CheckProgrammingDependencies)
+   10 03       (回到 Extended Session)
+   28 00 03    (恢复通信)
+   85 01       (恢复 DTC)
+   14 FF FF FF (清除所有 DTC)
+   10 01       (回到 Default Session)
+   11 03       (SoftReset)
 3. 复位后 Bootloader 检测到 Bank A 有效 -> 跳转 -> APP 启动
 ```
 
@@ -623,8 +753,14 @@ python align_hex.py input.hex output_aligned.hex 32
 4. 34 地址 = 0x80100000 (Bank B)
 5. 36/37 传输数据
 6. 31 01 DFFF -> 校验 Bank B -> 标记有效 -> 切 activeBank = B
-7. 11 03 -> 复位后启动 Bank B
-8. Bank A 旧版本保留，若 Bank B 启动失败 3 次 -> 自动回滚到 Bank A
+7. 31 01 FF 01 -> CheckProgrammingDependencies
+8. 10 03 -> 回到 Extended Session
+9. 28 00 03 -> 恢复通信
+10. 85 01 -> 恢复 DTC
+11. 14 FF FF FF -> 清除所有 DTC
+12. 10 01 -> 回到 Default Session
+13. 11 03 -> 复位后启动 Bank B
+14. Bank A 旧版本保留，若 Bank B 启动失败 3 次 -> 自动回滚到 Bank A
 ```
 
 ### 7.3 APP 回滚到 Bootloader（OTA 入口）
@@ -639,7 +775,82 @@ python align_hex.py input.hex output_aligned.hex 32
 
 ---
 
-## 8. 常见问题与故障排查
+## 8. 后编程阶段详解 (车企标准)
+
+### 8.1 为什么需要后编程阶段
+
+后编程阶段是车企刷写规范中 **强制要求的闭环环节**，目的是确保：
+1. 刷入的数据完整正确（校验）
+2. 软硬件版本兼容（依赖检查）
+3. 系统通信和诊断功能恢复正常
+4. 留下可追溯的审计日志（指纹）
+
+### 8.2 标准后编程步骤
+
+```
++--------------------------------------------------------------------+
+|  步骤 1: VerifyBank (31 01 DFFF)                                   |
++--------------------------------------------------------------------+
+|  对刚刷写的 Bank 执行全范围 CRC32 校验，与下载时计算的 CRC 比对。   |
+|  校验通过 -> 标记该 Bank VALID，写入 DFlash 标志区。                |
+|  校验失败 -> NRC 0x72，保持 Bank INVALID，不切换激活标志。          |
++--------------------------------------------------------------------+
+|  步骤 2: CheckProgrammingDependencies (31 01 FF 01)                |
++--------------------------------------------------------------------+
+|  验证目标 Bank 的应用代码是否有效：                                  |
+|  - 读取 DFlash 标志区的 valid 标记                                   |
+|  - 执行 CRC 校验确认刷入的数据完整                                   |
+|  返回: 0x01=通过, 0x00=失败                                          |
++--------------------------------------------------------------------+
+|  步骤 3: 回到 Extended Session (10 03)                              |
++--------------------------------------------------------------------+
+|  从 Programming Session 回到 Extended Session：                      |
+|  - 28/85/14 等服务在 Extended Session 下均可执行                     |
+|  - 部分 OEM 要求后编程阶段必须在 Extended Session 下执行             |
++--------------------------------------------------------------------+
+|  步骤 4: 恢复通信 (28 00 03)                                        |
++--------------------------------------------------------------------+
+|  预编程阶段用 28 03 03 禁用了应用报文，后编程必须恢复：              |
+|  28 00 03 -> sub-function=00 (Enable),                              |
+|              communicationType=03 (Normal + NetworkManagement)      |
++--------------------------------------------------------------------+
+|  步骤 5: 恢复 DTC (85 01)                                           |
++--------------------------------------------------------------------+
+|  预编程阶段用 85 02 禁用了 DTC 记录，后编程必须恢复：                |
+|  85 01 -> DTCSettingType=01 (ON)，重新启用故障码记录               |
++--------------------------------------------------------------------+
+|  步骤 6: 清除所有 DTC (14 FF FF FF)                                 |
++--------------------------------------------------------------------+
+|  刷写过程中可能因电压波动、通信中断等产生临时故障码，后编程必须清除： |
+|  14 FF FF FF -> groupOfDTC=0xFFFFFF (全部清除)                     |
+|  正响应: 54                                                          |
++--------------------------------------------------------------------+
+|  步骤 7: 回到 Default Session (10 01)                               |
++--------------------------------------------------------------------+
+|  从 Extended Session 回到 Default Session：                          |
+|  - 释放编程会话独占资源                                               |
+|  - 恢复正常的诊断服务权限                                             |
+|  - 为后续 ECUReset 做准备                                            |
++--------------------------------------------------------------------+
+|  步骤 8: ECU 复位 (11 03)                                           |
++--------------------------------------------------------------------+
+|  SoftReset (11 03) -> Bootloader 重新启动 -> 验证新 Bank -> 跳转 APP |
+|  或 HardReset (11 01) -> 完整上电复位                               |
++--------------------------------------------------------------------+
+```
+
+### 8.3 车企规范差异速查
+
+| OEM | 特殊要求 |
+|:---:|:---------|
+| VW/Audi | 必须使用 `28 00 03` 恢复通信，`85 01` 恢复 DTC，`14 FF FF FF` 清除 DTC，`10 01` 必须在复位前 |
+| BMW | 后编程包含 `31 01 FF 01` 依赖检查，失败则回滚 |
+| GM | 指纹写入 (F1 5A) 必须在后编程阶段完成，不可跳过 |
+| 通用/通用规范 | 三阶段缺一不可，S3 超时后必须从预编程重新开始 |
+
+---
+
+## 9. 常见问题与故障排查
 
 ### 8.1 跳转 APP 后停在 DEBUG 指令 (00 A0)
 
@@ -685,7 +896,7 @@ python align_hex.py input.hex output_aligned.hex 32
 
 ---
 
-## 9. 附录
+## 10. 附录
 
 ### 9.1 关键地址速查表
 
@@ -717,6 +928,8 @@ python align_hex.py input.hex output_aligned.hex 32
 3. **向量表对齐**: Bootloader 和 APP 的 BIV/BTV 偏移必须一致
 4. **HEX 对齐**: 刷写前用 `align_hex.py` 确保地址 32 字节对齐
 5. **DFlash 初始化**: 首次上电或擦除后，DFlash 标志区需重新初始化
+6. **DTC 初始化**: Bootloader 和 APP 的 `AppBL_init()` 中已调用 `dtcInit()`，主循环中已调用 `dtcTestMainProc()`
+7. **DTC 车企标准优化**: DTC 编码、状态字节、FDT 计数器、老化计数器、快照数据均符合 ISO 14229-1 / ISO 15031-6
 
 ### 9.4 参考文档
 
@@ -726,9 +939,15 @@ python align_hex.py input.hex output_aligned.hex 32
 - `UDS_A_B_DualBank_改造说明.md` -- UDS 刷写改造说明
 - `修复记录_2026-05-11.md` -- 详细修复记录
 - `修改记录_2026-05-12.md` -- Flash 驱动优化记录
+- [CSDN: UDS Bootloader 刷写流程详解](https://blog.csdn.net/LOVE135149/article/details/141574911) -- 参考标准刷写时序
 
 ---
 
 > **文档维护**: 本文件由 Kimi Code CLI 根据项目实际代码生成。  
-> **更新日期**: 2026-05-14  
+> **版本**: V1.3 (2026-05-14)  
+> **变更**:  
+> - 新增 0x14 ClearDTC、0x19 ReadDTC、0x31 01 02 03/FF 01 例程
+> - 完善后编程阶段（含 14 FF FF FF 清除 DTC）
+> - App DTC 流程完善：dtcInit() + dtcTestMainProc() + 0x19 服务
+> - **DTC 车企标准优化**：ISO 14229-1 标准编码、FDT 防抖、老化计数器、快照数据、扩展数据
 > **下次更新**: 当代码结构或刷写流程发生重大变更时

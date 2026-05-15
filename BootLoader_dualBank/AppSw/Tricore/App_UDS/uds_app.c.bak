@@ -6,7 +6,13 @@
  * \author  Administrator
  *********************************************************************************************************************/
 #include "uds_app.h"
-
+#include "App_bootloader_cfg.h"
+#include "Can_session.h"
+#include "fls_app.h"
+#include "Flash.h"
+#include "Flash.h"
+#include "App_bootloader.h"
+#include "Boot_DualBank.h"
 
 uint32 pageData1[128];
 
@@ -158,20 +164,6 @@ static const tUDSService gs_astUDSService[] =
 			SUPPORT_PHYSICAL_ADDR | SUPPORT_FUNCTION_ADDR,
 			SECURITY_LEVEL_1,
 			ControlDTCSetting0x85
-	},
-	{
-			0x14u,
-			DEFALUT_SESSION | PROGRAM_SESSION | EXTEND_SESSION,
-			SUPPORT_PHYSICAL_ADDR | SUPPORT_FUNCTION_ADDR,
-			NONE_SECURITY,
-			ClearDTCInformation0x14
-	},
-	{
-			0x19u,
-			DEFALUT_SESSION | PROGRAM_SESSION | EXTEND_SESSION,
-			SUPPORT_PHYSICAL_ADDR | SUPPORT_FUNCTION_ADDR,
-			NONE_SECURITY,
-			ReadDTCInformation0x19
 	},
 	/* Tester present service */
 	{
@@ -1355,163 +1347,10 @@ static void ClearDTCInformation0x14(struct UDSServiceInfo* i_pstUDSServiceInfo, 
 		SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_REQUEST_OUT_OF_RANGE, m_pstPDUMsg);
 		return;
 	}
-	/* Call actual DTC manager to clear all DTC records */
-	clearDTCByGroup(0xFFFFFFu);
+	/* TODO: Integrate with actual DTC manager to clear all DTC records.
+	 * For now, this is a stub that returns positive response. */
 	m_pstPDUMsg->aDataBuf[0] = 0x54; /* Positive response SID */
 	m_pstPDUMsg->xDataLen = 1;
-}
-
-static void ReadDTCInformation0x19(struct UDSServiceInfo* i_pstUDSServiceInfo, tUdsAppMsgInfo* m_pstPDUMsg)
-{
-	uint8 subFunc;
-	uint8 statusMask;
-	uint16 dtcCount;
-	uint8 dtcBuf[64];
-	uint16 i;
-	uint8 respLen;
-
-	if (m_pstPDUMsg->xDataLen < 2)
-	{
-		SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_INVALID_MESSAGE_LENGTH_OR_FORMAT, m_pstPDUMsg);
-		return;
-	}
-
-	subFunc = m_pstPDUMsg->aDataBuf[1];
-
-	switch (subFunc)
-	{
-		case REPORT_DTCNUMBER_BY_MASK: /* 0x01 */
-			if (m_pstPDUMsg->xDataLen < 3)
-			{
-				SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_INVALID_MESSAGE_LENGTH_OR_FORMAT, m_pstPDUMsg);
-				return;
-			}
-			statusMask = m_pstPDUMsg->aDataBuf[2];
-			dtcCount = getDTCCountByStatusMask(statusMask);
-
-			m_pstPDUMsg->aDataBuf[0] = 0x59;
-			m_pstPDUMsg->aDataBuf[1] = 0x01;
-			m_pstPDUMsg->aDataBuf[2] = DTC_AVAILABILITY_STATUS_MASK;
-			m_pstPDUMsg->aDataBuf[3] = ISO_14229_1; /* DTCFormatIdentifier */
-			m_pstPDUMsg->aDataBuf[4] = (uint8)(dtcCount >> 8);
-			m_pstPDUMsg->aDataBuf[5] = (uint8)(dtcCount & 0xFF);
-			m_pstPDUMsg->xDataLen = 6;
-			break;
-
-		case REPORT_DTCCODE_BY_MASK: /* 0x02 */
-			if (m_pstPDUMsg->xDataLen < 3)
-			{
-				SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_INVALID_MESSAGE_LENGTH_OR_FORMAT, m_pstPDUMsg);
-				return;
-			}
-			statusMask = m_pstPDUMsg->aDataBuf[2];
-			dtcCount = getDTCByStatusMask(dtcBuf, statusMask);
-
-			m_pstPDUMsg->aDataBuf[0] = 0x59;
-			m_pstPDUMsg->aDataBuf[1] = 0x02;
-			m_pstPDUMsg->aDataBuf[2] = DTC_AVAILABILITY_STATUS_MASK;
-			respLen = 3;
-			for (i = 0; i < dtcCount && respLen < (UDS_DATA_BUF_SIZE - 4); i++)
-			{
-				m_pstPDUMsg->aDataBuf[respLen++] = dtcBuf[i * 4 + 0];
-				m_pstPDUMsg->aDataBuf[respLen++] = dtcBuf[i * 4 + 1];
-				m_pstPDUMsg->aDataBuf[respLen++] = dtcBuf[i * 4 + 2];
-				m_pstPDUMsg->aDataBuf[respLen++] = dtcBuf[i * 4 + 3];
-			}
-			m_pstPDUMsg->xDataLen = respLen;
-			break;
-
-		case REPORT_DTCSNAPSHOT_BY_DTCNUMBER: /* 0x04 */
-			if (m_pstPDUMsg->xDataLen < 6)
-			{
-				SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_INVALID_MESSAGE_LENGTH_OR_FORMAT, m_pstPDUMsg);
-				return;
-			}
-			{
-				uint32 dtcCode = ((uint32)m_pstPDUMsg->aDataBuf[2] << 16) |
-				                 ((uint32)m_pstPDUMsg->aDataBuf[3] << 8) |
-				                 ((uint32)m_pstPDUMsg->aDataBuf[4]);
-				uint8 recordNum = m_pstPDUMsg->aDataBuf[5];
-				uint8 snapData[128];
-				uint8 snapLen = 0;
-
-				if (getDTCSanpData(dtcCode, recordNum, snapData, &snapLen) == FALSE)
-				{
-					SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_REQUEST_SEQUENCE_ERROR, m_pstPDUMsg);
-					return;
-				}
-
-				m_pstPDUMsg->aDataBuf[0] = 0x59;
-				m_pstPDUMsg->aDataBuf[1] = 0x04;
-				m_pstPDUMsg->aDataBuf[2] = DTC_AVAILABILITY_STATUS_MASK;
-				m_pstPDUMsg->aDataBuf[3] = GET_DTC_HIGH_BYTE(dtcCode);
-				m_pstPDUMsg->aDataBuf[4] = GET_DTC_MID_BYTE(dtcCode);
-				m_pstPDUMsg->aDataBuf[5] = GET_DTC_LOW_BYTE(dtcCode);
-				respLen = 6;
-				for (i = 0; i < snapLen && respLen < UDS_DATA_BUF_SIZE; i++)
-				{
-					m_pstPDUMsg->aDataBuf[respLen++] = snapData[i];
-				}
-				m_pstPDUMsg->xDataLen = respLen;
-			}
-			break;
-
-		case REPORT_DTCEXTEND_DATA_BY_DTCNUMBER: /* 0x06 */
-			if (m_pstPDUMsg->xDataLen < 6)
-			{
-				SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_INVALID_MESSAGE_LENGTH_OR_FORMAT, m_pstPDUMsg);
-				return;
-			}
-			{
-				uint32 dtcCode = ((uint32)m_pstPDUMsg->aDataBuf[2] << 16) |
-				                 ((uint32)m_pstPDUMsg->aDataBuf[3] << 8) |
-				                 ((uint32)m_pstPDUMsg->aDataBuf[4]);
-				uint8 recordNum = m_pstPDUMsg->aDataBuf[5];
-				uint8 extData[16];
-				uint8 extLen = 0;
-
-				if (getDTCExtData(dtcCode, recordNum, extData, &extLen) == FALSE)
-				{
-					SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_REQUEST_SEQUENCE_ERROR, m_pstPDUMsg);
-					return;
-				}
-
-				m_pstPDUMsg->aDataBuf[0] = 0x59;
-				m_pstPDUMsg->aDataBuf[1] = 0x06;
-				m_pstPDUMsg->aDataBuf[2] = DTC_AVAILABILITY_STATUS_MASK;
-				m_pstPDUMsg->aDataBuf[3] = GET_DTC_HIGH_BYTE(dtcCode);
-				m_pstPDUMsg->aDataBuf[4] = GET_DTC_MID_BYTE(dtcCode);
-				m_pstPDUMsg->aDataBuf[5] = GET_DTC_LOW_BYTE(dtcCode);
-				respLen = 6;
-				for (i = 0; i < extLen && respLen < UDS_DATA_BUF_SIZE; i++)
-				{
-					m_pstPDUMsg->aDataBuf[respLen++] = extData[i];
-				}
-				m_pstPDUMsg->xDataLen = respLen;
-			}
-			break;
-
-		case REPORT_SUPPORTED_DTC: /* 0x0A */
-			dtcCount = getDTCSupportedDtc(dtcBuf);
-
-			m_pstPDUMsg->aDataBuf[0] = 0x59;
-			m_pstPDUMsg->aDataBuf[1] = 0x0A;
-			m_pstPDUMsg->aDataBuf[2] = DTC_AVAILABILITY_STATUS_MASK;
-			respLen = 3;
-			for (i = 0; i < dtcCount && respLen < (UDS_DATA_BUF_SIZE - 4); i++)
-			{
-				m_pstPDUMsg->aDataBuf[respLen++] = dtcBuf[i * 4 + 0];
-				m_pstPDUMsg->aDataBuf[respLen++] = dtcBuf[i * 4 + 1];
-				m_pstPDUMsg->aDataBuf[respLen++] = dtcBuf[i * 4 + 2];
-				m_pstPDUMsg->aDataBuf[respLen++] = dtcBuf[i * 4 + 3];
-			}
-			m_pstPDUMsg->xDataLen = respLen;
-			break;
-
-		default:
-			SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_SUBFUNCTION_NOT_SUPPORTED, m_pstPDUMsg);
-			break;
-	}
 }
 
 static void ControlDTCSetting0x85(struct UDSServiceInfo* i_pstUDSServiceInfo, tUdsAppMsgInfo* m_pstPDUMsg)
@@ -1938,55 +1777,12 @@ static void RoutineControl0x31(struct UDSServiceInfo* i_pstUDSServiceInfo, tUdsA
 						m_pstPDUMsg->xDataLen = 6;
 						break;
 
-						case 0x0203:
-							/* CheckProgrammingPreconditions (ISO 14229-1 standard RID)
-							 * Returns: canFlash(1=ok, 0=denied) + targetBank('A' or 'B')
-							 */
-							if (m_pstPDUMsg->xDataLen < 4)
-							{
-								SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_INVALID_MESSAGE_LENGTH_OR_FORMAT, m_pstPDUMsg);
-								break;
-							}
-							IfxScuWdt_serviceCpuWatchdog(IfxScuWdt_getCpuWatchdogPassword());
-							routineResult = CheckProgrammingConditions();
-							IfxScuWdt_serviceCpuWatchdog(IfxScuWdt_getCpuWatchdogPassword());
-							m_pstPDUMsg->aDataBuf[0] = 0x71;
-							m_pstPDUMsg->aDataBuf[1] = 0x01;
-							m_pstPDUMsg->aDataBuf[2] = 0x02;
-							m_pstPDUMsg->aDataBuf[3] = 0x03;
-							m_pstPDUMsg->aDataBuf[4] = (uint8)(routineResult >> 8);
-							m_pstPDUMsg->aDataBuf[5] = (uint8)(routineResult & 0xFF);
-							m_pstPDUMsg->xDataLen = 6;
-							break;
+					case 0xFF01:
+						/* CheckProgrammingDependency routine - not supported in this implementation */
+						SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_SUBFUNCTION_NOT_SUPPORTED, m_pstPDUMsg);
+						break;
 
-						case 0xFF01:
-							{
-								/* CheckProgrammingDependencies
-								 * Verifies that the target bank has valid application code.
-								 */
-								uint32 targetBank = Boot_DualBank_GetTargetWriteBank();
-								BankStatus_t status;
-
-								if (m_pstPDUMsg->xDataLen < 4)
-								{
-									SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_INVALID_MESSAGE_LENGTH_OR_FORMAT, m_pstPDUMsg);
-									break;
-								}
-								IfxScuWdt_serviceCpuWatchdog(IfxScuWdt_getCpuWatchdogPassword());
-								status = Boot_DualBank_VerifyBank(targetBank);
-								IfxScuWdt_serviceCpuWatchdog(IfxScuWdt_getCpuWatchdogPassword());
-
-								m_pstPDUMsg->aDataBuf[0] = 0x71;
-								m_pstPDUMsg->aDataBuf[1] = 0x01;
-								m_pstPDUMsg->aDataBuf[2] = 0xFF;
-								m_pstPDUMsg->aDataBuf[3] = 0x01;
-								m_pstPDUMsg->aDataBuf[4] = (status == BANK_STATUS_VALID) ? 0x01 : 0x00;
-								m_pstPDUMsg->xDataLen = 5;
-							}
-							break;
-
-
-						case 0xDFFF:
+					case 0xDFFF:
 						{
 							if (TRUE != IsCurSecurityLevelRequet(SECURITY_LEVEL_2))
 							{

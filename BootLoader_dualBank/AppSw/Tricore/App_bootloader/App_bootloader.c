@@ -356,6 +356,9 @@ void AppBL_init(void)
 	Multican_init();
 	UdsInit(UDS_FUN_ADDR_ID,UDS_PHY_ADDR_ID,UDS_RESP_ADDR_ID);
 
+	/* init DTC manager */
+	dtcInit();
+
     initTime();
 
     /* flash */
@@ -399,6 +402,7 @@ void    AppBL_main(void)
   	// Can9252RxLookup(); // Replaced by interrupt isrCAN0_RX
 	UdsMainProcess();
 	CanMainProcess();
+	dtcTestMainProc();
 
 	/* CAN bus error handling */
 	if((CAN_NSR1.B.BOFF==1) && (CAN_NSR1.B.LEC==0x5)) // Bus-off

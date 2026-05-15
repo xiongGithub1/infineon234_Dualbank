@@ -57,6 +57,7 @@ typedef enum {
 /*--------------------------------------------Private Variables/Constants--------------------------------------------*/
 /*********************************************************************************************************************/
 extern backToBeforeCodeS g_backToBeforeCodeS;
+extern uint8 can_node1_error;								/* CAN node error status: 0=OK, 1=BusOff, 2=AckError */
 
 
 

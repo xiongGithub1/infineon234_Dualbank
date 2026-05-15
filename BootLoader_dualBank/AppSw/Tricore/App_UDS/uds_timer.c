@@ -137,6 +137,13 @@ uint32 uds_timer_GetTimerTickCnt(void)
     //return getSystemTick();
 }
 /*FUNCTION**********************************************************************
+
+/* Get 1ms counter for DTC test period management */
+uint32 uds_timer_Get1msCnt(void)
+{
+    return (uint32)gs_1msCnt;
+}
+/*FUNCTION**********************************************************************
  *
  * Function Name : TIMER_HAL_Deinit
  * Description   : This function initial this module.

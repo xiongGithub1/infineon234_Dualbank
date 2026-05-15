@@ -2,7 +2,7 @@
  * \file    obd_dtc.h
  * \brief
  * \version V1.0.0
- * \date    2021Äê12ÔÂ1ÈÕ
+ * \date    2021ï¿½ï¿½12ï¿½ï¿½1ï¿½ï¿½
  * \author  Administrator
  *********************************************************************************************************************/
 #ifndef UDSDIAGNOSTIC_UDS_DTC_H_
@@ -24,9 +24,9 @@ typedef enum
 }DTCFormat;
 
 typedef enum{
-    TEST_PASSED,//¼ì²âÍ¨¹ý
-    TEST_NORESULT,//ÎÞ½á¹û
-    TEST_FAILED,//¼ì²âÊ§°Ü
+    TEST_PASSED,//ï¿½ï¿½ï¿½Í¨ï¿½ï¿½
+    TEST_NORESULT,//ï¿½Þ½ï¿½ï¿½
+    TEST_FAILED,//ï¿½ï¿½ï¿½Ê§ï¿½ï¿½
 }DTCTestResult;
 
 typedef DTCTestResult (*DTCTestFunciton)(void);
@@ -59,13 +59,13 @@ typedef union
 	uint8 DTCStatusByte;
 	struct
 	{
-		uint8 TestFailed :1; //²âÊÔÊ§°Ü
-		uint8 TestFailedThisMonitoringCycle :1; //²âÊÔÎ´Í¨¹ý´Ë¼àÊÓÑ­»·
+		uint8 TestFailed :1; //ï¿½ï¿½ï¿½ï¿½Ê§ï¿½ï¿½
+		uint8 TestFailedThisMonitoringCycle :1; //ï¿½ï¿½ï¿½ï¿½Î´Í¨ï¿½ï¿½ï¿½Ë¼ï¿½ï¿½ï¿½Ñ­ï¿½ï¿½
 		uint8 PendingDTC :1;
-		uint8 ConfirmedDTC :1; //È·ÈÏ¹ÊÕÏ´úÂë
-		uint8 TestNotCompleteSinceLastClear :1; //×ÔÉÏ´ÎÇå³ýºó²âÊÔÎ´Íê³É
+		uint8 ConfirmedDTC :1; //È·ï¿½Ï¹ï¿½ï¿½Ï´ï¿½ï¿½ï¿½
+		uint8 TestNotCompleteSinceLastClear :1; //ï¿½ï¿½ï¿½Ï´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î´ï¿½ï¿½ï¿½
 		uint8 TestFailedSinceLastClear :1;
-		uint8 TestNotCompleteThisMonitoringCycle :1; //²âÊÔÎ´Íê³É´Ë¼àÊÓÖÜÆÚ
+		uint8 TestNotCompleteThisMonitoringCycle :1; //ï¿½ï¿½ï¿½ï¿½Î´ï¿½ï¿½É´Ë¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		uint8 WarningIndicatorRequested :1;
 	} DTCbit;
 } DTCStatusType;
@@ -74,33 +74,55 @@ typedef union
 //typedef struct
 //{
 //	uint8 record_number;
-//	uint8 OldCounter;//ÉÏÒ»´Î¼ÆÊý
-//	uint8 GoneCounter;//×ßÍêÁËµÄ¼ÆÊý
-//	uint8 TripCounter;//¹ÊÕÏ´ý¶¨¼ÆÊýÆ÷
-//	uint8 TripCounterThreshold;//¹ÊÕÏ¼ÆÊýÆ÷×î´óÖµ
-//	uint8 FaultOccurrences;//¹ÊÕÏ³öÏÖ´ÎÊý
+//	uint8 OldCounter;//ï¿½ï¿½Ò»ï¿½Î¼ï¿½ï¿½ï¿½
+//	uint8 GoneCounter;//ï¿½ï¿½ï¿½ï¿½ï¿½ËµÄ¼ï¿½ï¿½ï¿½
+//	uint8 TripCounter;//ï¿½ï¿½ï¿½Ï´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+//	uint8 TripCounterThreshold;//ï¿½ï¿½ï¿½Ï¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµ
+//	uint8 FaultOccurrences;//ï¿½ï¿½ï¿½Ï³ï¿½ï¿½Ö´ï¿½ï¿½ï¿½
 //}DTCExtendedDataInfo;
 
+/* FDT (Fault Detection Counter) Thresholds per ISO 14229-1 */
 #define FDT_MAX               (127)
 #define FDT_MIN               (-128)
-#define AGN_MAX               40
+#define FDT_STEP_PASS         (-1)    /* Decrement on test passed */
+#define FDT_STEP_FAIL         (+2)    /* Increment on test failed */
+#define FDT_CONFIRM_THRESH    (127)   /* Threshold for ConfirmedDTC = 1 */
+#define FDT_HEAL_THRESH       (-128)  /* Threshold for ConfirmedDTC = 0 (deconfirmed) */
 
+/* Aging Counter Thresholds */
+#define AGN_MAX               (40u)   /* Aging counter max before deconfirmation */
+#define AGN_STEP              (1u)    /* Increment per passed cycle */
 
+/* Debounce / Confirmation */
+#define DTC_DEBOUNCE_CYCLES   (3u)    /* Cycles for PendingDTC confirmation */
 
-/* dtc ×´Ì¬ÂëÁªºÏÌå */
+/* DTC Status Byte Bit Mask per ISO 14229-1 */
+#define DTC_STATUS_TF         (0x01u) /* bit0: TestFailed */
+#define DTC_STATUS_TFTMC      (0x02u) /* bit1: TestFailedThisMonitoringCycle */
+#define DTC_STATUS_PDTC       (0x04u) /* bit2: PendingDTC */
+#define DTC_STATUS_CDTC       (0x08u) /* bit3: ConfirmedDTC */
+#define DTC_STATUS_TNCSC      (0x10u) /* bit4: TestNotCompletedSinceLastClear */
+#define DTC_STATUS_TFSC       (0x20u) /* bit5: TestFailedSinceLastClear */
+#define DTC_STATUS_TNCTMC     (0x40u) /* bit6: TestNotCompletedThisMonitoringCycle */
+#define DTC_STATUS_WIR        (0x80u) /* bit7: WarningIndicatorRequested */
+
+/* Initial status after DTC clear: bits 4 and 6 set */
+#define DTC_STATUS_INIT       (DTC_STATUS_TNCSC | DTC_STATUS_TNCTMC)
+
+/* DTC status byte - ISO 14229-1 compliant */
 typedef union
 {
 	uint8 byteAll;
 	struct
 	{
-		uint8 TestFailed :1; //²âÊÔÊ§°Ü
-		uint8 TestFailedThisMonitoringCycle :1; //²âÊÔÎ´Í¨¹ý´Ë¼àÊÓÑ­»·
-		uint8 PendingDTC :1;
-		uint8 ConfirmedDTC :1; //È·ÈÏ¹ÊÕÏ´úÂë
-		uint8 TestNotCompleteSinceLastClear :1; //×ÔÉÏ´ÎÇå³ýºó²âÊÔÎ´Íê³É
-		uint8 TestFailedSinceLastClear :1;
-		uint8 TestNotCompleteThisMonitoringCycle :1; //²âÊÔÎ´Íê³É´Ë¼àÊÓÖÜÆÚ
-		uint8 WarningIndicatorRequested :1;
+		uint8 TestFailed :1;                         /* bit0: Current test result */
+		uint8 TestFailedThisMonitoringCycle :1;      /* bit1: Failed this cycle */
+		uint8 PendingDTC :1;                         /* bit2: Waiting for confirmation */
+		uint8 ConfirmedDTC :1;                       /* bit3: Confirmed by aging/FDT */
+		uint8 TestNotCompleteSinceLastClear :1;      /* bit4: Not tested since clear */
+		uint8 TestFailedSinceLastClear :1;           /* bit5: Failed since last clear */
+		uint8 TestNotCompleteThisMonitoringCycle :1; /* bit6: Not tested this cycle */
+		uint8 WarningIndicatorRequested :1;          /* bit7: MIL/warning requested */
 	} bit;
 } dtc_status_t;
 
@@ -112,37 +134,41 @@ typedef enum
 
 
 
-/* dtc ¿ìÕÕ½á¹¹Ìå */
+/* Snapshot data record (Freeze Frame) */
 typedef struct
 {
-	uint16 record_did;	// ¿ìÕÕµÄDID
-	uint16 record_data;	// ¿ìÕÕµÄÊý¾Ý
-}snap_data_t;
-//typedef struct
-//{
-//	uint16  record_num;		// ±íÊ¾snap_data_tÓÐ¶àÉÙ¸ö,¼´Ã¿Ìõ¿ìÕÕÖÐ¼ÇÂ¼µÄÊý¾ÝÓÐ¶àÉÙ
-//	snap_data_t *data; 		// ¾ßÌåµÄÊý¾Ý
-//}dtc_snap_t;
+	uint16 record_did;
+	uint16 record_data;
+} snap_data_t;
 
+/* Snapshot data storage management */
 typedef struct
 {
-	uint16 		base; //EEPROM ¿ªÊ¼µØÖ·
-	uint16 		current; 		  // µ±Ç°¿ìÕÕ´æ´¢ÐòºÅ,×î´óÖµ = SANP_RECORD_MAX_NUM
-	// Êµ¼ÊÊý¾ÝµØÖ·Èë¿Ú = base + current  * SANP_DATA_PER_SIZE
-}SnapDataTypedef;
-/* dtc Êý¾Ý±í¸ñ */
+	uint16 base;    /* EEPROM base address for this DTC */
+	uint16 current; /* Current snapshot write index (0 ~ SANP_RECORD_MAX_NUM-1) */
+} SnapDataTypedef;
+
+/* Extended Data Record - per ISO 14229-1 */
 typedef struct
 {
-	dtc_did_name dtc_code;			//Ö§³ÖµÄdid
-	dtc_status_t dtc_st;			//×´Ì¬Âë
-	//dtc_snap_t dtc_snap[SANP_RECORD_MAX_NUM];	//¿ìÕÕÊý¾ÝÈë¿Ú
-	SnapDataTypedef dtcSnapData;
-	uint8      fec_cnt;
-	sint16     fdt_cnt;        		/* FaultDetectionCount */
-	uint8      agn_cnt;        		/* DTCAgingCounter */
-	DTCTestFunciton testFunHandler;	//¹ÊÕÏÕï¶Ïº¯ÊýÈë¿Ú
-	uint32	   test_period;			// Õï¶ÏÖÜÆÚ,µ¥Î»ms
-}dtc_data_table;
+	uint8  occurrenceCounter;     /* Number of times fault occurred (0-255), lifetime counter */
+	uint8  agingCounter;          /* Aging counter for deconfirmation (0-AGN_MAX) */
+	uint8  faultOccurrenceSinceClear; /* Fault count since last clear */
+	sint16 fdt_cnt;               /* Fault Detection Counter (-128 ~ +127) */
+} DTCExtendedData_t;
+
+/* DTC Data Table Entry - OEM Standard */
+typedef struct
+{
+	dtc_did_name    dtc_code;       /* DTC identifier (3-byte ISO format) */
+	dtc_status_t    dtc_st;         /* DTC status byte per ISO 14229-1 */
+	SnapDataTypedef dtcSnapData;    /* Snapshot (freeze frame) storage info */
+	DTCExtendedData_t extData;      /* Extended data (aging, occurrence) */
+	uint8           debounceCnt;    /* Debounce counter for PendingDTC */
+	uint8           testPeriodMs;   /* Test period in milliseconds */
+	uint32          lastTestTime;   /* Timestamp of last test execution */
+	DTCTestFunciton testFunHandler; /* Fault detection function pointer */
+} dtc_data_table;
 
 extern uint8 isDtcStatuCanUpdate;
 
@@ -150,12 +176,14 @@ uint16 getDTCCountByStatusMask(uint8 status_mask);
 uint16 getDTCByStatusMask(uint8 *p_dtc, uint8 status_mask);
 uint16 getDTCSupportedDtc(uint8 *p_dtc);
 
-/* ¸ù¾ÝDTC »ñÈ¡ÏàÓ¦µÄ×´Ì¬±êÊ¶ */
+/* ï¿½ï¿½ï¿½ï¿½DTC ï¿½ï¿½È¡ï¿½ï¿½Ó¦ï¿½ï¿½×´Ì¬ï¿½ï¿½Ê¶ */
 dtc_status_t getStatusByDtcCode(uint32 dtc);
-/* ¹ÊÕÏÊÇ·ñÈ·ÈÏ */
+/* ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½È·ï¿½ï¿½ */
 uint8 IsFaultConfirmed(DTCStatusType status);
-/* ¶ÁÈ¡¿ìÕÕÐÅÏ¢ */
+/* ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢ */
 uint8 getDTCSanpData(uint32 dtc_code,uint8 record_idx,uint8 *p_snap_data,uint8 *p_snap_len);
+/* ï¿½ï¿½È¡ï¿½ï¿½Õ¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢ */
+uint8 getDTCExtData(uint32 dtc_code,uint8 record_num,uint8 *p_ext_data,uint8 *p_ext_len);
 
 void clearDTCByGroup(uint32 group);
 void dtcAddSnapData(uint32 dtc_code,snap_data_t *p_record,uint8 record_len);

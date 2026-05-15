@@ -17,46 +17,52 @@
 #include "uds_common.h"
 
 //以下两个模式只能打开一个
-//#define DIAGNOSTIC_MODE_FOR_APP				//APP诊断模式
-#define DIAGNOSTIC_MODE_FOR_BOOTLOADER	//BOOTLOADER诊断模式
+////#define DIAGNOSTIC_MODE_FOR_APP				//APP妯″紡
+#define DIAGNOSTIC_MODE_FOR_BOOTLOADER	//BOOTLOADER妯″紡
 
 /*****************************************************************************/
 
 
 /*****************************************************************************/
-/* DTC 配置 */
-#define DTC_CODE_MAX_NUM (8u)
-//#define DTC_FORMAT_15031                  (0x00)
-//#define DTC_FORMAT_14229                  (0x01)
+/* DTC Configuration - ISO 14229-1 / OEM Standard */
+#define DTC_CODE_MAX_NUM                  (8u)
 #define DTC_AVAILABILITY_STATUS_MASK      (0x7F)
 
-#define DTC_DID_MAX_NUM					(8u)		// 支持的DTC DID数量
-#define SANP_EEPROM_BASE_ADDR			(0xA000u)	// 快照数据的开始地址
-#define SANP_RECORD_MAX_NUM				(4u)		// 每个dtc did最多存储多少条快照
-#define SANP_DATA_DID_NUM				(8u)		// 每条快照存储的数据数量
-#define SANP_DATA_PER_SIZE				(SANP_DATA_DID_NUM * 4)		// 每个快照的数据长度=数据数量 * 4(4表示did + data共32位)
-#define VIN_F190						"W0L00043MB541326"	// 车身VIN号
-#define BSID_F180						"1.2.3.4"			// 软件版本号
-// 故障码
+#define DTC_DID_MAX_NUM                   (8u)
+#define SANP_EEPROM_BASE_ADDR             (0xA000u)
+#define SANP_RECORD_MAX_NUM               (4u)
+#define SANP_DATA_DID_NUM                 (8u)
+#define SANP_DATA_PER_SIZE                (SANP_DATA_DID_NUM * 4)
+
 typedef enum
 {
-	P150019 = 0x00150019u,
-	P150101 = 0x00150101u,
-	P150201 = 0x00150201u,
-	P150417 = 0x00150417u
-}dtc_did_name;
-// 快照ID
+	/* Network Communication DTCs */
+	DTC_U0100 = 0x0000C100u,
+	DTC_U0121 = 0x0000C121u,
+
+	/* Powertrain DTCs */
+	DTC_P0601 = 0x00000601u,
+	DTC_P0605 = 0x00000605u,
+
+	/* Body DTCs */
+	DTC_B1000 = 0x00009000u,
+	DTC_B1001 = 0x00009001u,
+
+	DTC_RESERVED_1 = 0x00000000u,
+	DTC_RESERVED_2 = 0x00000000u
+} dtc_did_name;
+
 typedef enum
 {
-	B001 = 0xB001u,
-	B002 = 0xB002u,
-	B003 = 0xB003u,
-	B004 = 0xB004u,
-	B005 = 0xB005u,
-	B006 = 0xB006u,
-	B007 = 0xB007u,
-	B008 = 0xB008u
-}snap_did_name;
+	SNAP_DID_SYS_VOLTAGE   = 0xF442u,
+	SNAP_DID_AMB_TEMP      = 0xF446u,
+	SNAP_DID_CAN_STATUS    = 0xF501u,
+	SNAP_DID_RUN_TIME      = 0xF50Au,
+	SNAP_DID_BANK_STATUS   = 0xF510u,
+	SNAP_DID_BOOT_CNT      = 0xF511u,
+	SNAP_DID_SW_VERSION    = 0xF188u,
+	SNAP_DID_HW_VERSION    = 0xF193u
+} snap_did_name;
 
 /* 22服务的读写DID */
 typedef enum
@@ -72,6 +78,7 @@ typedef enum
 	F190 = 0xF190u, //车身VIN
 }rw_data_did;
 
-
+#define VIN_F190                          "W0L00043MB541326"
+#define BSID_F180                         "1.2.3.4"
 
 #endif /* UDSDIAGNOSTIC_UDS_CFG_H_ */

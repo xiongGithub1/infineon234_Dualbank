@@ -2,7 +2,7 @@
  * \file    uds.h
  * \brief
  * \version V1.0.0
- * \date    2021��11��26��
+ * \date    2021锟斤拷11锟斤拷26锟斤拷
  * \author  Administrator
  *********************************************************************************************************************/
 #ifndef UDSDIAGNOSTIC_UDS_APP_H_
@@ -20,6 +20,13 @@
 #include "CANRxTxInterface.h"
 #include "uds_app_cfg.h"
 #include "Flash.h"
+#include "App_bootloader_cfg.h"
+#include "Can_session.h"
+#include "fls_app.h"
+#include "Flash.h"
+#include "Flash.h"
+#include "App_bootloader.h"
+#include "Boot_DualBank.h"
 
 typedef uint16 tUdsTime;
 
@@ -103,18 +110,19 @@ enum __UDS_NRC__
 
 typedef enum{
     RESET_NONE = 0,
-    HARD_RESET = 1,//Ӳ����λ
-    KEY_OFF_ON_RESET = 2,//���ظ�λ
-    SOFT_RESET = 3,//������λ
-    ENABLE_RAPID_POWER_SHUTDOWN = 4,//���ÿ��ٹػ�
-    DISABLE_RAPID_POWER_SHUTDOWN = 5,//���ÿ��ٹػ�
+    HARD_RESET = 1,//硬锟斤拷锟斤拷位
+    KEY_OFF_ON_RESET = 2,//锟斤拷锟截革拷位
+    SOFT_RESET = 3,//锟斤拷锟斤拷锟斤拷位
+    ENABLE_RAPID_POWER_SHUTDOWN = 4,//锟斤拷锟矫匡拷锟劫关伙拷
+    DISABLE_RAPID_POWER_SHUTDOWN = 5,//锟斤拷锟矫匡拷锟劫关伙拷
 }tUdsEcuResetType;
 
 typedef struct
 {
     tUdsId xUdsId;
     tUdsLen xDataLen;//250627
-    uint8 aDataBuf[150u];
+#define UDS_DATA_BUF_SIZE   (150u)
+    uint8 aDataBuf[UDS_DATA_BUF_SIZE];
 //    uint8 aDataBuf[4096u];//250627
 
     void (*pfUDSTxMsgServiceCallBack)(uint8); /* TX message callback */
@@ -194,9 +202,9 @@ typedef struct
 	tUDSRwDataRWMode rw_mode;
 	tUDSRwDataStoreMode rw_store;
 	tUDSRwDataType dataType;
-    uint32 p_entry;//������ڵ�ַ
-    uint8 dlc;//�ֽ���
-    uint8 dlc_max;//���ɴ洢���ֽ�����
+    uint32 p_entry;//锟斤拷锟斤拷锟斤拷诘锟街�
+    uint8 dlc;//锟街斤拷锟斤拷
+    uint8 dlc_max;//锟斤拷锟缴存储锟斤拷锟街斤拷锟斤拷锟斤拷
 
 }tUDSRwDataTable;
 
@@ -211,11 +219,11 @@ typedef enum
 
 
 typedef struct {
-    uint8 upgrade_flag;     // ������־λ
-    uint32 app_size;        // Ӧ�ó����С
-    uint8 md5[16];          // MD5У��ֵ
-    uint32 retry_count;     // ���Լ�����
-    uint8 reserved[11];     // ��������
+    uint8 upgrade_flag;     // 锟斤拷锟斤拷锟斤拷志位
+    uint32 app_size;        // 应锟矫筹拷锟斤拷锟叫�
+    uint8 md5[16];          // MD5校锟斤拷值
+    uint32 retry_count;     // 锟斤拷锟皆硷拷锟斤拷锟斤拷
+    uint8 reserved[11];     // 锟斤拷锟斤拷锟斤拷锟斤拷
 } BootloaderParams;
 
 static uint32 gs_DownloadCRC ;
@@ -232,7 +240,7 @@ static void ReadDTCInformation0x19(struct UDSServiceInfo *i_pstUDSServiceInfo, t
 static void ClearDTCInformation0x14(struct UDSServiceInfo *i_pstUDSServiceInfo, tUdsAppMsgInfo *m_pstPDUMsg);
 static void CommunicationControl0x28(struct UDSServiceInfo *i_pstUDSServiceInfo, tUdsAppMsgInfo *m_pstPDUMsg);
 static void ReadDataByIdentifier0x22(struct UDSServiceInfo *i_pstUDSServiceInfo, tUdsAppMsgInfo *m_pstPDUMsg);
-static void ReadDataByAddress0x23(struct UDSServiceInfo *i_pstUDSServiceInfo,tUdsAppMsgInfo *m_pstPDUMsg);//����ַ��ȡ���ݣ�20250328
+static void ReadDataByAddress0x23(struct UDSServiceInfo *i_pstUDSServiceInfo,tUdsAppMsgInfo *m_pstPDUMsg);//锟斤拷锟斤拷址锟斤拷取锟斤拷锟捷ｏ拷20250328
 static void WriteDataByIdentifier0x2E(struct UDSServiceInfo *i_pstUDSServiceInfo, tUdsAppMsgInfo *m_pstPDUMsg);
 static void RequestDownload0x34(struct UDSServiceInfo *i_pstUDSServiceInfo, tUdsAppMsgInfo *m_pstPDUMsg);
 static void TransferData0x36(struct UDSServiceInfo *i_pstUDSServiceInfo, tUdsAppMsgInfo *m_pstPDUMsg);

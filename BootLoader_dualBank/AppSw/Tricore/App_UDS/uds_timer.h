@@ -32,6 +32,7 @@ uint8 uds_timer_Is1msTickTimeout(void);
 uint8 uds_timer_Is100msTickTimeout(void);
 /* Get timer tick cnt for random seed. */
 uint32 uds_timer_GetTimerTickCnt(void);
+uint32 uds_timer_Get1msCnt(void);
 /*FUNCTION**********************************************************************
  *
  * Function Name : TIMER_HAL_Deinit

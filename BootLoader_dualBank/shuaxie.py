@@ -471,13 +471,20 @@ def do_flash_process():
             app.log_w(f"[Check] ⚠️ Short response, keep default target bank={TARGET_BANK}")
 
         # ------------------------------------------------------------
-        # 5. 关闭 DTC 85 02
+        # 5. 关闭通信 28 03 03 (Disable Rx/Tx)
+        #    减少刷写过程中总线负载，防止应用报文干扰
+        # ------------------------------------------------------------
+        if not uds_request(uds, 0x28, [0x03, 0x03], "Disable Communication"):
+            return
+
+        # ------------------------------------------------------------
+        # 6. 关闭 DTC 85 02
         # ------------------------------------------------------------
         if not uds_request(uds, 0x85, [0x02], "Disable DTC"):
             return
 
         # ------------------------------------------------------------
-        # 6. 编程会话 10 02
+        # 7. 编程会话 10 02
         # ------------------------------------------------------------
         if not session_control(uds, 0x02, "Programming Session"):
             return
@@ -490,14 +497,28 @@ def do_flash_process():
             return
 
         # ------------------------------------------------------------
-        # 8. 写指纹信息 2E F1 5A 55 55
+        # 8. 预编程条件检查 31 01 02 03 (ISO 14229-1 标准 RID)
+        #    正响应: 71 01 02 03 <canFlash> <targetBank>
+        # ------------------------------------------------------------
+        rsp = uds_request(uds, 0x31, [0x01, 0x02, 0x03], "Check Preconditions")
+        if not rsp:
+            return
+        if len(rsp.data) >= 5:
+            can_flash = rsp.data[3]
+            if can_flash != 1:
+                app.log_e(f"[Precond] ❌ Preconditions NOT OK (canFlash={can_flash}), abort!")
+                return
+            app.log_i("[Precond] ✅ Preconditions OK")
+
+        # ------------------------------------------------------------
+        # 9. 写指纹信息 2E F1 5A 55 55
         #    如需修改指纹内容，请调整 data 字段
         # ------------------------------------------------------------
         if not uds_request(uds, 0x2E, [0xF1, 0x5A, 0x55, 0x55], "Write Fingerprint"):
             return
 
         # ------------------------------------------------------------
-        # 9. 擦除目标 Bank (31 01 FF 00)
+        # 10. 擦除目标 Bank (31 01 FF 00)
         #    逐个 sector 擦除，每次只擦 1 个 sector，单次耗时 < 1s，
         #    不会触发 P2 超时。
         # ------------------------------------------------------------
@@ -506,54 +527,50 @@ def do_flash_process():
             return
 
         # ------------------------------------------------------------
-        # 10. 文件下载 (34/36/37，不自动发送 totalCheckCmd)
+        # 11. 文件下载 (34/36/37，不自动发送 totalCheckCmd)
         # ------------------------------------------------------------
         if not file_download(uds):
             return
 
-        # # 替换原来调用 file_download(uds) 的地方
-        # if not file_download_manual(uds):
-        #     app.log_e("[Flash] ❌ File download failed, aborting.")
-        #     return
         # ------------------------------------------------------------
-        # 11. 手动发送 totalCheckCmd 验证 CRC
-        #     31 01 DF FF <CRC32(4 bytes, big-endian)>
-        #     Bootloader 收到后会自行计算 Flash CRC 并与传入值比较。
+        # 12. 检查编程依赖性 31 01 FF 01
+        #     验证目标 Bank 是否已标记有效
         # ------------------------------------------------------------
-        # bank_start = BANK_B_START_ADDR if TARGET_BANK == "A" else BANK_A_START_ADDR
-        # bank_size  = BANK_APP_B_SIZE  if TARGET_BANK == "A" else BANK_APP_A_SIZE
-
-        # file_crc = calc_bank_crc32(HEX_FILE, bank_start, bank_size)
-        # if file_crc is None:
-        #     app.log_e("[Verify] ❌ CRC calculation failed, abort ECU reset!")
-        #     return
-
-        # app.log_i(f"[Verify] HEX file CRC32 = 0x{file_crc:08X}")
-
-        # total_check_data = [
-        #     0x01, 0xDF, 0xFF,
-        #     (file_crc >> 24) & 0xFF,
-        #     (file_crc >> 16) & 0xFF,
-        #     (file_crc >> 8)  & 0xFF,
-        #     file_crc & 0xFF,
-        # ]
-
-        # rsp = uds_request(uds, 0x31, total_check_data, "Verify CRC")
-        # if not rsp:
-        #     app.log_e("[Verify] ❌ No response from 31 01 DFFF, abort ECU reset!")
-        #     return
-
-        # # rsp.data: [0x01=subFunc, 0xDF=RID_H, 0xFF=RID_L, 0x01=result]
-        # if len(rsp.data) < 4 or rsp.data[3] != 0x01:
-        #     app.log_e(
-        #         f"[Verify] ❌ Bank {TARGET_BANK} CRC verification FAILED! "
-        #         f"rsp.data={rsp.data.hex() if rsp.data else 'empty'}, abort ECU reset!"
-        #     )
-        #     return
-        # app.log_i(f"[Verify] ✅ Bank {TARGET_BANK} CRC OK, bank activated.")
+        rsp = uds_request(uds, 0x31, [0x01, 0xFF, 0x01], "Check Dependencies")
+        if not rsp:
+            app.log_w("[Post] ⚠️ CheckProgrammingDependencies no response, continue...")
+        elif len(rsp.data) >= 4 and rsp.data[3] == 0x01:
+            app.log_i("[Post] ✅ Programming dependencies OK")
+        else:
+            app.log_w("[Post] ⚠️ Programming dependencies may have issues, continue...")
 
         # ------------------------------------------------------------
-        # 12. ECU 复位 11 01
+        # 13. 后编程阶段 - 恢复系统正常工作状态
+        # ------------------------------------------------------------
+        app.log_i("[Post] ====== Post-Programming Phase ======")
+
+        # 13.1 切换到扩展会话 10 03
+        if not session_control(uds, 0x03, "Extended Session (Post)"):
+            app.log_w("[Post] ⚠️ Failed to enter Extended Session, continue...")
+
+        # 13.2 恢复通信 28 00 03 (Enable Rx/Tx)
+        if not uds_request(uds, 0x28, [0x00, 0x03], "Enable Communication"):
+            app.log_w("[Post] ⚠️ Failed to enable communication, continue...")
+
+        # 13.3 恢复 DTC 85 01
+        if not uds_request(uds, 0x85, [0x01], "Enable DTC"):
+            app.log_w("[Post] ⚠️ Failed to enable DTC, continue...")
+
+        # 13.4 清除所有 DTC 14 FF FF FF
+        if not uds_request(uds, 0x14, [0xFF, 0xFF, 0xFF], "Clear All DTC"):
+            app.log_w("[Post] ⚠️ Failed to clear DTC, continue...")
+
+        # 13.5 回到默认会话 10 01
+        if not session_control(uds, 0x01, "Default Session (Post)"):
+            app.log_w("[Post] ⚠️ Failed to enter Default Session, continue...")
+
+        # ------------------------------------------------------------
+        # 14. ECU 复位 11 03 (SoftReset)
         # ------------------------------------------------------------
         uds_request(uds, 0x11, [0x03], "ECU Reset")
 

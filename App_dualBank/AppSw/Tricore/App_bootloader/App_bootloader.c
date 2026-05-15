@@ -339,6 +339,7 @@ void AppBL_init(void)
 	Multican_init();
 	UdsInit(UDS_FUN_ADDR_ID,UDS_PHY_ADDR_ID,UDS_RESP_ADDR_ID);
 
+	dtcInit();
     initTime();
 
     /* flash */
@@ -377,6 +378,7 @@ void    AppUds_main(void)
 
 	UdsMainProcess();
 	CanMainProcess();
+	dtcTestMainProc();
 
 	/* CAN bus error handling */
 	if((CAN_NSR1.B.BOFF==1) && (CAN_NSR1.B.LEC==0x5)) // Bus-off
