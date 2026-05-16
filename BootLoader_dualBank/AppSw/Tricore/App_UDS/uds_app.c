@@ -6,6 +6,7 @@
  * \author  Administrator
  *********************************************************************************************************************/
 #include "uds_app.h"
+#include "Boot_DualBank.h"
 
 
 uint32 pageData1[128];
@@ -1567,6 +1568,15 @@ static uint32 gs_RxBlockNum = 0u;
 static uint32 gs_DownloadCRC = 0xFFFFFFFFu;
 static uint8  gs_bCrcActive = FALSE;
 
+#define RSA2048_SIG_LEN (256u)
+
+/* Download session tracking for payload/signature separation.
+ * gs_downloadStartAddr: uncached base address set at 0x34.
+ * gs_downloadPayloadLen: payload length excluding trailing RSA signature.
+ */
+static uint32 gs_downloadStartAddr = 0u;
+static uint32 gs_downloadPayloadLen = 0u;
+
 
 static void RequestDownload0x34(struct UDSServiceInfo* i_pstUDSServiceInfo,
 	tUdsAppMsgInfo* m_pstPDUMsg)
@@ -1576,6 +1586,10 @@ static void RequestDownload0x34(struct UDSServiceInfo* i_pstUDSServiceInfo,
 	uint8 Ret = TRUE;
 	uint32  addrBytesLength, dataBytesLength;
 	uint32 addrAndDataBytesLength;
+	uint32 rawAddr = 0u;
+	uint32 activeBank;
+	uint32 targetBank;
+	uint32 cachedBase;
 	addrAndDataBytesLength = m_pstPDUMsg->aDataBuf[2u];
 	addrBytesLength = addrAndDataBytesLength & 0x0f;
 	dataBytesLength = (addrAndDataBytesLength & 0xf0) >> 4;
@@ -1592,30 +1606,48 @@ static void RequestDownload0x34(struct UDSServiceInfo* i_pstUDSServiceInfo,
 
 
 
-		gs_stDowloadDataInfo.StartAddr = 0u;
+		/* Parse raw address from 0x34 request */
+		rawAddr = 0u;
 		for (Index = 0u; Index < addrBytesLength; Index++)
-
 		{
-			gs_stDowloadDataInfo.StartAddr <<= 8u;
-
-
-			gs_stDowloadDataInfo.StartAddr |= m_pstPDUMsg->aDataBuf[Index + 3u];
-
+			rawAddr <<= 8u;
+			rawAddr |= m_pstPDUMsg->aDataBuf[Index + 3u];
 		}
-		gs_stDowloadDataInfo.StartAddr = (gs_stDowloadDataInfo.StartAddr & 0x00FFFFFF) | 0xA0000000;
 
-		/* Dual Bank: determine target bank from download address
-		 * StartAddr is uncached (0xA0...), convert back to cached for comparison */
+		/* Offset mode: rawAddr < 0x10000 means "auto-select opposite bank"
+		 * Bootloader ignores the address and writes to the inactive bank.
+		 * This supports single-HEX workflow where the .pkg has PayloadAddr=0.
+		 */
+		if (rawAddr < 0x00010000u)
 		{
-			uint32 cachedAddr = gs_stDowloadDataInfo.StartAddr - 0x20000000u;
-			if ((cachedAddr >= BANK_B_START_ADDR) &&
-				(cachedAddr < BANK_B_END_ADDR))
+			activeBank = Boot_DualBank_GetActiveBank();
+			targetBank = (activeBank == BANK_A) ? BANK_B : BANK_A;
+			cachedBase = (targetBank == BANK_A) ? BANK_A_START_ADDR : BANK_B_START_ADDR;
+
+			gs_stDowloadDataInfo.StartAddr = cachedBase | 0xA0000000u; /* uncached */
+			Boot_DualBank_SetTargetWriteBank(targetBank);
+
+			/* Add offset if non-zero (e.g., vector table at 0x00009000) */
+			gs_stDowloadDataInfo.StartAddr += rawAddr;
+		}
+		else
+		{
+			/* Absolute address mode (legacy): address explicitly specifies target */
+			gs_stDowloadDataInfo.StartAddr = (rawAddr & 0x00FFFFFF) | 0xA0000000;
+
+			/* Dual Bank: determine target bank from download address
+			 * StartAddr is uncached (0xA0...), convert back to cached for comparison */
 			{
-				Boot_DualBank_SetTargetWriteBank(BANK_B);
-			}
-			else
-			{
-				Boot_DualBank_SetTargetWriteBank(BANK_A);
+				uint32 cachedAddr = gs_stDowloadDataInfo.StartAddr - 0x20000000u;
+				if ((cachedAddr >= BANK_B_START_ADDR) &&
+					(cachedAddr < BANK_B_END_ADDR))
+				{
+					Boot_DualBank_SetTargetWriteBank(BANK_B);
+				}
+				else
+				{
+					Boot_DualBank_SetTargetWriteBank(BANK_A);
+				}
 			}
 		}
 
@@ -1663,7 +1695,20 @@ static void RequestDownload0x34(struct UDSServiceInfo* i_pstUDSServiceInfo,
 
 		Flash_SaveDownloadDataInfo(gs_stDowloadDataInfo.StartAddr, gs_stDowloadDataInfo.DataLen);
 
-
+		/* Save base address and payload length for CRC boundary control.
+		 * The trailing RSA-2048 signature is part of the download but must
+		 * not participate in the CRC so that tester-side CRC (over payload
+		 * only) still matches.
+		 */
+		gs_downloadStartAddr = gs_stDowloadDataInfo.StartAddr;
+		if (gs_stDowloadDataInfo.DataLen > RSA2048_SIG_LEN)
+		{
+			gs_downloadPayloadLen = gs_stDowloadDataInfo.DataLen - RSA2048_SIG_LEN;
+		}
+		else
+		{
+			gs_downloadPayloadLen = 0u;
+		}
 
 		m_pstPDUMsg->aDataBuf[0u] = i_pstUDSServiceInfo->SerNum + 0x40u;
 		m_pstPDUMsg->aDataBuf[1u] = 0x10u;
@@ -1732,12 +1777,32 @@ static void TransferData0x36(struct UDSServiceInfo* i_pstUDSServiceInfo, tUdsApp
 	}
 	else
 	{
-		/* Accumulate CRC over the received payload (matches tester-side calculation) */
+		/* Accumulate CRC over the received payload only (signature excluded).
+		 * The trailing RSA-2048 signature is written to Flash but must not
+		 * participate in the CRC so that the tester-side CRC (computed over
+		 * payload only) still matches.
+		 */
 		if (gs_bCrcActive != FALSE)
 		{
-			gs_DownloadCRC = Boot_CRC32_Update(gs_DownloadCRC,
-				&m_pstPDUMsg->aDataBuf[2],
-				actualDataLen);
+			uint32 offset = gs_stDowloadDataInfo.StartAddr - gs_downloadStartAddr;
+			uint32 crcLen = actualDataLen;
+			if ((offset + actualDataLen) > gs_downloadPayloadLen)
+			{
+				if (offset < gs_downloadPayloadLen)
+				{
+					crcLen = gs_downloadPayloadLen - offset;
+				}
+				else
+				{
+					crcLen = 0u;
+				}
+			}
+			if (crcLen > 0u)
+			{
+				gs_DownloadCRC = Boot_CRC32_Update(gs_DownloadCRC,
+					&m_pstPDUMsg->aDataBuf[2],
+					crcLen);
+			}
 		}
 
 		gs_stDowloadDataInfo.StartAddr += actualDataLen;
@@ -1986,25 +2051,30 @@ static void RoutineControl0x31(struct UDSServiceInfo* i_pstUDSServiceInfo, tUdsA
 							break;
 
 
-						case 0xDFFF:
-						{
-							if (TRUE != IsCurSecurityLevelRequet(SECURITY_LEVEL_2))
-							{
-								SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_SECURITY_ACCESS_DENIED, m_pstPDUMsg);
-								break;
-							}
 
-							/* Expect: SID(1) + subFunc(1) + RID(2) + CRC32(4) = 8 bytes */
-							if (m_pstPDUMsg->xDataLen < 8)
-							{
-								SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_INVALID_MESSAGE_LENGTH_OR_FORMAT, m_pstPDUMsg);
-								break;
-							}
-
+							case 0xDFFF:
 							{
 								uint32 expectedCRC;
 								uint32 actualCRC;
-								uint32 targetBank = Boot_DualBank_GetTargetWriteBank();
+								uint32 targetBank;
+								BankStatus_t verifyStatus;
+								const uint8 *signature;
+
+								if (TRUE != IsCurSecurityLevelRequet(SECURITY_LEVEL_2))
+								{
+									SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_SECURITY_ACCESS_DENIED, m_pstPDUMsg);
+									break;
+								}
+
+								/* Expect: SID(1) + subFunc(1) + RID(2) + CRC32(4) = 8 bytes.
+								 * The 256-byte RSA signature was already written to Flash
+								 * at the end of the payload during 0x36/0x37.
+								 */
+								if (m_pstPDUMsg->xDataLen < 8)
+								{
+									SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_INVALID_MESSAGE_LENGTH_OR_FORMAT, m_pstPDUMsg);
+									break;
+								}
 
 								/* Parse expected CRC32 from tester (big-endian) */
 								expectedCRC = ((uint32) m_pstPDUMsg->aDataBuf[4] << 24) |
@@ -2012,10 +2082,8 @@ static void RoutineControl0x31(struct UDSServiceInfo* i_pstUDSServiceInfo, tUdsA
 									((uint32) m_pstPDUMsg->aDataBuf[6] << 8) |
 									((uint32) m_pstPDUMsg->aDataBuf[7]);
 
-
 								/* Use streaming CRC accumulated during 0x36 TransferData.
-								 * This avoids re-reading Flash (and potential Data Cache staleness)
-								 * and matches the tester-side calculation over the raw data stream. */
+								 * Only payload bytes (excluding trailing signature) were accumulated. */
 								if (gs_bCrcActive != FALSE)
 								{
 									actualCRC = gs_DownloadCRC ^ 0xFFFFFFFFu;
@@ -2028,7 +2096,7 @@ static void RoutineControl0x31(struct UDSServiceInfo* i_pstUDSServiceInfo, tUdsA
 								if (actualCRC != expectedCRC)
 								{
 									/* CRC mismatch: do not mark valid */
-									routineResult = 0x00;
+									routineResult = 0x01;
 									m_pstPDUMsg->aDataBuf[0] = 0x71;
 									m_pstPDUMsg->aDataBuf[1] = 0x01;
 									m_pstPDUMsg->aDataBuf[2] = 0xDF;
@@ -2040,23 +2108,47 @@ static void RoutineControl0x31(struct UDSServiceInfo* i_pstUDSServiceInfo, tUdsA
 									break;
 								}
 
-								/* CRC OK: mark valid and activate */
+								/* CRC OK: read RSA signature from PFlash and verify */
+								targetBank = Boot_DualBank_GetTargetWriteBank();
+								signature = (const uint8 *)(gs_downloadStartAddr + gs_downloadPayloadLen);
+
+								verifyStatus = Boot_DualBank_VerifyBankWithSignature(
+									targetBank,
+									expectedCRC,
+									gs_downloadPayloadLen,
+									signature,
+									RSA2048_SIG_LEN);
+
+								if (verifyStatus != BANK_STATUS_VALID)
+								{
+									routineResult = 0x02;
+									m_pstPDUMsg->aDataBuf[0] = 0x71;
+									m_pstPDUMsg->aDataBuf[1] = 0x01;
+									m_pstPDUMsg->aDataBuf[2] = 0xDF;
+									m_pstPDUMsg->aDataBuf[3] = 0xFF;
+									m_pstPDUMsg->aDataBuf[4] = (uint8) routineResult;
+									m_pstPDUMsg->xDataLen = 5;
+									gs_DownloadCRC = 0xFFFFFFFFu;
+									gs_bCrcActive  = FALSE;
+									break;
+								}
+
+								/* Signature OK: mark valid and activate */
 								g_bootPhase = BOOT_PHASE_PROG_VERIFY;
-								Boot_DualBank_MarkBankValid(targetBank, 0x00010000u, Flash_GetReceivedDataLength());
+								Boot_DualBank_MarkBankValid(targetBank, 0x00010000u, gs_downloadPayloadLen);
 								Boot_DualBank_SetActiveBank(targetBank);
-								routineResult = 0x01;
+								routineResult = 0x00;
 								gs_DownloadCRC = 0xFFFFFFFFu;
 								gs_bCrcActive  = FALSE;
-							}
 
-							m_pstPDUMsg->aDataBuf[0] = 0x71;
-							m_pstPDUMsg->aDataBuf[1] = 0x01;
-							m_pstPDUMsg->aDataBuf[2] = 0xDF;
-							m_pstPDUMsg->aDataBuf[3] = 0xFF;
-							m_pstPDUMsg->aDataBuf[4] = (uint8) routineResult;
-							m_pstPDUMsg->xDataLen = 5;
-							break;
-						}
+								m_pstPDUMsg->aDataBuf[0] = 0x71;
+								m_pstPDUMsg->aDataBuf[1] = 0x01;
+								m_pstPDUMsg->aDataBuf[2] = 0xDF;
+								m_pstPDUMsg->aDataBuf[3] = 0xFF;
+								m_pstPDUMsg->aDataBuf[4] = (uint8) routineResult;
+								m_pstPDUMsg->xDataLen = 5;
+								break;
+							}
 
 					default:
 						SetNegativeErroCode(i_pstUDSServiceInfo->SerNum, NRC_SUBFUNCTION_NOT_SUPPORTED, m_pstPDUMsg);

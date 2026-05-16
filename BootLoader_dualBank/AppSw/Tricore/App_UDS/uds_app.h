@@ -121,7 +121,7 @@ typedef struct
 {
     tUdsId xUdsId;
     tUdsLen xDataLen;//250627
-#define UDS_DATA_BUF_SIZE   (150u)
+#define UDS_DATA_BUF_SIZE   (300u)
     uint8 aDataBuf[UDS_DATA_BUF_SIZE];
 //    uint8 aDataBuf[4096u];//250627
 

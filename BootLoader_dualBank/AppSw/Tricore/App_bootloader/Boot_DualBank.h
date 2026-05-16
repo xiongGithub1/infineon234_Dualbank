@@ -16,6 +16,11 @@
 #define DFLASH_FLAG_SHADOW_OFFSET       0x100u
 #define DFLASH_FLAG_SIZE                80u
 
+/* DFlash signature storage (dedicated sector, separate from flags/DTC) */
+#define DFLASH_SIGNATURE_SECTOR_ADDR    0xAF004000u
+#define DFLASH_SIGNATURE_ADDR           0xAF004000u
+#define DFLASH_SIGNATURE_SIZE           256u
+
 #define FLAG_MAGIC                      0x5A5AA5A5u
 #define BANK_VALID_MAGIC                0x55AA55AAu
 #define FLAG_SEQUENCE_INIT              0x00000001u
@@ -90,6 +95,16 @@ typedef enum
 
 extern volatile BootPhase_t g_bootPhase;
 
+/* Debug buffer for signature verification troubleshooting.
+ * Filled by Boot_DualBank_VerifyBankWithSignature() when RSA check fails.
+ * Layout: [0:31] = SHA-256 hash, [32:287] = RSA decrypted EM
+ */
+/* #define SIG_DEBUG_HASH_LEN   32 */
+/* #define SIG_DEBUG_EM_LEN     256 */
+/* extern uint8 g_sigDebugHash[SIG_DEBUG_HASH_LEN]; */
+/* extern uint8 g_sigDebugEM[SIG_DEBUG_EM_LEN]; */
+/* extern uint8 g_sigDebugVerifyResult; */
+
 typedef struct
 {
     uint32 magic;
@@ -148,6 +163,7 @@ boolean Boot_DualBank_WriteFlags(const DualBankFlags_t* flags);
 void Boot_DualBank_SelectAndJump(void);
 BankStatus_t Boot_DualBank_VerifyBank(uint32 bank);
 BankStatus_t Boot_DualBank_VerifyBankWithCrc(uint32 bank, uint32 expectedCrc);
+BankStatus_t Boot_DualBank_VerifyBankWithSignature(uint32 bank, uint32 expectedCrc, uint32 codeSize, const uint8 *signature, uint32 sigLen);
 uint32 Boot_DualBank_CalculateCRC(uint32 startAddr, uint32 size);
 uint32 Boot_CRC32_Update(uint32 crc, const uint8 *data, uint32 length);
 void Boot_DualBank_InvalidateBank(uint32 bank);

@@ -27,6 +27,8 @@
 								<option id="com.tasking.ctc.cc.optimize.1422017948" name="Optimization level:" superClass="com.tasking.ctc.cc.optimize" value="com.tasking.ctc.cc.optimize.0" valueType="enumerated"/>
 								<option id="com.tasking.ctc.cc.includePaths.1121670208" name="Include paths" superClass="com.tasking.ctc.cc.includePaths" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/AppSw/Tricore/App_bootloader/crypto}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/crypto}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/AppSw/Tricore/Tc234_Modules/STM}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/AppSw/Tricore/App_UDS}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/AppSw/Tricore/App_UDS/Flah_app}&quot;"/>

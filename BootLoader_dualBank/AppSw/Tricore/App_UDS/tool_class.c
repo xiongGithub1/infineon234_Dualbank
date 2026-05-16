@@ -2,11 +2,11 @@
  * \file    tool_class.c
  * \brief
  * \version V1.0.0
- * \date    2022Äê2ÔÂ28ÈÕ
+ * \date    2022ï¿½ï¿½2ï¿½ï¿½28ï¿½ï¿½
  * \author  Administrator
  *********************************************************************************************************************/
 #include "tool_class.h"
-
+#include "Flash.h"
 
 
 
@@ -14,8 +14,8 @@
 
 void tl_memset(void *s, int c, int count)
 {
-	char *xs = (char *)s;//½« void * ÀàÐÍµÄÖ¸Õë s ×ª»»Îª char * ÀàÐÍµÄÖ¸Õë xs¡£
-						 //ÕâÊÇÒòÎª void * ÊÇÍ¨ÓÃÖ¸ÕëÀàÐÍ£¬²»ÄÜÖ±½Ó½øÐÐÖ¸ÕëËãÊõÔËËã£¨Èç ++£©£¬¶ø char * ÊÇ×Ö½ÚÖ¸Õë£¬¿ÉÒÔÖð×Ö½Ú²Ù×÷ÄÚ´æ¡£
+	char *xs = (char *)s;//ï¿½ï¿½ void * ï¿½ï¿½ï¿½Íµï¿½Ö¸ï¿½ï¿½ s ×ªï¿½ï¿½Îª char * ï¿½ï¿½ï¿½Íµï¿½Ö¸ï¿½ï¿½ xsï¿½ï¿½
+						 //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îª void * ï¿½ï¿½Í¨ï¿½ï¿½Ö¸ï¿½ï¿½ï¿½ï¿½ï¿½Í£ï¿½ï¿½ï¿½ï¿½ï¿½Ö±ï¿½Ó½ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ã£¨ï¿½ï¿½ ++ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ char * ï¿½ï¿½ï¿½Ö½ï¿½Ö¸ï¿½ë£¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö½Ú²ï¿½ï¿½ï¿½ï¿½Ú´æ¡£
 	while (count--)
 		*xs++ = (char)c;
 }
@@ -49,7 +49,7 @@ void tl_queue_add_item(DataQueue *pdq,QueueMsgObject *pObject)
 {
 	if(((pdq->rear + 1) % QUEUE_MAXSIZE) == pdq->front)
 	{
-		// ¶ÓÁÐÒÑÂú£¬Ö´ÐÐ¸²¸Ç
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö´ï¿½Ð¸ï¿½ï¿½ï¿½
 		//tl_queue_init();
 		tl_queue_init(pdq);
 	}
@@ -61,7 +61,7 @@ uint8 tl_queue_take_item(DataQueue *pdq,QueueMsgObject *pObject)
 {
 	if(pdq->rear == pdq->front)
 	{
-		// ¶ÓÁÐÎª¿Õ
+		// ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½
 		//pObject = ((void *) 0);
 		return 0;
 	}
@@ -69,27 +69,56 @@ uint8 tl_queue_take_item(DataQueue *pdq,QueueMsgObject *pObject)
 	pdq->front = (pdq->front + 1) % QUEUE_MAXSIZE;
 	return 1;
 }
-// ´ÓEEPROMÖÐ¶ÁÈ¡Êý¾Ý,³É¹¦·µ»Ø¶Áµ½µÄÊýÁ¿,Ê§°Ü·µ»Ø0
+// ï¿½ï¿½EEPROMï¿½Ð¶ï¿½È¡ï¿½ï¿½ï¿½ï¿½,ï¿½É¹ï¿½ï¿½ï¿½ï¿½Ø¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½,Ê§ï¿½Ü·ï¿½ï¿½ï¿½0
 uint8 tl_read_from_eeprom(uint32 addr,uint8 *pDstData,uint8 count)
 {
 	// TODO
 	return count;
 }
-// ´ÓFLASHÖÐ¶ÁÈ¡Êý¾Ý,³É¹¦·µ»Ø¶Áµ½µÄÊýÁ¿,Ê§°Ü·µ»Ø0
+// ï¿½ï¿½FLASHï¿½Ð¶ï¿½È¡ï¿½ï¿½ï¿½ï¿½,ï¿½É¹ï¿½ï¿½ï¿½ï¿½Ø¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½,Ê§ï¿½Ü·ï¿½ï¿½ï¿½0
 uint8 tl_read_from_flash(uint32 addr,uint8 *pDstData,uint8 count)
 {
 	// TODO
 	return count;
 }
-// ÏòEEPROMÖÐÐ´ÈëÊý¾Ý,³É¹¦·µ»ØÐ´ÈëµÄ×Ö½ÚÊý,Ê§°Ü·µ»Ø0
+// ï¿½ï¿½EEPROMï¿½ï¿½Ð´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½,ï¿½É¹ï¿½ï¿½ï¿½ï¿½ï¿½Ð´ï¿½ï¿½ï¿½ï¿½Ö½ï¿½ï¿½ï¿½,Ê§ï¿½Ü·ï¿½ï¿½ï¿½0
 uint8 tl_write_to_eeprom(uint32 addr,uint8 *pData,uint8 count)
 {
 	// TODO
 	return count;
 }
-// ÏòFLASHÖÐÐ´ÈëÊý¾Ý,³É¹¦·µ»ØÐ´ÈëµÄ×Ö½ÚÊý,Ê§°Ü·µ»Ø0
-uint8 tl_write_to_flash(uint32 addr,uint8 *pData,uint8 count)
+/* Write data to DFlash.
+ * Returns number of bytes written on success, 0 on failure.
+ * Data length is rounded up to nearest DFLASH_PAGE_LENGTH (8 bytes).
+ * Caller must ensure the target DFlash sector is erased beforehand.
+ */
+uint8 tl_write_to_flash(uint32 addr, uint8 *pData, uint8 count)
 {
-	// TODO
+	uint32 alignedBuf[64]; /* 256 bytes / 4 = 64 words */
+	uint8 i;
+	uint32 writeLen;
+
+	if (count == 0)
+	{
+		return 0;
+	}
+
+	/* Clear aligned buffer */
+	for (i = 0; i < 64; i++)
+	{
+		alignedBuf[i] = 0u;
+	}
+
+	/* Copy data to aligned buffer */
+	for (i = 0; i < count; i++)
+	{
+		((uint8*)alignedBuf)[i] = pData[i];
+	}
+
+	/* Round up to nearest 8-byte page for DFlash */
+	writeLen = ((count + DFLASH_PAGE_LENGTH - 1u) / DFLASH_PAGE_LENGTH) * DFLASH_PAGE_LENGTH;
+
+	Flash_writeDFlash_port(addr, alignedBuf, writeLen);
+
 	return count;
 }

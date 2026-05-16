@@ -17,6 +17,20 @@
     ],
     "DataMiningHits": false,
     "DataRecorder": [
+        {
+            "ChannelID": "CAN 1",
+            "Enable": true,
+            "FileNameOption": 1,
+            "FilePath": "E:/workFiles/IEBS/tc234bootloader/tc234bootloader/Recorder1.asc",
+            "MaxFileSize": 100,
+            "Name": "Recorder1",
+            "Option": 1,
+            "RecorderSignals": [
+            ],
+            "Signals": [
+            ],
+            "Type": 1
+        }
     ],
     "DataRecorderSettings": {
         "maxParallelTaskCount": 256,
@@ -87,7 +101,7 @@
         "rules": [
         ]
     },
-    "currentPage": "{108f67d1-54da-4970-bbbb-534f981dfddf}",
+    "currentPage": "{2bd33e05-e5cb-46fe-8f25-44077b52c87b}",
     "database": {
         "expressionVariables": {
             "extra": {
@@ -180,7 +194,7 @@
                 "dto": 0,
                 "dtoEx": false,
                 "ecuAddress": 0,
-                "enable": true,
+                "enable": false,
                 "ethConnectTimeoutMs": 3000,
                 "ethMasterIp": "0.0.0.0",
                 "ethMasterPort": 0,
@@ -9248,20 +9262,20 @@
             "details": {
                 "subWindows": [
                     {
-                        "height": 594,
+                        "height": 566,
                         "index": 1,
                         "uuid": "{d11a6eb2-481b-45cd-90dd-8cc7de406359}",
-                        "width": 858,
-                        "x": 741,
-                        "y": -2
+                        "width": 857,
+                        "x": 742,
+                        "y": -23
                     },
                     {
-                        "height": 610,
+                        "height": 564,
                         "index": 2,
                         "uuid": "{361ee376-21ba-4c44-82c2-180091cb1b51}",
                         "width": 743,
                         "x": 0,
-                        "y": 0
+                        "y": -21
                     }
                 ]
             },
@@ -9274,20 +9288,33 @@
             "details": {
                 "subWindows": [
                     {
-                        "height": 594,
                         "index": 1,
-                        "uuid": "{a782bbe6-9d7b-42f8-a4b3-930770317e77}",
-                        "width": 774,
-                        "x": 0,
-                        "y": 0
+                        "minimized": true,
+                        "uuid": "{9fad5f9a-1043-439f-993c-152078c1a25c}"
                     },
                     {
                         "height": 600,
                         "index": 2,
+                        "uuid": "{e10fad03-46d4-4d76-8152-b5a4d09bb8ce}",
+                        "width": 800,
+                        "x": 866,
+                        "y": 43
+                    },
+                    {
+                        "height": 600,
+                        "index": 3,
                         "uuid": "{91bdec0c-3ad8-42bc-99b1-d0d2a3e25965}",
                         "width": 800,
-                        "x": 774,
+                        "x": 780,
                         "y": 0
+                    },
+                    {
+                        "height": 594,
+                        "index": 4,
+                        "uuid": "{a782bbe6-9d7b-42f8-a4b3-930770317e77}",
+                        "width": 774,
+                        "x": 0,
+                        "y": 4
                     }
                 ]
             },
@@ -9300,12 +9327,16 @@
             "details": {
                 "subWindows": [
                     {
+                        "minimized": true,
+                        "uuid": "{9fad5f9a-1043-439f-993c-152078c1a25c}"
+                    },
+                    {
                         "height": 596,
                         "index": 1,
                         "uuid": "{6f043236-1508-4edb-8539-1a36256eb861}",
                         "width": 828,
                         "x": 0,
-                        "y": 0
+                        "y": -41
                     },
                     {
                         "height": 600,
@@ -9313,13 +9344,55 @@
                         "uuid": "{ba587331-6b70-4362-9af0-3715ef2995d0}",
                         "width": 786,
                         "x": 823,
-                        "y": -9
+                        "y": -50
                     }
                 ]
             },
             "index": 3,
             "name": "uds",
             "uuid": "{fbe69733-160f-4e99-81b2-808f0c40d247}"
+        },
+        {
+            "comment": "hex变pkg",
+            "details": {
+                "subWindows": [
+                    {
+                        "height": 480,
+                        "index": 1,
+                        "uuid": "{f05f5e66-ffa7-486f-ac2c-19d854402505}",
+                        "width": 800,
+                        "x": -1,
+                        "y": -405
+                    },
+                    {
+                        "height": 480,
+                        "index": 2,
+                        "uuid": "{479aee6f-a1ed-44df-a879-c1ed16c9af3a}",
+                        "width": 800,
+                        "x": 801,
+                        "y": -418
+                    },
+                    {
+                        "height": 480,
+                        "index": 3,
+                        "uuid": "{9fffdb3b-a5d1-4964-8b3e-9a7868bf93cb}",
+                        "width": 800,
+                        "x": 804,
+                        "y": 73
+                    },
+                    {
+                        "height": 480,
+                        "index": 4,
+                        "uuid": "{0861e26d-1a6d-4290-b926-8e87c48994a9}",
+                        "width": 800,
+                        "x": -3,
+                        "y": 75
+                    }
+                ]
+            },
+            "index": 4,
+            "name": "pkg",
+            "uuid": "{37478bb2-0588-400a-8de0-7e7a75bd55a8}"
         }
     ],
     "subWindows": [
@@ -9328,7 +9401,7 @@
             "details": {
                 "args": "",
                 "isAutoStart": false,
-                "lastModified": 1778507990790,
+                "lastModified": 1778831926969,
                 "scriptFile": "E:/workFiles/IEBS/tc234bootloader/BootLoader_dualBank/shuaxie.py"
             },
             "index": 1,
@@ -9620,7 +9693,7 @@
                             "or": true
                         },
                         "title": "数据",
-                        "width": 160
+                        "width": 451
                     },
                     {
                         "field": 27,
@@ -10165,7 +10238,7 @@
                             "or": true
                         },
                         "title": "数据",
-                        "width": 160
+                        "width": 451
                     },
                     {
                         "field": 27,
@@ -10452,7 +10525,7 @@
                 "timeMode": "0",
                 "viewIndex": "0",
                 "viewLayout": "4",
-                "viewSizes": ""
+                "viewSizes": "0"
             },
             "index": 2,
             "name": "报文",
@@ -10743,7 +10816,7 @@
                             "or": true
                         },
                         "title": "数据",
-                        "width": 160
+                        "width": 332
                     },
                     {
                         "field": 27,
@@ -11074,6 +11147,13 @@
                         "field": 5,
                         "field_name": "E_Identifier",
                         "filter": {
+                            "conditions": [
+                                {
+                                    "relation": 0,
+                                    "type": 1,
+                                    "value": "6e1"
+                                }
+                            ],
                             "format": 0,
                             "or": true
                         },
@@ -11288,7 +11368,7 @@
                             "or": true
                         },
                         "title": "数据",
-                        "width": 160
+                        "width": 332
                     },
                     {
                         "field": 27,
@@ -11575,7 +11655,7 @@
                 "timeMode": "0",
                 "viewIndex": "0",
                 "viewLayout": "4",
-                "viewSizes": ""
+                "viewSizes": "0"
             },
             "index": 3,
             "name": "报文",
@@ -11622,7 +11702,1761 @@
                     "script": {
                         "globalDefinitions": "# 在这里添加全局变量、函数，在所有步骤中都可访问\r\nfrom ZXDoc import *\r\n"
                     },
-                    "securityAccessDll": "E:/workFiles/IEBS/tc234bootloader/ZcanProDll/Debug/ZcanProDll.dll",
+                    "securityAccessDll": "E:\\workFiles\\IEBS\\tc234bootloader\\ZcanProDll\\Debug\\ZcanProDll.dll",
+                    "sessionKeep": {
+                        "addressingType": 1,
+                        "enabled": false,
+                        "interval": 2000,
+                        "suppressResponse": true
+                    },
+                    "tp": {
+                        "blockDownloadRetry": 2,
+                        "blockSize": 0,
+                        "fcTimeout": 1000,
+                        "fillByte": "0x0",
+                        "frameType": 0,
+                        "isModifyEcuSTmin": false,
+                        "isfillByte": true,
+                        "localSTmin": 0,
+                        "p2Timeout": 2000,
+                        "p2xTimeout": 5000,
+                        "protocalVersion": 0,
+                        "remoteSTmin": 0
+                    }
+                },
+                "deviceId": "{f576fa52-f6a0-4741-aed0-28ba5e1b7975}",
+                "flashCount": 1,
+                "flashInfo": [
+                    {
+                        "addressing": {
+                            "functional_address": "7DF",
+                            "is_extend": false,
+                            "physical_address": "74C",
+                            "respons_address": "75C"
+                        },
+                        "addresssize": 4,
+                        "crc_block_custom_cmd": "31 01 F1 A0",
+                        "crc_block_custom_enable": false,
+                        "crc_block_enable": false,
+                        "crc_cmd": "31 01 02 02",
+                        "crc_enable": false,
+                        "crc_in_reverse": true,
+                        "crc_init_value": "0xffffffff",
+                        "crc_out_reverse": true,
+                        "crc_poly": "0x4c11db7",
+                        "crc_type": 0,
+                        "crc_xor_value": "0xffffffff",
+                        "customBlockSize": 0,
+                        "customParamForS37": "",
+                        "customParamForS37Enable": false,
+                        "custom_addressing": false,
+                        "dataFormatIdentifier": 0,
+                        "delay": 0,
+                        "desc": "文件下载",
+                        "erase_ecu_memory_mode": 3,
+                        "ever_file_block_delay": 0,
+                        "file": "E:/workFiles/IEBS/tc234bootloader/App_dualBank/Debug/App_dualBank.hex",
+                        "file_blocks": [
+                            {
+                                "address": "0x80020000",
+                                "crc": "0x3359EAFD",
+                                "enabled": true,
+                                "fillByte": "0x0",
+                                "mappedAddress": "0x80020000",
+                                "mappedSize": "18",
+                                "size": "18"
+                            },
+                            {
+                                "address": "0x80020020",
+                                "crc": "0x8303BBFF",
+                                "enabled": true,
+                                "fillByte": "0x0",
+                                "mappedAddress": "0x80020020",
+                                "mappedSize": "12",
+                                "size": "12"
+                            },
+                            {
+                                "address": "0x80020030",
+                                "crc": "0xD2E8B89",
+                                "enabled": true,
+                                "fillByte": "0x0",
+                                "mappedAddress": "0x80020030",
+                                "mappedSize": "44334",
+                                "size": "44334"
+                            },
+                            {
+                                "address": "0x8002AD60",
+                                "crc": "0xE14DFEBF",
+                                "enabled": true,
+                                "fillByte": "0x0",
+                                "mappedAddress": "0x8002AD60",
+                                "mappedSize": "3973",
+                                "size": "3973"
+                            },
+                            {
+                                "address": "0x8002BCE8",
+                                "crc": "0x6D653F6F",
+                                "enabled": true,
+                                "fillByte": "0x0",
+                                "mappedAddress": "0x8002BCE8",
+                                "mappedSize": "1837",
+                                "size": "1837"
+                            },
+                            {
+                                "address": "0x8002C418",
+                                "crc": "0xDBC677F",
+                                "enabled": true,
+                                "fillByte": "0x0",
+                                "mappedAddress": "0x8002C418",
+                                "mappedSize": "688",
+                                "size": "688"
+                            },
+                            {
+                                "address": "0x80090500",
+                                "crc": "0x157ED6DC",
+                                "enabled": true,
+                                "fillByte": "0x0",
+                                "mappedAddress": "0x80090500",
+                                "mappedSize": "10",
+                                "size": "10"
+                            },
+                            {
+                                "address": "0x80090540",
+                                "crc": "0xA7535417",
+                                "enabled": true,
+                                "fillByte": "0x0",
+                                "mappedAddress": "0x80090540",
+                                "mappedSize": "10",
+                                "size": "10"
+                            },
+                            {
+                                "address": "0x80090C80",
+                                "crc": "0xFAF8F481",
+                                "enabled": true,
+                                "fillByte": "0x0",
+                                "mappedAddress": "0x80090C80",
+                                "mappedSize": "10",
+                                "size": "10"
+                            },
+                            {
+                                "address": "0x80098000",
+                                "crc": "0xB558FB58",
+                                "enabled": true,
+                                "fillByte": "0x0",
+                                "mappedAddress": "0x80098000",
+                                "mappedSize": "242",
+                                "size": "242"
+                            }
+                        ],
+                        "functionaddr": false,
+                        "isCustomBlockSize": false,
+                        "lengthsize": 4,
+                        "type": "download"
+                    },
+                    {
+                        "addressing": {
+                            "functional_address": "7DF",
+                            "is_extend": false,
+                            "physical_address": "74C",
+                            "respons_address": "75C"
+                        },
+                        "check_response": false,
+                        "custom_addressing": false,
+                        "data": "01 02 02",
+                        "delay": 0,
+                        "desc": "例程控制",
+                        "expect_response_data": "",
+                        "functionaddr": false,
+                        "is_crc_cmd": "false",
+                        "sid": "0x31",
+                        "suppress_response": false,
+                        "type": "general",
+                        "uds_service": {
+                            "creation_type": 0,
+                            "desc": "Routine Control",
+                            "enabled": true,
+                            "id": "0x31",
+                            "sub_services": [
+                                {
+                                    "creation_type": 0,
+                                    "data": "",
+                                    "desc": "Start Routine",
+                                    "id": "0x01",
+                                    "isDataNode": false
+                                },
+                                {
+                                    "creation_type": 0,
+                                    "data": "",
+                                    "desc": "Stop Routine",
+                                    "id": "0x02",
+                                    "isDataNode": false
+                                },
+                                {
+                                    "creation_type": 0,
+                                    "data": "",
+                                    "desc": "Request Routine Results",
+                                    "id": "0x03",
+                                    "isDataNode": false
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "addressing": {
+                            "functional_address": "7DF",
+                            "is_extend": false,
+                            "physical_address": "74C",
+                            "respons_address": "75C"
+                        },
+                        "check_response": false,
+                        "custom_addressing": false,
+                        "data": "03 ",
+                        "delay": 0,
+                        "desc": "ECU重置",
+                        "expect_response_data": "",
+                        "functionaddr": false,
+                        "is_crc_cmd": "false",
+                        "sid": "0x11",
+                        "suppress_response": false,
+                        "type": "general",
+                        "uds_service": {
+                            "creation_type": 0,
+                            "desc": "ECU Reset",
+                            "enabled": true,
+                            "id": "0x11",
+                            "sub_services": [
+                                {
+                                    "creation_type": 0,
+                                    "data": "",
+                                    "desc": "Hard Reset",
+                                    "id": "0x01",
+                                    "isDataNode": false
+                                },
+                                {
+                                    "creation_type": 0,
+                                    "data": "",
+                                    "desc": "Key Off On Reset",
+                                    "id": "0x02",
+                                    "isDataNode": false
+                                },
+                                {
+                                    "creation_type": 0,
+                                    "data": "",
+                                    "desc": "Soft Reset",
+                                    "id": "0x03",
+                                    "isDataNode": false
+                                },
+                                {
+                                    "creation_type": 0,
+                                    "data": "",
+                                    "desc": "Enable Rapid Power Shutdown",
+                                    "id": "0x04",
+                                    "isDataNode": false
+                                },
+                                {
+                                    "creation_type": 0,
+                                    "data": "",
+                                    "desc": "Disable Rapid Power Shutdown",
+                                    "id": "0x05",
+                                    "isDataNode": false
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "sessionKeepEnagled": false
+            },
+            "index": 4,
+            "name": "ECU刷新",
+            "userData": "DoCAN",
+            "uuid": "{91bdec0c-3ad8-42bc-99b1-d0d2a3e25965}",
+            "windowType": "ECU Flash"
+        },
+        {
+            "comment": "",
+            "details": {
+                "SearchView": {
+                    "case": false,
+                    "children": true,
+                    "history": false,
+                    "input": "",
+                    "inputs": "",
+                    "wholeWords": false
+                },
+                "autoScrollToLatest": "true",
+                "detailViewLayout": "3",
+                "displayMode": "0",
+                "errorFieldsData": [
+                    {
+                        "field": 0,
+                        "field_name": "E_Zero",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "",
+                        "width": 150
+                    },
+                    {
+                        "field": 1,
+                        "field_name": "E_No",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "序号",
+                        "width": 65
+                    },
+                    {
+                        "field": 2,
+                        "field_name": "E_Time",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "时间",
+                        "width": 150
+                    },
+                    {
+                        "field": 3,
+                        "field_name": "E_Number",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "索引",
+                        "width": 60
+                    },
+                    {
+                        "field": 4,
+                        "field_name": "E_Channel",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "通道",
+                        "width": 60
+                    },
+                    {
+                        "field": 5,
+                        "field_name": "E_Identifier",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "ID",
+                        "width": 60
+                    },
+                    {
+                        "field": 6,
+                        "field_name": "E_Name",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "名称",
+                        "width": 208
+                    },
+                    {
+                        "field": 7,
+                        "field_name": "E_DNGroup",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "组",
+                        "width": 60
+                    },
+                    {
+                        "field": 8,
+                        "field_name": "E_DNMessageID",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "消息ID(hex)",
+                        "width": 60
+                    },
+                    {
+                        "field": 9,
+                        "field_name": "E_DNMessage",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "消息描述",
+                        "width": 200
+                    },
+                    {
+                        "field": 10,
+                        "field_name": "E_DNDir",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "源/目的",
+                        "width": 80
+                    },
+                    {
+                        "field": 11,
+                        "field_name": "E_DNMAC",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "MAC ID",
+                        "width": 60
+                    },
+                    {
+                        "field": 12,
+                        "field_name": "E_DNService",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "服务",
+                        "width": 100
+                    },
+                    {
+                        "field": 13,
+                        "field_name": "E_DNRR",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "请求/响应",
+                        "width": 80
+                    },
+                    {
+                        "field": 14,
+                        "field_name": "E_PGN",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "PGN",
+                        "width": 100
+                    },
+                    {
+                        "field": 15,
+                        "field_name": "E_EventType",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "事件类型",
+                        "width": 100
+                    },
+                    {
+                        "field": 16,
+                        "field_name": "E_SenderNode",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "发送节点",
+                        "width": 90
+                    },
+                    {
+                        "field": 17,
+                        "field_name": "E_ReceiveNode",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "接收节点",
+                        "width": 90
+                    },
+                    {
+                        "field": 18,
+                        "field_name": "E_Src",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "源地址(hex)",
+                        "width": 90
+                    },
+                    {
+                        "field": 19,
+                        "field_name": "E_Dest",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "目的地址(hex)",
+                        "width": 90
+                    },
+                    {
+                        "field": 20,
+                        "field_name": "E_SourcePort",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "源端口",
+                        "width": 50
+                    },
+                    {
+                        "field": 21,
+                        "field_name": "E_DestPort",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "目标端口",
+                        "width": 50
+                    },
+                    {
+                        "field": 22,
+                        "field_name": "E_Priority",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "优先级",
+                        "width": 50
+                    },
+                    {
+                        "field": 23,
+                        "field_name": "E_Dir",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "方向",
+                        "width": 50
+                    },
+                    {
+                        "field": 24,
+                        "field_name": "E_Length",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "长度",
+                        "width": 60
+                    },
+                    {
+                        "field": 25,
+                        "field_name": "E_DLC",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "DLC",
+                        "width": 40
+                    },
+                    {
+                        "field": 26,
+                        "field_name": "E_Data",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "数据",
+                        "width": 382
+                    },
+                    {
+                        "field": 27,
+                        "field_name": "E_HexData",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "数据(十六进制)",
+                        "width": 160
+                    },
+                    {
+                        "field": 28,
+                        "field_name": "E_DecData",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "数据(十进制)",
+                        "width": 160
+                    },
+                    {
+                        "field": 29,
+                        "field_name": "E_BinData",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "数据(二进制)",
+                        "width": 160
+                    },
+                    {
+                        "field": 30,
+                        "field_name": "E_ASCIIData",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "数据(字符)",
+                        "width": 160
+                    },
+                    {
+                        "field": 31,
+                        "field_name": "E_Command",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "命令",
+                        "width": 100
+                    },
+                    {
+                        "field": 32,
+                        "field_name": "E_Interpretation",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "解释",
+                        "width": 200
+                    },
+                    {
+                        "field": 33,
+                        "field_name": "E_J1939Type",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "类型",
+                        "width": 60
+                    },
+                    {
+                        "field": 34,
+                        "field_name": "E_Violation",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "违例",
+                        "width": 150
+                    },
+                    {
+                        "field": 35,
+                        "field_name": "E_Remote",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "远程帧",
+                        "width": 60
+                    },
+                    {
+                        "field": 36,
+                        "field_name": "E_ESI",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "ESI",
+                        "width": 60
+                    },
+                    {
+                        "field": 37,
+                        "field_name": "E_ProtectedID",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "PID",
+                        "width": 60
+                    },
+                    {
+                        "field": 38,
+                        "field_name": "E_CheckSum",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "帧校验和",
+                        "width": 60
+                    },
+                    {
+                        "field": 39,
+                        "field_name": "E_VlanID",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "VLAN ID",
+                        "width": 60
+                    },
+                    {
+                        "field": 40,
+                        "field_name": "E_EtherType",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "以太网类型",
+                        "width": 60
+                    },
+                    {
+                        "field": 41,
+                        "field_name": "E_PacketLength",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "包长度",
+                        "width": 60
+                    },
+                    {
+                        "field": 42,
+                        "field_name": "E_EtherProtocol",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "协议",
+                        "width": 60
+                    },
+                    {
+                        "field": 43,
+                        "field_name": "E_DiagType",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "类型",
+                        "width": 60
+                    },
+                    {
+                        "field": 44,
+                        "field_name": "E_DiagDataLength",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "长度",
+                        "width": 60
+                    },
+                    {
+                        "field": 45,
+                        "field_name": "E_SOMEIP_ServiceID",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "服务ID",
+                        "width": 60
+                    },
+                    {
+                        "field": 46,
+                        "field_name": "E_SOMEIP_MethodID",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "方法ID",
+                        "width": 60
+                    },
+                    {
+                        "field": 47,
+                        "field_name": "E_SOMEIP_ServiceName",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "服务",
+                        "width": 100
+                    },
+                    {
+                        "field": 48,
+                        "field_name": "E_SOMEIP_MethodName",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "方法",
+                        "width": 100
+                    },
+                    {
+                        "field": 49,
+                        "field_name": "E_SOMEIP_ClientID",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "客户端ID",
+                        "width": 60
+                    },
+                    {
+                        "field": 50,
+                        "field_name": "E_SOMEIP_SessionID",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "会话ID",
+                        "width": 60
+                    },
+                    {
+                        "field": 51,
+                        "field_name": "E_SOMEIP_MessageType",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "消息类型",
+                        "width": 90
+                    },
+                    {
+                        "field": 52,
+                        "field_name": "E_SOMEIP_ReturnCode",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "返回码",
+                        "width": 60
+                    },
+                    {
+                        "field": 53,
+                        "field_name": "E_FrameCounter",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "帧计数",
+                        "width": 60
+                    }
+                ],
+                "fadeOutOldEvent": "true",
+                "fadeOutUnchangedBytes": "true",
+                "fieldLayoutKey": "CAN/FD",
+                "fieldsData": [
+                    {
+                        "field": 0,
+                        "field_name": "E_Zero",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "",
+                        "width": 150
+                    },
+                    {
+                        "field": 1,
+                        "field_name": "E_No",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "序号",
+                        "width": 65
+                    },
+                    {
+                        "field": 2,
+                        "field_name": "E_Time",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "时间",
+                        "width": 150
+                    },
+                    {
+                        "field": 3,
+                        "field_name": "E_Number",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "索引",
+                        "width": 60
+                    },
+                    {
+                        "field": 4,
+                        "field_name": "E_Channel",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "通道",
+                        "width": 60
+                    },
+                    {
+                        "field": 5,
+                        "field_name": "E_Identifier",
+                        "filter": {
+                            "conditions": [
+                                {
+                                    "relation": 0,
+                                    "type": 1,
+                                    "value": "75c"
+                                }
+                            ],
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "ID",
+                        "width": 60
+                    },
+                    {
+                        "field": 6,
+                        "field_name": "E_Name",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "名称",
+                        "width": 208
+                    },
+                    {
+                        "field": 7,
+                        "field_name": "E_DNGroup",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "组",
+                        "width": 60
+                    },
+                    {
+                        "field": 8,
+                        "field_name": "E_DNMessageID",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "消息ID(hex)",
+                        "width": 60
+                    },
+                    {
+                        "field": 9,
+                        "field_name": "E_DNMessage",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "消息描述",
+                        "width": 200
+                    },
+                    {
+                        "field": 10,
+                        "field_name": "E_DNDir",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "源/目的",
+                        "width": 80
+                    },
+                    {
+                        "field": 11,
+                        "field_name": "E_DNMAC",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "MAC ID",
+                        "width": 60
+                    },
+                    {
+                        "field": 12,
+                        "field_name": "E_DNService",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "服务",
+                        "width": 100
+                    },
+                    {
+                        "field": 13,
+                        "field_name": "E_DNRR",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "请求/响应",
+                        "width": 80
+                    },
+                    {
+                        "field": 14,
+                        "field_name": "E_PGN",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "PGN",
+                        "width": 100
+                    },
+                    {
+                        "field": 15,
+                        "field_name": "E_EventType",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "事件类型",
+                        "width": 100
+                    },
+                    {
+                        "field": 16,
+                        "field_name": "E_SenderNode",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "发送节点",
+                        "width": 90
+                    },
+                    {
+                        "field": 17,
+                        "field_name": "E_ReceiveNode",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "接收节点",
+                        "width": 90
+                    },
+                    {
+                        "field": 18,
+                        "field_name": "E_Src",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "源地址(hex)",
+                        "width": 90
+                    },
+                    {
+                        "field": 19,
+                        "field_name": "E_Dest",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "目的地址(hex)",
+                        "width": 90
+                    },
+                    {
+                        "field": 20,
+                        "field_name": "E_SourcePort",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "源端口",
+                        "width": 50
+                    },
+                    {
+                        "field": 21,
+                        "field_name": "E_DestPort",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "目标端口",
+                        "width": 50
+                    },
+                    {
+                        "field": 22,
+                        "field_name": "E_Priority",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "优先级",
+                        "width": 50
+                    },
+                    {
+                        "field": 23,
+                        "field_name": "E_Dir",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "方向",
+                        "width": 50
+                    },
+                    {
+                        "field": 24,
+                        "field_name": "E_Length",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "长度",
+                        "width": 60
+                    },
+                    {
+                        "field": 25,
+                        "field_name": "E_DLC",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "DLC",
+                        "width": 40
+                    },
+                    {
+                        "field": 26,
+                        "field_name": "E_Data",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "数据",
+                        "width": 382
+                    },
+                    {
+                        "field": 27,
+                        "field_name": "E_HexData",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "数据(十六进制)",
+                        "width": 160
+                    },
+                    {
+                        "field": 28,
+                        "field_name": "E_DecData",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "数据(十进制)",
+                        "width": 160
+                    },
+                    {
+                        "field": 29,
+                        "field_name": "E_BinData",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "数据(二进制)",
+                        "width": 160
+                    },
+                    {
+                        "field": 30,
+                        "field_name": "E_ASCIIData",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "数据(字符)",
+                        "width": 160
+                    },
+                    {
+                        "field": 31,
+                        "field_name": "E_Command",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "命令",
+                        "width": 100
+                    },
+                    {
+                        "field": 32,
+                        "field_name": "E_Interpretation",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "解释",
+                        "width": 200
+                    },
+                    {
+                        "field": 33,
+                        "field_name": "E_J1939Type",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "类型",
+                        "width": 60
+                    },
+                    {
+                        "field": 34,
+                        "field_name": "E_Violation",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "违例",
+                        "width": 150
+                    },
+                    {
+                        "field": 35,
+                        "field_name": "E_Remote",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "远程帧",
+                        "width": 60
+                    },
+                    {
+                        "field": 36,
+                        "field_name": "E_ESI",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "ESI",
+                        "width": 60
+                    },
+                    {
+                        "field": 37,
+                        "field_name": "E_ProtectedID",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "PID",
+                        "width": 60
+                    },
+                    {
+                        "field": 38,
+                        "field_name": "E_CheckSum",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "帧校验和",
+                        "width": 60
+                    },
+                    {
+                        "field": 39,
+                        "field_name": "E_VlanID",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "VLAN ID",
+                        "width": 60
+                    },
+                    {
+                        "field": 40,
+                        "field_name": "E_EtherType",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "以太网类型",
+                        "width": 60
+                    },
+                    {
+                        "field": 41,
+                        "field_name": "E_PacketLength",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "包长度",
+                        "width": 60
+                    },
+                    {
+                        "field": 42,
+                        "field_name": "E_EtherProtocol",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "协议",
+                        "width": 60
+                    },
+                    {
+                        "field": 43,
+                        "field_name": "E_DiagType",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "类型",
+                        "width": 60
+                    },
+                    {
+                        "field": 44,
+                        "field_name": "E_DiagDataLength",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "长度",
+                        "width": 60
+                    },
+                    {
+                        "field": 45,
+                        "field_name": "E_SOMEIP_ServiceID",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "服务ID",
+                        "width": 60
+                    },
+                    {
+                        "field": 46,
+                        "field_name": "E_SOMEIP_MethodID",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "方法ID",
+                        "width": 60
+                    },
+                    {
+                        "field": 47,
+                        "field_name": "E_SOMEIP_ServiceName",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "服务",
+                        "width": 100
+                    },
+                    {
+                        "field": 48,
+                        "field_name": "E_SOMEIP_MethodName",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "方法",
+                        "width": 100
+                    },
+                    {
+                        "field": 49,
+                        "field_name": "E_SOMEIP_ClientID",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "客户端ID",
+                        "width": 60
+                    },
+                    {
+                        "field": 50,
+                        "field_name": "E_SOMEIP_SessionID",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "会话ID",
+                        "width": 60
+                    },
+                    {
+                        "field": 51,
+                        "field_name": "E_SOMEIP_MessageType",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "消息类型",
+                        "width": 90
+                    },
+                    {
+                        "field": 52,
+                        "field_name": "E_SOMEIP_ReturnCode",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "返回码",
+                        "width": 60
+                    },
+                    {
+                        "field": 53,
+                        "field_name": "E_FrameCounter",
+                        "filter": {
+                            "format": 0,
+                            "or": true
+                        },
+                        "title": "帧计数",
+                        "width": 60
+                    }
+                ],
+                "floatValueAccuracy": "3",
+                "isValidDecimalEnabled": "true",
+                "numberMode": "0",
+                "pageCount": "1000",
+                "pauseCacheFrameCount": "100000",
+                "pauseCacheSeconds": "60",
+                "showAbsoluteDateFlag": "false",
+                "showErrorView": "false",
+                "showNumber": "false",
+                "startClear": "true",
+                "timeAccuracy": "6",
+                "timeMode": "0",
+                "viewIndex": "0",
+                "viewLayout": "4",
+                "viewSizes": "0"
+            },
+            "index": 5,
+            "name": "报文",
+            "userData": "",
+            "uuid": "{6f043236-1508-4edb-8539-1a36256eb861}",
+            "windowType": "Trace Window"
+        },
+        {
+            "comment": "",
+            "details": {
+                "configuration": {
+                    "addressing": {
+                        "extend": false,
+                        "functionalAddress": "0x7DF",
+                        "mode": {
+                            "addressingMode": 0,
+                            "ecuAddr": 0,
+                            "extensionAddr": 0,
+                            "strictAddrMode": false,
+                            "testerAddr": 0
+                        },
+                        "physicalAddress": "0x74C",
+                        "responseAddress": "0x75C"
+                    },
+                    "debug": {
+                        "udsInterface": 0
+                    },
+                    "doip": {
+                        "aliveCheckMaxIdleTimeMs": 0,
+                        "connectTimeout": 2000,
+                        "connectionMode": 0,
+                        "isResponseAliveCheckEnabled": false,
+                        "remotePort": 13400,
+                        "sendActivationPacket": true
+                    },
+                    "flash": {
+                        "stopOnFailure": true
+                    },
+                    "output": {
+                        "outputMaxRowCount": 100000,
+                        "showRawFrame": false,
+                        "singleFileMaxRowCount": 100000
+                    },
+                    "script": {
+                        "globalDefinitions": "# 在这里添加全局变量、函数，在所有步骤中都可访问\r\nfrom ZXDoc import *\r\n"
+                    },
+                    "securityAccessDll": "E:\\workFiles\\IEBS\\tc234bootloader\\ZcanProDll\\Debug\\ZcanProDll.dll",
+                    "sessionKeep": {
+                        "addressingType": 1,
+                        "enabled": false,
+                        "interval": 2000,
+                        "suppressResponse": true
+                    },
+                    "tp": {
+                        "blockDownloadRetry": 2,
+                        "blockSize": 0,
+                        "fcTimeout": 1000,
+                        "fillByte": "0x0",
+                        "frameType": 0,
+                        "isModifyEcuSTmin": false,
+                        "isfillByte": true,
+                        "localSTmin": 0,
+                        "p2Timeout": 2000,
+                        "p2xTimeout": 5000,
+                        "protocalVersion": 0,
+                        "remoteSTmin": 0
+                    }
+                },
+                "currentDataTab": 0,
+                "dataTabs": [
+                    {
+                        "groups": [
+                            {
+                                "items": [
+                                    {
+                                        "id": "10 01",
+                                        "name": "DefaultSession",
+                                        "taskItem": {
+                                            "addressing": {
+                                                "functional_address": "7DF",
+                                                "is_extend": false,
+                                                "physical_address": "74C",
+                                                "respons_address": "75C"
+                                            },
+                                            "addressingType": 0,
+                                            "data": "10 01",
+                                            "delayMs": 0,
+                                            "desc": "默认会话",
+                                            "enabled": true,
+                                            "expectResponseData": "",
+                                            "isCheckResponse": false,
+                                            "isCustomAddressing": false,
+                                            "isSuppressResponse": false,
+                                            "name": "DefaultSession",
+                                            "responseTraceType": 0,
+                                            "type": 5
+                                        },
+                                        "type": "Basic"
+                                    },
+                                    {
+                                        "id": "31 01 00 00",
+                                        "name": "StartRoutine",
+                                        "taskItem": {
+                                            "addressing": {
+                                                "functional_address": "7DF",
+                                                "is_extend": false,
+                                                "physical_address": "74C",
+                                                "respons_address": "75C"
+                                            },
+                                            "addressingType": 0,
+                                            "data": "31 01 00 00 00",
+                                            "delayMs": 0,
+                                            "desc": "启动例程",
+                                            "enabled": true,
+                                            "expectResponseData": "",
+                                            "isCheckResponse": false,
+                                            "isCustomAddressing": false,
+                                            "isSuppressResponse": false,
+                                            "name": "StartRoutine",
+                                            "responseTraceType": 0,
+                                            "type": 5
+                                        },
+                                        "type": "Basic"
+                                    },
+                                    {
+                                        "id": "11 03",
+                                        "name": "SoftReset",
+                                        "taskItem": {
+                                            "addressing": {
+                                                "functional_address": "7DF",
+                                                "is_extend": false,
+                                                "physical_address": "74C",
+                                                "respons_address": "75C"
+                                            },
+                                            "addressingType": 0,
+                                            "data": "11 03",
+                                            "delayMs": 0,
+                                            "desc": "软重置",
+                                            "enabled": true,
+                                            "expectResponseData": "",
+                                            "isCheckResponse": false,
+                                            "isCustomAddressing": false,
+                                            "isSuppressResponse": false,
+                                            "name": "SoftReset",
+                                            "responseTraceType": 0,
+                                            "type": 5
+                                        },
+                                        "type": "Basic"
+                                    },
+                                    {
+                                        "id": "19 01",
+                                        "name": "ReportNumberOfDTCByStatusMask",
+                                        "taskItem": {
+                                            "addressing": {
+                                                "functional_address": "7DF",
+                                                "is_extend": false,
+                                                "physical_address": "74C",
+                                                "respons_address": "75C"
+                                            },
+                                            "addressingType": 0,
+                                            "data": "19 01 FF",
+                                            "delayMs": 0,
+                                            "desc": "按状态掩码报告DTC数量",
+                                            "enabled": true,
+                                            "expectResponseData": "",
+                                            "isCheckResponse": false,
+                                            "isCustomAddressing": false,
+                                            "isSuppressResponse": false,
+                                            "name": "ReportNumberOfDTCByStatusMask",
+                                            "responseTraceType": 0,
+                                            "type": 5
+                                        },
+                                        "type": "Basic"
+                                    },
+                                    {
+                                        "id": "19 02",
+                                        "name": "ReportDTCByStatusMask",
+                                        "taskItem": {
+                                            "addressing": {
+                                                "functional_address": "7DF",
+                                                "is_extend": false,
+                                                "physical_address": "74C",
+                                                "respons_address": "75C"
+                                            },
+                                            "addressingType": 0,
+                                            "data": "19 02 00",
+                                            "delayMs": 0,
+                                            "desc": "按状态掩码报告DTC",
+                                            "enabled": true,
+                                            "expectResponseData": "",
+                                            "isCheckResponse": false,
+                                            "isCustomAddressing": false,
+                                            "isSuppressResponse": false,
+                                            "name": "ReportDTCByStatusMask",
+                                            "responseTraceType": 0,
+                                            "type": 5
+                                        },
+                                        "type": "Basic"
+                                    },
+                                    {
+                                        "id": "19 0A",
+                                        "name": "ReportSupportedDTC",
+                                        "taskItem": {
+                                            "addressing": {
+                                                "functional_address": "7DF",
+                                                "is_extend": false,
+                                                "physical_address": "74C",
+                                                "respons_address": "75C"
+                                            },
+                                            "addressingType": 0,
+                                            "data": "19 0A 00",
+                                            "delayMs": 0,
+                                            "desc": "报告受支持的DTC",
+                                            "enabled": true,
+                                            "expectResponseData": "",
+                                            "isCheckResponse": false,
+                                            "isCustomAddressing": false,
+                                            "isSuppressResponse": false,
+                                            "name": "ReportSupportedDTC",
+                                            "responseTraceType": 0,
+                                            "type": 5
+                                        },
+                                        "type": "Basic"
+                                    },
+                                    {
+                                        "id": "19 04",
+                                        "name": "ReportDTCSnapshotRecordByDTCNumber",
+                                        "taskItem": {
+                                            "addressing": {
+                                                "functional_address": "7DF",
+                                                "is_extend": false,
+                                                "physical_address": "74C",
+                                                "respons_address": "75C"
+                                            },
+                                            "addressingType": 0,
+                                            "data": "19 04 00",
+                                            "delayMs": 0,
+                                            "desc": "按DTC编号报告DTC快照记录",
+                                            "enabled": true,
+                                            "expectResponseData": "",
+                                            "isCheckResponse": false,
+                                            "isCustomAddressing": false,
+                                            "isSuppressResponse": false,
+                                            "name": "ReportDTCSnapshotRecordByDTCNumber",
+                                            "responseTraceType": 0,
+                                            "type": 5
+                                        },
+                                        "type": "Basic"
+                                    }
+                                ],
+                                "name": "默认分组",
+                                "type": "Group"
+                            }
+                        ],
+                        "name": "新页"
+                    }
+                ],
+                "sendCount": 1,
+                "windowSettings": {
+                    "uintDisplayType": 0
+                }
+            },
+            "index": 6,
+            "name": "UDS诊断",
+            "userData": "{f576fa52-f6a0-4741-aed0-28ba5e1b7975}",
+            "uuid": "{ba587331-6b70-4362-9af0-3715ef2995d0}",
+            "windowType": "UDS Diagnostics"
+        },
+        {
+            "comment": "",
+            "details": {
+                "autostart": false,
+                "bytesPerRow": 16,
+                "failurePolicy": 1,
+                "interval": 10,
+                "items": [
+                    {
+                        "ID": 1868,
+                        "channel": 1,
+                        "data": "06 19 04 00 c1 00 ff 00",
+                        "dataLength": 8,
+                        "enabled": true,
+                        "frameType": 0,
+                        "generators": {
+                        },
+                        "interval": 10,
+                        "name": "帧",
+                        "times": 1,
+                        "type": 1
+                    }
+                ],
+                "layout": {
+                    "frame": "AAAA/wAAAAAAAAABAAAAAQAAAAAAAAAAAAAAAAAAAAALAAYAAAACAAAACgAAAGQAAAAJAAAAZAAAAxAAAAALAQAAAQAAAAAAAAAAAAAAAGT/////AAAAgQAAAAAAAAALAAAAPAAAAAEAAAAAAAAAeAAAAAEAAAAAAAAAPAAAAAEAAAAAAAAAWgAAAAEAAAAAAAAAoAAAAAEAAAAAAAAALQAAAAEAAAAAAAAASwAAAAEAAAAAAAAARgAAAAEAAAAAAAAAaAAAAAEAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAEAAAAAAAAD6AAAAABk",
+                    "signals": "AAAA/wAAAAAAAAABAAAAAP////8BAAAAAAAAAAAAAAAJAAEAAAABAAAACAAAAGQAAALzAAAACQEBAAEAAAAAAAAAAAAAAABk/////wAAAIEAAAAAAAAACQAAAK8AAAABAAAAAAAAAFUAAAABAAAAAAAAAHgAAAABAAAAAAAAAEsAAAABAAAAAAAAAEsAAAABAAAAAAAAAEsAAAABAAAAAAAAADIAAAABAAAAAAAAAGQAAAABAAAAAAAAAAAAAAABAAAAAAAAA+gAAAAAZA==",
+                    "splitter": "AAAA/wAAAAEAAAACAAAAwAAAAOIA/////wEAAAACAA=="
+                },
+                "maxRetryTimes": 3,
+                "parallel": true,
+                "parallelJobs": 512,
+                "resetGenerators": true,
+                "retryInterval": 10,
+                "showAddress": true,
+                "showAscii": true,
+                "showStatus": true,
+                "template": {
+                    "channel": 1,
+                    "data": "00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
+                    "frameType": 6,
+                    "id": 1,
+                    "interval": 10,
+                    "length": 64,
+                    "times": 1
+                },
+                "times": 1,
+                "version": 1
+            },
+            "index": 7,
+            "name": "报文发送",
+            "userData": "",
+            "uuid": "{9fad5f9a-1043-439f-993c-152078c1a25c}",
+            "windowType": "CAN Transmit"
+        },
+        {
+            "comment": "",
+            "details": {
+                "configuration": {
+                    "addressing": {
+                        "extend": false,
+                        "functionalAddress": "0x7DF",
+                        "mode": {
+                            "addressingMode": 0,
+                            "ecuAddr": 0,
+                            "extensionAddr": 0,
+                            "strictAddrMode": false,
+                            "testerAddr": 0
+                        },
+                        "physicalAddress": "0x74C",
+                        "responseAddress": "0x75C"
+                    },
+                    "debug": {
+                        "udsInterface": 0
+                    },
+                    "doip": {
+                        "aliveCheckMaxIdleTimeMs": 0,
+                        "connectTimeout": 2000,
+                        "connectionMode": 0,
+                        "isResponseAliveCheckEnabled": false,
+                        "remotePort": 13400,
+                        "sendActivationPacket": true
+                    },
+                    "flash": {
+                        "stopOnFailure": true
+                    },
+                    "output": {
+                        "outputMaxRowCount": 100000,
+                        "showRawFrame": false,
+                        "singleFileMaxRowCount": 100000
+                    },
+                    "script": {
+                        "globalDefinitions": "# 在这里添加全局变量、函数，在所有步骤中都可访问\r\nfrom ZXDoc import *\r\n"
+                    },
+                    "securityAccessDll": "E:\\workFiles\\IEBS\\tc234bootloader\\ZcanProDll\\Debug\\ZcanProDll.dll",
                     "sessionKeep": {
                         "addressingType": 1,
                         "enabled": false,
@@ -11735,47 +13569,40 @@
                         },
                         "check_response": false,
                         "custom_addressing": false,
-                        "data": "02 ",
+                        "data": "01 DF FD",
                         "delay": 0,
-                        "desc": "诊断会话控制",
+                        "desc": "例程控制",
                         "expect_response_data": "",
                         "functionaddr": false,
                         "is_crc_cmd": "false",
-                        "sid": "0x10",
+                        "sid": "0x31",
                         "suppress_response": false,
                         "type": "general",
                         "uds_service": {
                             "creation_type": 0,
-                            "desc": "Diagnostic Session Control",
+                            "desc": "Routine Control",
                             "enabled": true,
-                            "id": "0x10",
+                            "id": "0x31",
                             "sub_services": [
                                 {
                                     "creation_type": 0,
                                     "data": "",
-                                    "desc": "Default Session",
+                                    "desc": "Start Routine",
                                     "id": "0x01",
                                     "isDataNode": false
                                 },
                                 {
                                     "creation_type": 0,
                                     "data": "",
-                                    "desc": "Programming Session",
+                                    "desc": "Stop Routine",
                                     "id": "0x02",
                                     "isDataNode": false
                                 },
                                 {
                                     "creation_type": 0,
                                     "data": "",
-                                    "desc": "Extended Diagnostic Session",
+                                    "desc": "Request Routine Results",
                                     "id": "0x03",
-                                    "isDataNode": false
-                                },
-                                {
-                                    "creation_type": 0,
-                                    "data": "",
-                                    "desc": "Safety System Diagnostic Session",
-                                    "id": "0x04",
                                     "isDataNode": false
                                 }
                             ]
@@ -11784,1220 +13611,67 @@
                 ],
                 "sessionKeepEnagled": false
             },
-            "index": 4,
+            "index": 8,
             "name": "ECU刷新",
             "userData": "DoCAN",
-            "uuid": "{91bdec0c-3ad8-42bc-99b1-d0d2a3e25965}",
+            "uuid": "{e10fad03-46d4-4d76-8152-b5a4d09bb8ce}",
             "windowType": "ECU Flash"
         },
         {
             "comment": "",
             "details": {
-                "SearchView": {
-                    "case": false,
-                    "children": true,
-                    "history": false,
-                    "input": "",
-                    "inputs": "",
-                    "wholeWords": false
-                },
-                "autoScrollToLatest": "true",
-                "detailViewLayout": "3",
-                "displayMode": "0",
-                "errorFieldsData": [
-                    {
-                        "field": 0,
-                        "field_name": "E_Zero",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "",
-                        "width": 150
-                    },
-                    {
-                        "field": 1,
-                        "field_name": "E_No",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "序号",
-                        "width": 65
-                    },
-                    {
-                        "field": 2,
-                        "field_name": "E_Time",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "时间",
-                        "width": 150
-                    },
-                    {
-                        "field": 3,
-                        "field_name": "E_Number",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "索引",
-                        "width": 60
-                    },
-                    {
-                        "field": 4,
-                        "field_name": "E_Channel",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "通道",
-                        "width": 60
-                    },
-                    {
-                        "field": 5,
-                        "field_name": "E_Identifier",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "ID",
-                        "width": 60
-                    },
-                    {
-                        "field": 6,
-                        "field_name": "E_Name",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "名称",
-                        "width": 100
-                    },
-                    {
-                        "field": 7,
-                        "field_name": "E_DNGroup",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "组",
-                        "width": 60
-                    },
-                    {
-                        "field": 8,
-                        "field_name": "E_DNMessageID",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "消息ID(hex)",
-                        "width": 60
-                    },
-                    {
-                        "field": 9,
-                        "field_name": "E_DNMessage",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "消息描述",
-                        "width": 200
-                    },
-                    {
-                        "field": 10,
-                        "field_name": "E_DNDir",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "源/目的",
-                        "width": 80
-                    },
-                    {
-                        "field": 11,
-                        "field_name": "E_DNMAC",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "MAC ID",
-                        "width": 60
-                    },
-                    {
-                        "field": 12,
-                        "field_name": "E_DNService",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "服务",
-                        "width": 100
-                    },
-                    {
-                        "field": 13,
-                        "field_name": "E_DNRR",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "请求/响应",
-                        "width": 80
-                    },
-                    {
-                        "field": 14,
-                        "field_name": "E_PGN",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "PGN",
-                        "width": 100
-                    },
-                    {
-                        "field": 15,
-                        "field_name": "E_EventType",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "事件类型",
-                        "width": 100
-                    },
-                    {
-                        "field": 16,
-                        "field_name": "E_SenderNode",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "发送节点",
-                        "width": 90
-                    },
-                    {
-                        "field": 17,
-                        "field_name": "E_ReceiveNode",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "接收节点",
-                        "width": 90
-                    },
-                    {
-                        "field": 18,
-                        "field_name": "E_Src",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "源地址(hex)",
-                        "width": 90
-                    },
-                    {
-                        "field": 19,
-                        "field_name": "E_Dest",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "目的地址(hex)",
-                        "width": 90
-                    },
-                    {
-                        "field": 20,
-                        "field_name": "E_SourcePort",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "源端口",
-                        "width": 50
-                    },
-                    {
-                        "field": 21,
-                        "field_name": "E_DestPort",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "目标端口",
-                        "width": 50
-                    },
-                    {
-                        "field": 22,
-                        "field_name": "E_Priority",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "优先级",
-                        "width": 50
-                    },
-                    {
-                        "field": 23,
-                        "field_name": "E_Dir",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "方向",
-                        "width": 50
-                    },
-                    {
-                        "field": 24,
-                        "field_name": "E_Length",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "长度",
-                        "width": 60
-                    },
-                    {
-                        "field": 25,
-                        "field_name": "E_DLC",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "DLC",
-                        "width": 40
-                    },
-                    {
-                        "field": 26,
-                        "field_name": "E_Data",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "数据",
-                        "width": 160
-                    },
-                    {
-                        "field": 27,
-                        "field_name": "E_HexData",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "数据(十六进制)",
-                        "width": 160
-                    },
-                    {
-                        "field": 28,
-                        "field_name": "E_DecData",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "数据(十进制)",
-                        "width": 160
-                    },
-                    {
-                        "field": 29,
-                        "field_name": "E_BinData",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "数据(二进制)",
-                        "width": 160
-                    },
-                    {
-                        "field": 30,
-                        "field_name": "E_ASCIIData",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "数据(字符)",
-                        "width": 160
-                    },
-                    {
-                        "field": 31,
-                        "field_name": "E_Command",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "命令",
-                        "width": 100
-                    },
-                    {
-                        "field": 32,
-                        "field_name": "E_Interpretation",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "解释",
-                        "width": 200
-                    },
-                    {
-                        "field": 33,
-                        "field_name": "E_J1939Type",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "类型",
-                        "width": 60
-                    },
-                    {
-                        "field": 34,
-                        "field_name": "E_Violation",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "违例",
-                        "width": 150
-                    },
-                    {
-                        "field": 35,
-                        "field_name": "E_Remote",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "远程帧",
-                        "width": 60
-                    },
-                    {
-                        "field": 36,
-                        "field_name": "E_ESI",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "ESI",
-                        "width": 60
-                    },
-                    {
-                        "field": 37,
-                        "field_name": "E_ProtectedID",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "PID",
-                        "width": 60
-                    },
-                    {
-                        "field": 38,
-                        "field_name": "E_CheckSum",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "帧校验和",
-                        "width": 60
-                    },
-                    {
-                        "field": 39,
-                        "field_name": "E_VlanID",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "VLAN ID",
-                        "width": 60
-                    },
-                    {
-                        "field": 40,
-                        "field_name": "E_EtherType",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "以太网类型",
-                        "width": 60
-                    },
-                    {
-                        "field": 41,
-                        "field_name": "E_PacketLength",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "包长度",
-                        "width": 60
-                    },
-                    {
-                        "field": 42,
-                        "field_name": "E_EtherProtocol",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "协议",
-                        "width": 60
-                    },
-                    {
-                        "field": 43,
-                        "field_name": "E_DiagType",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "类型",
-                        "width": 60
-                    },
-                    {
-                        "field": 44,
-                        "field_name": "E_DiagDataLength",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "长度",
-                        "width": 60
-                    },
-                    {
-                        "field": 45,
-                        "field_name": "E_SOMEIP_ServiceID",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "服务ID",
-                        "width": 60
-                    },
-                    {
-                        "field": 46,
-                        "field_name": "E_SOMEIP_MethodID",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "方法ID",
-                        "width": 60
-                    },
-                    {
-                        "field": 47,
-                        "field_name": "E_SOMEIP_ServiceName",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "服务",
-                        "width": 100
-                    },
-                    {
-                        "field": 48,
-                        "field_name": "E_SOMEIP_MethodName",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "方法",
-                        "width": 100
-                    },
-                    {
-                        "field": 49,
-                        "field_name": "E_SOMEIP_ClientID",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "客户端ID",
-                        "width": 60
-                    },
-                    {
-                        "field": 50,
-                        "field_name": "E_SOMEIP_SessionID",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "会话ID",
-                        "width": 60
-                    },
-                    {
-                        "field": 51,
-                        "field_name": "E_SOMEIP_MessageType",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "消息类型",
-                        "width": 90
-                    },
-                    {
-                        "field": 52,
-                        "field_name": "E_SOMEIP_ReturnCode",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "返回码",
-                        "width": 60
-                    },
-                    {
-                        "field": 53,
-                        "field_name": "E_FrameCounter",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "帧计数",
-                        "width": 60
-                    }
-                ],
-                "fadeOutOldEvent": "true",
-                "fadeOutUnchangedBytes": "true",
-                "fieldLayoutKey": "CAN/FD",
-                "fieldsData": [
-                    {
-                        "field": 0,
-                        "field_name": "E_Zero",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "",
-                        "width": 150
-                    },
-                    {
-                        "field": 1,
-                        "field_name": "E_No",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "序号",
-                        "width": 65
-                    },
-                    {
-                        "field": 2,
-                        "field_name": "E_Time",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "时间",
-                        "width": 150
-                    },
-                    {
-                        "field": 3,
-                        "field_name": "E_Number",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "索引",
-                        "width": 60
-                    },
-                    {
-                        "field": 4,
-                        "field_name": "E_Channel",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "通道",
-                        "width": 60
-                    },
-                    {
-                        "field": 5,
-                        "field_name": "E_Identifier",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "ID",
-                        "width": 60
-                    },
-                    {
-                        "field": 6,
-                        "field_name": "E_Name",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "名称",
-                        "width": 100
-                    },
-                    {
-                        "field": 7,
-                        "field_name": "E_DNGroup",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "组",
-                        "width": 60
-                    },
-                    {
-                        "field": 8,
-                        "field_name": "E_DNMessageID",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "消息ID(hex)",
-                        "width": 60
-                    },
-                    {
-                        "field": 9,
-                        "field_name": "E_DNMessage",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "消息描述",
-                        "width": 200
-                    },
-                    {
-                        "field": 10,
-                        "field_name": "E_DNDir",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "源/目的",
-                        "width": 80
-                    },
-                    {
-                        "field": 11,
-                        "field_name": "E_DNMAC",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "MAC ID",
-                        "width": 60
-                    },
-                    {
-                        "field": 12,
-                        "field_name": "E_DNService",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "服务",
-                        "width": 100
-                    },
-                    {
-                        "field": 13,
-                        "field_name": "E_DNRR",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "请求/响应",
-                        "width": 80
-                    },
-                    {
-                        "field": 14,
-                        "field_name": "E_PGN",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "PGN",
-                        "width": 100
-                    },
-                    {
-                        "field": 15,
-                        "field_name": "E_EventType",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "事件类型",
-                        "width": 100
-                    },
-                    {
-                        "field": 16,
-                        "field_name": "E_SenderNode",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "发送节点",
-                        "width": 90
-                    },
-                    {
-                        "field": 17,
-                        "field_name": "E_ReceiveNode",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "接收节点",
-                        "width": 90
-                    },
-                    {
-                        "field": 18,
-                        "field_name": "E_Src",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "源地址(hex)",
-                        "width": 90
-                    },
-                    {
-                        "field": 19,
-                        "field_name": "E_Dest",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "目的地址(hex)",
-                        "width": 90
-                    },
-                    {
-                        "field": 20,
-                        "field_name": "E_SourcePort",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "源端口",
-                        "width": 50
-                    },
-                    {
-                        "field": 21,
-                        "field_name": "E_DestPort",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "目标端口",
-                        "width": 50
-                    },
-                    {
-                        "field": 22,
-                        "field_name": "E_Priority",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "优先级",
-                        "width": 50
-                    },
-                    {
-                        "field": 23,
-                        "field_name": "E_Dir",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "方向",
-                        "width": 50
-                    },
-                    {
-                        "field": 24,
-                        "field_name": "E_Length",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "长度",
-                        "width": 60
-                    },
-                    {
-                        "field": 25,
-                        "field_name": "E_DLC",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "DLC",
-                        "width": 40
-                    },
-                    {
-                        "field": 26,
-                        "field_name": "E_Data",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "数据",
-                        "width": 160
-                    },
-                    {
-                        "field": 27,
-                        "field_name": "E_HexData",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "数据(十六进制)",
-                        "width": 160
-                    },
-                    {
-                        "field": 28,
-                        "field_name": "E_DecData",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "数据(十进制)",
-                        "width": 160
-                    },
-                    {
-                        "field": 29,
-                        "field_name": "E_BinData",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "数据(二进制)",
-                        "width": 160
-                    },
-                    {
-                        "field": 30,
-                        "field_name": "E_ASCIIData",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "数据(字符)",
-                        "width": 160
-                    },
-                    {
-                        "field": 31,
-                        "field_name": "E_Command",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "命令",
-                        "width": 100
-                    },
-                    {
-                        "field": 32,
-                        "field_name": "E_Interpretation",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "解释",
-                        "width": 200
-                    },
-                    {
-                        "field": 33,
-                        "field_name": "E_J1939Type",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "类型",
-                        "width": 60
-                    },
-                    {
-                        "field": 34,
-                        "field_name": "E_Violation",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "违例",
-                        "width": 150
-                    },
-                    {
-                        "field": 35,
-                        "field_name": "E_Remote",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "远程帧",
-                        "width": 60
-                    },
-                    {
-                        "field": 36,
-                        "field_name": "E_ESI",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "ESI",
-                        "width": 60
-                    },
-                    {
-                        "field": 37,
-                        "field_name": "E_ProtectedID",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "PID",
-                        "width": 60
-                    },
-                    {
-                        "field": 38,
-                        "field_name": "E_CheckSum",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "帧校验和",
-                        "width": 60
-                    },
-                    {
-                        "field": 39,
-                        "field_name": "E_VlanID",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "VLAN ID",
-                        "width": 60
-                    },
-                    {
-                        "field": 40,
-                        "field_name": "E_EtherType",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "以太网类型",
-                        "width": 60
-                    },
-                    {
-                        "field": 41,
-                        "field_name": "E_PacketLength",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "包长度",
-                        "width": 60
-                    },
-                    {
-                        "field": 42,
-                        "field_name": "E_EtherProtocol",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "协议",
-                        "width": 60
-                    },
-                    {
-                        "field": 43,
-                        "field_name": "E_DiagType",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "类型",
-                        "width": 60
-                    },
-                    {
-                        "field": 44,
-                        "field_name": "E_DiagDataLength",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "长度",
-                        "width": 60
-                    },
-                    {
-                        "field": 45,
-                        "field_name": "E_SOMEIP_ServiceID",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "服务ID",
-                        "width": 60
-                    },
-                    {
-                        "field": 46,
-                        "field_name": "E_SOMEIP_MethodID",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "方法ID",
-                        "width": 60
-                    },
-                    {
-                        "field": 47,
-                        "field_name": "E_SOMEIP_ServiceName",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "服务",
-                        "width": 100
-                    },
-                    {
-                        "field": 48,
-                        "field_name": "E_SOMEIP_MethodName",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "方法",
-                        "width": 100
-                    },
-                    {
-                        "field": 49,
-                        "field_name": "E_SOMEIP_ClientID",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "客户端ID",
-                        "width": 60
-                    },
-                    {
-                        "field": 50,
-                        "field_name": "E_SOMEIP_SessionID",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "会话ID",
-                        "width": 60
-                    },
-                    {
-                        "field": 51,
-                        "field_name": "E_SOMEIP_MessageType",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "消息类型",
-                        "width": 90
-                    },
-                    {
-                        "field": 52,
-                        "field_name": "E_SOMEIP_ReturnCode",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "返回码",
-                        "width": 60
-                    },
-                    {
-                        "field": 53,
-                        "field_name": "E_FrameCounter",
-                        "filter": {
-                            "format": 0,
-                            "or": true
-                        },
-                        "title": "帧计数",
-                        "width": 60
-                    }
-                ],
-                "floatValueAccuracy": "3",
-                "isValidDecimalEnabled": "true",
-                "numberMode": "0",
-                "pageCount": "1000",
-                "pauseCacheFrameCount": "100000",
-                "pauseCacheSeconds": "60",
-                "showAbsoluteDateFlag": "false",
-                "showErrorView": "false",
-                "showNumber": "false",
-                "startClear": "true",
-                "timeAccuracy": "6",
-                "timeMode": "0",
-                "viewIndex": "0",
-                "viewLayout": "4",
-                "viewSizes": ""
+                "args": "",
+                "isAutoStart": false,
+                "lastModified": 1778831040219,
+                "scriptFile": "E:/workFiles/IEBS/tc234bootloader/BootLoader_dualBank/zxdoc_genkey.py"
             },
-            "index": 5,
-            "name": "报文",
+            "index": 9,
+            "name": "脚本",
             "userData": "",
-            "uuid": "{6f043236-1508-4edb-8539-1a36256eb861}",
-            "windowType": "Trace Window"
+            "uuid": "{f05f5e66-ffa7-486f-ac2c-19d854402505}",
+            "windowType": "Scripting"
         },
         {
             "comment": "",
             "details": {
-                "configuration": {
-                    "addressing": {
-                        "extend": false,
-                        "functionalAddress": "0x7DF",
-                        "mode": {
-                            "addressingMode": 0,
-                            "ecuAddr": 0,
-                            "extensionAddr": 0,
-                            "strictAddrMode": false,
-                            "testerAddr": 0
-                        },
-                        "physicalAddress": "0x74C",
-                        "responseAddress": "0x75C"
-                    },
-                    "debug": {
-                        "udsInterface": 0
-                    },
-                    "doip": {
-                        "aliveCheckMaxIdleTimeMs": 0,
-                        "connectTimeout": 2000,
-                        "connectionMode": 0,
-                        "isResponseAliveCheckEnabled": false,
-                        "remotePort": 13400,
-                        "sendActivationPacket": true
-                    },
-                    "flash": {
-                        "stopOnFailure": true
-                    },
-                    "output": {
-                        "outputMaxRowCount": 100000,
-                        "showRawFrame": false,
-                        "singleFileMaxRowCount": 100000
-                    },
-                    "script": {
-                        "globalDefinitions": "# 在这里添加全局变量、函数，在所有步骤中都可访问\r\nfrom ZXDoc import *\r\n"
-                    },
-                    "securityAccessDll": "E:/workFiles/IEBS/tc234bootloader/ZcanProDll/Debug/ZcanProDll.dll",
-                    "sessionKeep": {
-                        "addressingType": 1,
-                        "enabled": false,
-                        "interval": 2000,
-                        "suppressResponse": true
-                    },
-                    "tp": {
-                        "blockDownloadRetry": 2,
-                        "blockSize": 0,
-                        "fcTimeout": 1000,
-                        "fillByte": "0x0",
-                        "frameType": 0,
-                        "isModifyEcuSTmin": false,
-                        "isfillByte": true,
-                        "localSTmin": 0,
-                        "p2Timeout": 2000,
-                        "p2xTimeout": 5000,
-                        "protocalVersion": 0,
-                        "remoteSTmin": 0
-                    }
-                },
-                "currentDataTab": 0,
-                "dataTabs": [
-                    {
-                        "groups": [
-                            {
-                                "items": [
-                                ],
-                                "name": "默认分组",
-                                "type": "Group"
-                            }
-                        ],
-                        "name": "新页"
-                    }
-                ],
-                "sendCount": 1,
-                "windowSettings": {
-                    "uintDisplayType": 0
-                }
+                "args": "",
+                "isAutoStart": false,
+                "lastModified": 1778831175906,
+                "scriptFile": "E:/workFiles/IEBS/tc234bootloader/BootLoader_dualBank/zxdoc_extract_pub.py"
             },
-            "index": 6,
-            "name": "UDS诊断",
-            "userData": "{f576fa52-f6a0-4741-aed0-28ba5e1b7975}",
-            "uuid": "{ba587331-6b70-4362-9af0-3715ef2995d0}",
-            "windowType": "UDS Diagnostics"
+            "index": 10,
+            "name": "脚本",
+            "userData": "",
+            "uuid": "{479aee6f-a1ed-44df-a879-c1ed16c9af3a}",
+            "windowType": "Scripting"
+        },
+        {
+            "comment": "",
+            "details": {
+                "args": "",
+                "isAutoStart": false,
+                "lastModified": 1778831222667,
+                "scriptFile": "E:/workFiles/IEBS/tc234bootloader/BootLoader_dualBank/zxdoc_gen_pkg_A.py"
+            },
+            "index": 11,
+            "name": "脚本",
+            "userData": "",
+            "uuid": "{0861e26d-1a6d-4290-b926-8e87c48994a9}",
+            "windowType": "Scripting"
+        },
+        {
+            "comment": "",
+            "details": {
+                "args": "",
+                "isAutoStart": false,
+                "lastModified": 1778831239191,
+                "scriptFile": "E:/workFiles/IEBS/tc234bootloader/BootLoader_dualBank/zxdoc_gen_pkg_B.py"
+            },
+            "index": 12,
+            "name": "脚本",
+            "userData": "",
+            "uuid": "{9fffdb3b-a5d1-4964-8b3e-9a7868bf93cb}",
+            "windowType": "Scripting"
         }
     ],
     "symbolExplorer": {
@@ -13008,7 +13682,7 @@
     "tabsOnTop": true,
     "trigger": false,
     "windowManagerArea": {
-        "areaState": "AAAA/wAAAAD9AAAAAAAABlgAAAJsAAAABAAAAAQAAAAIAAAACPwAAAAA",
+        "areaState": "AAAA/wAAAAD9AAAAAAAABlgAAAJbAAAABAAAAAQAAAAIAAAACPwAAAAA",
         "manager": {
             "docks": [
             ],

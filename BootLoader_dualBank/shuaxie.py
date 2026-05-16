@@ -18,8 +18,8 @@ import sys
 #   7. 27 01/02   -> 安全访问 Level 2 (编程会话必须)
 #   8. 2E F1 5A...-> 写指纹信息
 #   9. 31 01 FF 00-> 逐个擦除目标 Bank sector
-#  10. 34/36/37   -> 文件下载 (ZxDoc file_download API)
-#  11. 31 01 DFFF -> 验证并激活 Bank
+#  10. 34/36/37   -> 文件下载 (Payload + Signature)
+#  11. 31 01 DFFF -> 验证并激活 Bank (CRC only, Sig read from PFlash)
 #  12. 11 01      -> ECU 复位
 # ============================================================================
 
@@ -31,14 +31,14 @@ TESTER_ADDR = 0x75C        # Tester 响应地址 (TX)
 FUNC_ADDR = 0x7DF          # 功能地址（会话保持用）
 CHANNEL = 1                # CAN 通道号
 
-# 刷写文件路径（.hex 或 .bin，需与 LSL 中的 Bank 地址匹配）
+# 刷写文件路径（.pkg 容器格式，由 pkg_generator.py 生成）
+# 只需要一个 .pkg，Bootloader 自动选择对区写入
+PKG_FILE = r"E:\workFiles\IEBS\tc234bootloader\tc234bootloader\App_dualBank.pkg"
 
-HEX_FILE =r"E:\workFiles\IEBS\tc234bootloader\App_dualBank\Debug\App_dualBank.hex"
-HEX_FILE_B=r"E:\workFiles\IEBS\tc234bootloader\App_dualBank\debug_b\App_dualBank.hex"
 # 安全访问 DLL 路径（用于 27 服务 Seed->Key 计算）
 KEY_DLL = r"E:\visualStudioCode\ZcanProDll\Debug\ZcanProDll.dll"
 
-# 刷写目标 Bank: "A" 或 "B"
+# 刷写目标 Bank: 由 Bootloader 通过 31 FF FD 动态返回，无需手动配置
 # Bank A: 0x80020000 ~ 0x800FFFFF (S8~S22, 896KB)
 # Bank B: 0x80100000 ~ 0x801FFFFF (S23~S26, 1MB)
 TARGET_BANK = "B"
@@ -59,6 +59,10 @@ BANK_SECTORS = {
 _g_erased_sectors = []
 
 TOTAL_CHECK_CMD = bytes.fromhex("31 01 DF FF")
+
+# .pkg 容器 Header 大小
+PKG_HEADER_SIZE = 128
+SIG_LEN_RSA2048 = 256
 
 def uds_request(uds, sid, data, desc="UDS"):
     """
@@ -82,6 +86,64 @@ def uds_request(uds, sid, data, desc="UDS"):
         return None
     app.log_i(f"[{desc}] ✅ OK, rsp: {rsp.data.hex()}")
     return rsp
+
+
+def parse_pkg_file(pkg_path):
+    """
+    解析 .pkg 容器文件。
+    返回: (payload_addr, payload_len, payload_bytes, signature_bytes, sw_version, payload_crc)
+    """
+    with open(pkg_path, "rb") as f:
+        pkg = f.read()
+
+    if len(pkg) < PKG_HEADER_SIZE + SIG_LEN_RSA2048:
+        raise ValueError(f".pkg file too small: {len(pkg)} bytes")
+
+    header = pkg[0:PKG_HEADER_SIZE]
+
+    # Magic
+    magic = header[0:4]
+    if magic != b"PKG2":
+        raise ValueError(f"Invalid .pkg magic: {magic!r}, expected b'PKG2'")
+
+    # Header fields (little-endian)
+    header_size = struct.unpack_from("<I", header, 4)[0]
+    payload_addr = struct.unpack_from("<I", header, 8)[0]
+    payload_len = struct.unpack_from("<I", header, 12)[0]
+    sw_version = struct.unpack_from("<I", header, 16)[0]
+    sw_version_mask = struct.unpack_from("<I", header, 20)[0]
+    build_timestamp = struct.unpack_from("<I", header, 24)[0]
+    payload_crc = struct.unpack_from("<I", header, 28)[0]
+    header_crc = struct.unpack_from("<I", header, 32)[0]
+    sig_algorithm = struct.unpack_from("<I", header, 36)[0]
+    sig_len = struct.unpack_from("<I", header, 40)[0]
+
+    # Verify header CRC (header[0:32], excludes CRC field itself)
+    import zlib
+    header_crc_calc = zlib.crc32(header[0:32]) & 0xFFFFFFFF
+    if header_crc != header_crc_calc:
+        raise ValueError(f"Header CRC mismatch: file=0x{header_crc:08X}, calc=0x{header_crc_calc:08X}")
+
+    # Extract payload and signature
+    payload = pkg[PKG_HEADER_SIZE : PKG_HEADER_SIZE + payload_len]
+    signature = pkg[PKG_HEADER_SIZE + payload_len : PKG_HEADER_SIZE + payload_len + sig_len]
+
+    if len(payload) != payload_len:
+        raise ValueError(f"Payload length mismatch: header says {payload_len}, actual {len(payload)}")
+
+    # Verify payload CRC
+    payload_crc_calc = zlib.crc32(payload) & 0xFFFFFFFF
+    if payload_crc != payload_crc_calc:
+        raise ValueError(f"Payload CRC mismatch: header=0x{payload_crc:08X}, calc=0x{payload_crc_calc:08X}")
+
+    print(f"[parse_pkg] Magic={magic!r}, HeaderSize={header_size}")
+    print(f"[parse_pkg] PayloadAddr=0x{payload_addr:08X}, PayloadLen={payload_len}")
+    print(f"[parse_pkg] SWVersion=0x{sw_version:08X}, BuildTime={build_timestamp}")
+    print(f"[parse_pkg] PayloadCRC=0x{payload_crc:08X}, HeaderCRC=0x{header_crc:08X}")
+    print(f"[parse_pkg] SigAlgorithm={sig_algorithm}, SigLen={sig_len}")
+    print(f"[parse_pkg] Signature={len(signature)} bytes")
+
+    return payload_addr, payload_len, payload, signature, sw_version, payload_crc
 
 
 def session_control(uds, session_type, desc):
@@ -157,18 +219,10 @@ def erase_target_bank(uds):
     return True
 
 
-
-
-
-def file_download(uds):
+def file_download(uds, pkg_path):
     """
     34/36/37 文件下载（使用 ZXDoc 内置 file_download API）。
-    注意: 由于我们在调用本函数前已经手动完成了 Flash 擦除，
-    如果 ZxDoc 的 file_download 内部也尝试自动擦除，可能会因命令格式
-    不兼容而失败。建议:
-      1. 先测试观察 file_download 是否自动发送了 31 擦除命令；
-      2. 如有冲突，将 memEraseType 改为不自动擦除的模式
-         （如 ZMemEraseType.WithoutErase，具体枚举名请参考 ZXDoc 文档）。
+    从 .pkg 容器中提取 Payload，通过 ZXDoc 发送。
     """
     expected_sectors = set(BANK_SECTORS.get(TARGET_BANK, BANK_SECTORS["A"]))
     actual_sectors = set(_g_erased_sectors)
@@ -185,15 +239,40 @@ def file_download(uds):
             f"[Download] ✅ Erase check passed: {len(actual_sectors)}/{len(expected_sectors)} sectors erased. "
             f"Proceeding to RequestDownload (0x34)."
         )
-    if not os.path.exists(HEX_FILE):
-        app.log_e(f"[Download] ❌ File not found: {HEX_FILE}")
+    if not os.path.exists(pkg_path):
+        app.log_e(f"[Download] ❌ File not found: {pkg_path}")
         return False
 
+    # 解析 .pkg
+    try:
+        payload_addr, payload_len, payload_bytes, signature_bytes, sw_version, payload_crc = parse_pkg_file(pkg_path)
+    except Exception as e:
+        app.log_e(f"[Download] ❌ Failed to parse .pkg: {e}")
+        return False
+
+    # 将 Payload + Signature 一起保存为临时 .bin 文件供 ZXDoc 发送
+    # Bootloader 会从 PFlash 末尾读取 Signature 进行验证
+    tmp_bin = pkg_path + ".payload.bin"
+    combined = payload_bytes + signature_bytes
+    with open(tmp_bin, "wb") as f:
+        f.write(combined)
+    app.log_i(f"[Download] Payload+Sig: {payload_len}+{len(signature_bytes)}={len(combined)} bytes -> {tmp_bin}")
+
+    # 构造下载请求
+    block_cfg = FlashDataBlockCfg(
+        startAddr=0,
+        dataLen=len(combined),
+        crc=payload_crc,
+        fillByte=0x00,
+        mappedAddr=payload_addr,
+    )
+
     dl_req = ZFileDownloadReq(
-        filePath=HEX_FILE,
-        # memEraseType=ZMemEraseType.WithParam,  # 如需禁用自动擦除请修改此处
+        filePath=tmp_bin,
+        memEraseType=ZMemEraseType.NoErase,  # 已手动擦除，禁用自动擦除
         srcAddr=PHY_ADDR,
         dstAddr=TESTER_ADDR,
+        fileBlockCfgs=[block_cfg],
         crcAlgorithm=ZCrcAlgorithm(
             type=ZCrcType.CRC32,
             polynomial=0x04C11DB7,
@@ -202,7 +281,7 @@ def file_download(uds):
             reflectInput=True,
             reflectOutput=True,
         ),
-        totalCheckCmd=TOTAL_CHECK_CMD,
+        totalCheckCmd=None,  # 手动发送 31 DFFF，不用 ZXDoc 内置
     )
 
     if uds.file_download(dl_req):
@@ -213,159 +292,7 @@ def file_download(uds):
         return False
 
 
-def parse_hex_file(filepath):
-    """解析 Intel HEX 文件，返回 {abs_addr: byte_value} 和起始地址"""
-    data = {}
-    base_addr = 0
-    start_addr = None
 
-    with open(filepath, 'r') as f:
-        for line_num, line in enumerate(f, 1):
-            line = line.strip()
-            if not line:
-                continue
-            if line[0] != ':':
-                continue
-
-            if len(line) < 11:
-                continue
-
-            try:
-                byte_count = int(line[1:3], 16)
-                addr = int(line[3:7], 16)
-                rec_type = int(line[7:9], 16)
-            except ValueError:
-                continue
-
-            if rec_type == 0x04:  # Extended Linear Address
-                base_addr = int(line[9:13], 16) << 16
-            elif rec_type == 0x02:  # Extended Segment Address
-                base_addr = int(line[9:13], 16) << 4
-            elif rec_type == 0x00:  # Data
-                abs_addr = base_addr + addr
-                for i in range(byte_count):
-                    try:
-                        data[abs_addr + i] = int(line[9 + i*2:11 + i*2], 16)
-                    except (ValueError, IndexError):
-                        pass
-            elif rec_type == 0x05:  # Start Linear Address
-                if len(line) >= 17:
-                    start_addr = int(line[9:17], 16)
-            elif rec_type == 0x01:  # End of File
-                break
-
-    return data, start_addr
-
-
-def group_segments(data, max_gap=32):
-    """将数据地址分组为连续段（空隙 <= max_gap 的合并）"""
-    if not data:
-        return []
-
-    sorted_addrs = sorted(data.keys())
-    segments = []
-    seg_start = sorted_addrs[0]
-    seg_end = sorted_addrs[0] + 1
-    prev_addr = sorted_addrs[0]
-
-    for addr in sorted_addrs[1:]:
-        if addr <= prev_addr + max_gap:
-            seg_end = max(seg_end, addr + 1)
-        else:
-            segments.append((seg_start, seg_end))
-            seg_start = addr
-            seg_end = addr + 1
-        prev_addr = addr
-
-    segments.append((seg_start, seg_end))
-    return segments
-
-
-def write_hex_record(f, byte_count, offset, rec_type, data_bytes):
-    """写入一条 Intel HEX 记录"""
-    record = f"{byte_count:02X}{offset:04X}{rec_type:02X}"
-    if data_bytes:
-        record += data_bytes.hex().upper()
-
-    # 计算校验和：所有字节的和取低8位，再取补码
-    checksum = byte_count + ((offset >> 8) & 0xFF) + (offset & 0xFF) + rec_type
-    for b in data_bytes:
-        checksum += b
-    checksum = ((-checksum) & 0xFF)
-
-    record += f"{checksum:02X}"
-    f.write(f":{record}\n")
-
-
-def align_hex_file(input_path, output_path, align=32, fill_byte=0x00):
-    """
-    对齐 Intel HEX 文件。
-
-    Args:
-        input_path:  输入 HEX 文件路径
-        output_path: 输出 HEX 文件路径
-        align:       对齐边界（默认 32 字节，TC234 PFlash page size）
-        fill_byte:   填充字节（默认 0x00，AURIX PFlash 擦除状态）
-    """
-    data, start_addr = parse_hex_file(input_path)
-
-    if not data:
-        print(f"[align_hex] Error: No data found in {input_path}")
-        return False
-
-    segments = group_segments(data, max_gap=align)
-
-    with open(output_path, 'w') as f:
-        current_base = -1
-
-        for seg_start, seg_end in segments:
-            aligned_start = seg_start & ~(align - 1)
-            aligned_end = (seg_end + align - 1) & ~(align - 1)
-
-            addr = aligned_start
-            while addr < aligned_end:
-                # 检查是否需要发送扩展线性地址记录
-                base = addr >> 16
-                if base != current_base:
-                    current_base = base
-                    write_hex_record(f, 2, 0x0000, 0x04,
-                                     bytes([base >> 8, base & 0xFF]))
-
-                offset = addr & 0xFFFF
-                line_data = bytearray()
-                for i in range(align):
-                    line_data.append(data.get(addr + i, fill_byte))
-
-                write_hex_record(f, align, offset, 0x00, bytes(line_data))
-                addr += align
-
-        # 起始地址记录（如果有）
-        if start_addr is not None:
-            write_hex_record(f, 4, 0x0000, 0x05,
-                             bytes([(start_addr >> 24) & 0xFF,
-                                    (start_addr >> 16) & 0xFF,
-                                    (start_addr >> 8) & 0xFF,
-                                    start_addr & 0xFF]))
-
-        # 结束记录
-        write_hex_record(f, 0, 0x0000, 0x01, b'')
-
-    # 统计信息
-    total_data = len(data)
-    aligned_total = sum(
-        ((seg_end + align - 1) & ~(align - 1)) - (seg_start & ~(align - 1))
-        for seg_start, seg_end in segments
-    )
-    added = aligned_total - total_data
-
-    print(f"[align_hex] Aligned HEX file saved to: {output_path}")
-    print(f"[align_hex]   Original data bytes: {total_data}")
-    print(f"[align_hex]   Aligned total bytes: {aligned_total}")
-    print(f"[align_hex]   Added fill bytes:    {added} ({added/total_data*100:.1f}%)")
-    print(f"[align_hex]   Alignment:           {align} bytes")
-    print(f"[align_hex]   Fill byte:           0x{fill_byte:02X}")
-
-    return True
 
 
 def do_flash_process():
@@ -417,14 +344,16 @@ def do_flash_process():
         # 4. 检查编程条件 31 01 DF FD
         #    正响应: 71 01 FF FD <canFlash> <targetBank>
         #      canFlash  : 1=能刷写, 0=不能
-        #      targetBank: 'A' 或 'B'（推荐刷写的 Bank）
+        #      targetBank: 'A' 或 'B'（Bootloader 自动选择的对区）
+        #    只需要一个 .pkg，targetBank 仅用于确定擦除哪个 Bank 的 sector
         # ------------------------------------------------------------
         global TARGET_BANK
-        global HEX_FILE
+        global PKG_FILE
         rsp = uds_request(uds, 0x31, [0x01, 0xFF, 0xFD], "Check Programming")
         if not rsp:
             return
         # ZXDoc rsp.data 不含 SID，格式: [01 subFunc, FF RID_H, FD RID_L, canFlash, targetBank]
+        pkg_path = PKG_FILE
         if len(rsp.data) >= 5:
             can_flash = rsp.data[3]
             target_bank_char = rsp.data[4]
@@ -432,43 +361,20 @@ def do_flash_process():
             if can_flash != 1:
                 app.log_e(f"[Check] ❌ Programming conditions NOT OK (canFlash={can_flash}), abort flash!")
                 return
-            if target_bank_char ==0x0A:
+            if target_bank_char == 0x0A:
                 TARGET_BANK = 'A'
-                input_file = HEX_FILE
-                Bank_A_file = r"E:\workFiles\IEBS\tc234bootloader\tc234bootloader\App_dualBank_A.hex"
-                alignment = int(sys.argv[3]) if len(sys.argv) > 3 else 32
-
-                if not os.path.exists(input_file):
-                    app.log_e(f"[Check] ❌ Input file for Bank A not found: {input_file}")
-                    sys.exit(1)
-
-                success = align_hex_file(input_file, Bank_A_file, align=alignment, fill_byte=0x00)
-                if not success:
-                    app.log_e("[Check] ❌ Failed to align HEX file for Bank A")
-                    sys.exit(1)
-                else:
-                    HEX_FILE = Bank_A_file
-                app.log_i(f"[Check] ✅ Target bank dynamically set to Bank {TARGET_BANK}")
-            elif target_bank_char==0x0B:
-                TARGET_BANK ='B'
-                input_file = HEX_FILE_B
-                Bank_B_file = r"E:\workFiles\IEBS\tc234bootloader\tc234bootloader\App_dualBank_B.hex"
-                alignment = int(sys.argv[3]) if len(sys.argv) > 3 else 32
-
-                if not os.path.exists(input_file):
-                    app.log_e(f"[Check] ❌ Input file for Bank B not found: {input_file}")
-                    sys.exit(1)
-
-                success = align_hex_file(input_file, Bank_B_file, align=alignment, fill_byte=0x00)
-                if not success:
-                    app.log_e("[Check] ❌ Failed to align HEX file for Bank B")
-                    sys.exit(1)
-                else:
-                    HEX_FILE = Bank_B_file
+                app.log_i(f"[Check] ✅ Bootloader selected Bank A (opposite of current)")
+            elif target_bank_char == 0x0B:
+                TARGET_BANK = 'B'
+                app.log_i(f"[Check] ✅ Bootloader selected Bank B (opposite of current)")
             else:
                 app.log_w(f"[Check] ⚠️ Unexpected targetBank char=0x{rsp.data[4]:02X}, keep default={TARGET_BANK}")
         else:
             app.log_w(f"[Check] ⚠️ Short response, keep default target bank={TARGET_BANK}")
+
+        if not os.path.exists(pkg_path):
+            app.log_e(f"[Check] ❌ PKG file not found: {pkg_path}")
+            sys.exit(1)
 
         # ------------------------------------------------------------
         # 5. 关闭通信 28 03 03 (Disable Rx/Tx)
@@ -527,23 +433,38 @@ def do_flash_process():
             return
 
         # ------------------------------------------------------------
-        # 11. 文件下载 (34/36/37，不自动发送 totalCheckCmd)
+        # 11. 文件下载 (34/36/37，只发送 Payload)
         # ------------------------------------------------------------
-        if not file_download(uds):
+        if not file_download(uds, pkg_path):
             return
 
         # ------------------------------------------------------------
-        # 12. 检查编程依赖性 31 01 FF 01
-        #     验证目标 Bank 是否已标记有效
+        # 12. 检查编程依赖性 31 01 DFFF
+        #     31 DFFF 只传 CRC(4B)，Bootloader 从 PFlash 末尾读 Sig 验证。
         # ------------------------------------------------------------
-        rsp = uds_request(uds, 0x31, [0x01, 0xFF, 0x01], "Check Dependencies")
-        if not rsp:
-            app.log_w("[Post] ⚠️ CheckProgrammingDependencies no response, continue...")
-        elif len(rsp.data) >= 4 and rsp.data[3] == 0x01:
-            app.log_i("[Post] ✅ Programming dependencies OK")
-        else:
-            app.log_w("[Post] ⚠️ Programming dependencies may have issues, continue...")
-
+        try:
+            _, payload_len, _, _, _, payload_crc = parse_pkg_file(pkg_path)
+            # 31 01 DF FF + CRC(4B, big-endian)
+            # PayloadLen is not needed: Bootloader knows it from 0x34 DataLen - SigLen.
+            dfff_data = bytes([0x01, 0xDF, 0xFF])
+            dfff_data += bytes([
+                (payload_crc >> 24) & 0xFF,
+                (payload_crc >> 16) & 0xFF,
+                (payload_crc >> 8) & 0xFF,
+                payload_crc & 0xFF,
+            ])
+            rsp = uds_request(uds, 0x31, list(dfff_data), "Verify & Activate")
+            if not rsp:
+                app.log_e("[Verify] ❌ No response from 31 DFFF")
+                return
+            if len(rsp.data) >= 5 and rsp.data[4] == 0x01:
+                app.log_i("[Verify] ✅ Signature and CRC verified, bank activated")
+            else:
+                app.log_e("[Verify] ❌ Signature/CRC verification failed!")
+                return
+        except Exception as e:
+            app.log_e(f"[Verify] ❌ Failed to construct 31 DFFF: {e}")
+            return
         # ------------------------------------------------------------
         # 13. 后编程阶段 - 恢复系统正常工作状态
         # ------------------------------------------------------------
