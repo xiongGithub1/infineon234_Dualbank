@@ -184,8 +184,8 @@ def __zxdoc_main__():
         # print("Usage: python align_hex.py <input.hex> <output.hex> [alignment]")
     # sys.exit(1)
 
-    input_file = r"E:\workFiles\IEBS\IEBS_durabilityTest4_CAN_20251127\IEBS_durabilityTest4_CAN_20251127\Debug\IEBS_UDS_CAN_CANFD_V1_1_20260424(1).hex"
-    output_file = r"E:\workFiles\IEBS\tc234bootloader\tc234bootloader\IEBS_UDS_CAN_CANFD_V1_1_20260424.hex"
+    input_file = r"E:\workFiles\IEBS\tc234bootloader\App_dualBank\Debug\App_dualBank.hex"
+    output_file = r"E:\workFiles\IEBS\tc234bootloader\tc234bootloader\App_dualBank.hex"
     alignment = int(sys.argv[3]) if len(sys.argv) > 3 else 32
 
     if not os.path.exists(input_file):

@@ -95,16 +95,6 @@ typedef enum
 
 extern volatile BootPhase_t g_bootPhase;
 
-/* Debug buffer for signature verification troubleshooting.
- * Filled by Boot_DualBank_VerifyBankWithSignature() when RSA check fails.
- * Layout: [0:31] = SHA-256 hash, [32:287] = RSA decrypted EM
- */
-/* #define SIG_DEBUG_HASH_LEN   32 */
-/* #define SIG_DEBUG_EM_LEN     256 */
-/* extern uint8 g_sigDebugHash[SIG_DEBUG_HASH_LEN]; */
-/* extern uint8 g_sigDebugEM[SIG_DEBUG_EM_LEN]; */
-/* extern uint8 g_sigDebugVerifyResult; */
-
 typedef struct
 {
     uint32 magic;

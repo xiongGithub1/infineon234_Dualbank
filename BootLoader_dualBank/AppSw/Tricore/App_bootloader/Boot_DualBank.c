@@ -88,11 +88,6 @@ void MeasureEraseBankA_Time(void)
 
 static uint32 g_activeBank = BANK_A;
 
-/* Debug buffers for signature verification troubleshooting */
-/* uint8 g_sigDebugHash[SIG_DEBUG_HASH_LEN]; */
-/* uint8 g_sigDebugEM[SIG_DEBUG_EM_LEN]; */
-/* uint8 g_sigDebugVerifyResult = 0; */
-
 /* Global boot phase identifier for OEM traceability */
 volatile BootPhase_t g_bootPhase = BOOT_PHASE_STARTUP;
 

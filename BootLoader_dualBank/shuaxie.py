@@ -457,7 +457,7 @@ def do_flash_process():
             if not rsp:
                 app.log_e("[Verify] ❌ No response from 31 DFFF")
                 return
-            if len(rsp.data) >= 5 and rsp.data[4] == 0x01:
+            if len(rsp.data) >= 4 and rsp.data[3] == 0x00:
                 app.log_i("[Verify] ✅ Signature and CRC verified, bank activated")
             else:
                 app.log_e("[Verify] ❌ Signature/CRC verification failed!")

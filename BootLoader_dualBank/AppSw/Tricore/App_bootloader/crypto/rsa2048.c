@@ -8,10 +8,6 @@
 
 #include "rsa2048.h"
 
-/* External debug buffers declared in Boot_DualBank.h / defined in Boot_DualBank.c */
-/* extern uint8 g_sigDebugEM[RSA2048_SIG_LEN]; */
-/* extern uint8 g_sigDebugVerifyResult; */
-
 #define RSA_WORDS   (64u)   /* 2048 / 32 */
 #define RSA_DWORDS  (128u)  /* 4096 / 32, for multiplication result */
 
