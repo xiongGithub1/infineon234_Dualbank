@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from ZXDoc import *
 import time
 import os
@@ -31,11 +32,11 @@ TESTER_ADDR = 0x75C        # Tester 响应地址 (TX)
 FUNC_ADDR = 0x7DF          # 功能地址（会话保持用）
 CHANNEL = 1                # CAN 通道号
 
-# 刷写文件路径（.pkg 容器格式，由 pkg_generator.py 生成）
+# 刷写文件路径（.pkg 容器格式，绝对路径）
 # 只需要一个 .pkg，Bootloader 自动选择对区写入
-PKG_FILE = r"E:\workFiles\IEBS\tc234bootloader\tc234bootloader\App_dualBank.pkg"
+PKG_FILE = r"E:\workFiles\IEBS\tc234bootloader\App_dualBank.pkg"
 
-# 安全访问 DLL 路径（用于 27 服务 Seed->Key 计算）
+# 安全访问 DLL 路径（绝对路径，用于 27 服务 Seed->Key 计算）
 KEY_DLL = r"E:\visualStudioCode\ZcanProDll\Debug\ZcanProDll.dll"
 
 # 刷写目标 Bank: 由 Bootloader 通过 31 FF FD 动态返回，无需手动配置
@@ -295,8 +296,10 @@ def file_download(uds, pkg_path):
 
 
 
-def do_flash_process():
-    """完整刷写主流程"""
+def do_flash_process(pkg_path=None):
+    """完整刷写主流程，返回 True/False"""
+    actual_pkg = pkg_path if pkg_path else PKG_FILE
+    
     uds = ZDoCanInterface(
         channelIndex=CHANNEL,
         cfg=ZUdsCANCfg(
@@ -316,29 +319,30 @@ def do_flash_process():
 
     if uds.handle() < 0:
         app.log_e("[Init] ❌ Failed to create UDS interface")
-        return
+        return False
 
     # 启动会话保持（功能地址 0x7DF，周期 5000ms）
     uds.start_session_keep(FUNC_ADDR, 5000, True)
 
+    flash_ok = False
     try:
         # ------------------------------------------------------------
         # 1. 默认会话 10 01
         # ------------------------------------------------------------
         if not session_control(uds, 0x01, "Default Session"):
-            return
+            return False
 
         # ------------------------------------------------------------
         # 2. 扩展会话 10 03
         # ------------------------------------------------------------
         if not session_control(uds, 0x03, "Extended Session"):
-            return
+            return False
 
         # ------------------------------------------------------------
         # 3. 安全访问 Level 1（扩展会话下解锁）
         # ------------------------------------------------------------
         if not security_access(uds, 1, "SA L1"):
-            return
+            return False
 
         # ------------------------------------------------------------
         # 4. 检查编程条件 31 01 DF FD
@@ -348,19 +352,18 @@ def do_flash_process():
         #    只需要一个 .pkg，targetBank 仅用于确定擦除哪个 Bank 的 sector
         # ------------------------------------------------------------
         global TARGET_BANK
-        global PKG_FILE
         rsp = uds_request(uds, 0x31, [0x01, 0xFF, 0xFD], "Check Programming")
         if not rsp:
-            return
+            return False
         # ZXDoc rsp.data 不含 SID，格式: [01 subFunc, FF RID_H, FD RID_L, canFlash, targetBank]
-        pkg_path = PKG_FILE
+        pkg_path = actual_pkg
         if len(rsp.data) >= 5:
             can_flash = rsp.data[3]
             target_bank_char = rsp.data[4]
             app.log_i(f"[Check] Bootloader reports: canFlash={can_flash}, targetBank={target_bank_char}")
             if can_flash != 1:
                 app.log_e(f"[Check] ❌ Programming conditions NOT OK (canFlash={can_flash}), abort flash!")
-                return
+                return False
             if target_bank_char == 0x0A:
                 TARGET_BANK = 'A'
                 app.log_i(f"[Check] ✅ Bootloader selected Bank A (opposite of current)")
@@ -374,33 +377,33 @@ def do_flash_process():
 
         if not os.path.exists(pkg_path):
             app.log_e(f"[Check] ❌ PKG file not found: {pkg_path}")
-            sys.exit(1)
+            return False
 
         # ------------------------------------------------------------
         # 5. 关闭通信 28 03 03 (Disable Rx/Tx)
         #    减少刷写过程中总线负载，防止应用报文干扰
         # ------------------------------------------------------------
         if not uds_request(uds, 0x28, [0x03, 0x03], "Disable Communication"):
-            return
+            return False
 
         # ------------------------------------------------------------
         # 6. 关闭 DTC 85 02
         # ------------------------------------------------------------
         if not uds_request(uds, 0x85, [0x02], "Disable DTC"):
-            return
+            return False
 
         # ------------------------------------------------------------
         # 7. 编程会话 10 02
         # ------------------------------------------------------------
         if not session_control(uds, 0x02, "Programming Session"):
-            return
+            return False
 
         # ------------------------------------------------------------
         # 7. 安全访问 Level 2（编程会话必须解锁 Level 2）
         #    BootLoader 中 31 01 FF 00 / 31 01 DFFF 都要求 SECURITY_LEVEL_2
         # ------------------------------------------------------------
         if not security_access(uds, 3, "SA L2"):
-            return
+            return False
 
         # ------------------------------------------------------------
         # 8. 预编程条件检查 31 01 02 03 (ISO 14229-1 标准 RID)
@@ -408,12 +411,12 @@ def do_flash_process():
         # ------------------------------------------------------------
         rsp = uds_request(uds, 0x31, [0x01, 0x02, 0x03], "Check Preconditions")
         if not rsp:
-            return
+            return False
         if len(rsp.data) >= 5:
             can_flash = rsp.data[3]
             if can_flash != 1:
                 app.log_e(f"[Precond] ❌ Preconditions NOT OK (canFlash={can_flash}), abort!")
-                return
+                return False
             app.log_i("[Precond] ✅ Preconditions OK")
 
         # ------------------------------------------------------------
@@ -421,7 +424,7 @@ def do_flash_process():
         #    如需修改指纹内容，请调整 data 字段
         # ------------------------------------------------------------
         if not uds_request(uds, 0x2E, [0xF1, 0x5A, 0x55, 0x55], "Write Fingerprint"):
-            return
+            return False
 
         # ------------------------------------------------------------
         # 10. 擦除目标 Bank (31 01 FF 00)
@@ -430,13 +433,13 @@ def do_flash_process():
         # ------------------------------------------------------------
         if not erase_target_bank(uds):
             app.log_e("[Flash] Erase failed, abort download!")
-            return
+            return False
 
         # ------------------------------------------------------------
         # 11. 文件下载 (34/36/37，只发送 Payload)
         # ------------------------------------------------------------
         if not file_download(uds, pkg_path):
-            return
+            return False
 
         # ------------------------------------------------------------
         # 12. 检查编程依赖性 31 01 DFFF
@@ -456,15 +459,15 @@ def do_flash_process():
             rsp = uds_request(uds, 0x31, list(dfff_data), "Verify & Activate")
             if not rsp:
                 app.log_e("[Verify] ❌ No response from 31 DFFF")
-                return
+                return False
             if len(rsp.data) >= 4 and rsp.data[3] == 0x00:
                 app.log_i("[Verify] ✅ Signature and CRC verified, bank activated")
             else:
                 app.log_e("[Verify] ❌ Signature/CRC verification failed!")
-                return
+                return False
         except Exception as e:
             app.log_e(f"[Verify] ❌ Failed to construct 31 DFFF: {e}")
-            return
+            return False
         # ------------------------------------------------------------
         # 13. 后编程阶段 - 恢复系统正常工作状态
         # ------------------------------------------------------------
@@ -495,8 +498,12 @@ def do_flash_process():
         # ------------------------------------------------------------
         uds_request(uds, 0x11, [0x03], "ECU Reset")
 
+        flash_ok = True
+
     finally:
         uds.stop_session_keep()
+
+    return flash_ok
 
 
 # ============================================================================
