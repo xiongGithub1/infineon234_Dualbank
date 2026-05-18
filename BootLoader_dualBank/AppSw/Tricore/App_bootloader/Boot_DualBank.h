@@ -154,6 +154,7 @@ void Boot_DualBank_SelectAndJump(void);
 BankStatus_t Boot_DualBank_VerifyBank(uint32 bank);
 BankStatus_t Boot_DualBank_VerifyBankWithCrc(uint32 bank, uint32 expectedCrc);
 BankStatus_t Boot_DualBank_VerifyBankWithSignature(uint32 bank, uint32 expectedCrc, uint32 codeSize, const uint8 *signature, uint32 sigLen);
+BankStatus_t Boot_DualBank_VerifyBankWithSignature_CrcProvided(uint32 bank, uint32 expectedCrc, uint32 actualCrc, const uint8 *signature, uint32 sigLen, uint32 codeSize);
 uint32 Boot_DualBank_CalculateCRC(uint32 startAddr, uint32 size);
 uint32 Boot_CRC32_Update(uint32 crc, const uint8 *data, uint32 length);
 void Boot_DualBank_InvalidateBank(uint32 bank);

@@ -1,3 +1,10 @@
+/*
+ * @Author: qinXiong
+ * @Date: 2026-05-15 15:06:21
+ * @LastEditors: Qxiong&&2307975018@qq.com
+ * @LastEditTime: 2026-05-18 09:33:40
+ * @Description: 
+ */
 /* Auto-generated public key header for RSA-2048 verification */
 #ifndef CRYPTO_PUBLIC_KEY_H_
 #define CRYPTO_PUBLIC_KEY_H_

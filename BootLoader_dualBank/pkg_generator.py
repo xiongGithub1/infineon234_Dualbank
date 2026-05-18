@@ -17,10 +17,12 @@
         --key private.pem \
         --out App_dualBank_B.pkg
 
-容器格式:
-    [0:127]   Header (128 bytes)
-    [128:N]   Payload (raw binary from hex)
-    [N:N+256] Signature (RSA-2048 PKCS#1 v1.5 + SHA-256)
+容器格式 (PKG3 - 多段支持):
+    [0:127]        Header (128 bytes)
+    [128:128+P]    Payload (多段数据，每段前带 16-byte SEGM 描述头)
+                     SEGM 头: [SEGM(4) | flash_addr(4) | data_len(4) | reserved(4)]
+                     data_len 不含 SEGM 头本身
+    [128+P:128+P+256]  Signature (RSA-2048 PKCS#1 v1.5 + SHA-256)
 """
 
 import argparse
@@ -40,11 +42,15 @@ except ImportError:
 # ============================================================================
 # Constants
 # ============================================================================
-PKG_MAGIC = b"PKG2"          # 4 bytes
+PKG_MAGIC = b"PKG3"          # 4 bytes (v3 = multi-segment support)
 HEADER_SIZE = 128            # bytes
 SIG_ALGORITHM_RSA2048 = 1
 SIG_LEN_RSA2048 = 256
 PAGE_SIZE = 32               # TC234 PFlash page size (bytes)
+
+# Multi-segment descriptor (embedded in payload)
+SEGMENT_MAGIC = b"SEGM"      # 4 bytes
+SEGMENT_HEADER_SIZE = 16     # bytes: [SEGM(4) | addr(4) | len(4) | reserved(4)]
 
 
 def parse_hex_file(filepath):
@@ -230,19 +236,33 @@ def calc_crc32(data):
     return zlib.crc32(data) & 0xFFFFFFFF
 
 
+def build_segment_header(flash_addr, data_len, reserved=0):
+    """构建 16 字节段描述头
+    
+    flash_addr: 数据在 payload 中的 offset（用于 Bootloader 解析定位）
+    data_len:   数据长度（不含 SEGM 头）
+    """
+    seg = bytearray(SEGMENT_HEADER_SIZE)
+    seg[0:4] = SEGMENT_MAGIC
+    struct.pack_into("<I", seg, 4, flash_addr)
+    struct.pack_into("<I", seg, 8, data_len)
+    struct.pack_into("<I", seg, 12, reserved)
+    return seg
+
+
 def build_header(payload_addr, payload_len, sw_version, sw_version_mask,
-                 build_timestamp, payload_crc, header_crc,
+                 build_timestamp, payload_crc, header_crc, num_segments=1,
                  sig_algorithm=SIG_ALGORITHM_RSA2048, sig_len=SIG_LEN_RSA2048):
-    """构建 128 字节 Header"""
+    """构建 128 字节 Header (PKG3 多段格式)"""
     header = bytearray(HEADER_SIZE)
 
     # [0:3] Magic
     header[0:4] = PKG_MAGIC
     # [4:7] Header Size
     struct.pack_into("<I", header, 4, HEADER_SIZE)
-    # [8:11] Payload Address
+    # [8:11] Payload Address (保留兼容性，offset 模式填 0)
     struct.pack_into("<I", header, 8, payload_addr)
-    # [12:15] Payload Length
+    # [12:15] Payload Length (含所有 SEGM 头 + 数据)
     struct.pack_into("<I", header, 12, payload_len)
     # [16:19] SW Version
     struct.pack_into("<I", header, 16, sw_version)
@@ -258,13 +278,100 @@ def build_header(payload_addr, payload_len, sw_version, sw_version_mask,
     struct.pack_into("<I", header, 36, sig_algorithm)
     # [40:43] Signature Length
     struct.pack_into("<I", header, 40, sig_len)
-    # [44:127] Reserved (zeros)
+    # [44:47] Number of Segments (PKG3 新增)
+    struct.pack_into("<I", header, 44, num_segments)
+    # [48:127] Reserved (zeros)
 
     # 计算 Header CRC32 (Header[0:32], 不含 CRC 字段本身)
     header_crc_value = calc_crc32(header[0:32])
     struct.pack_into("<I", header, 32, header_crc_value)
 
     return header, header_crc_value
+
+
+def extract_binary_multisegment(data, base_addr=None, page_size=PAGE_SIZE):
+    """
+    从 HEX 解析结果中提取多段数据。
+    
+    PKG3 格式 payload 结构（连续写入 Flash，Bootloader 内部解析）：
+        [data1] [data2] ... [data_n] [SEGM1] [SEGM2] ... [SEGMn]
+    
+    其中 SEGM 头（16 bytes）描述每段数据的位置和长度：
+        - magic(4):   "SEGM"
+        - offset(4):  该段数据在 payload 中的起始 offset
+        - data_len(4): 该段数据长度（不含 SEGM 头）
+        - reserved(4): 保留
+    
+    这样 Bootloader 可以连续下载完整 payload，然后从末尾解析段表，
+    跳跃写入 Flash 的对应位置。
+    
+    Args:
+        data: {abs_addr: byte_value}
+        base_addr: 基址，用于 offset 平移。None=不平移
+        page_size: Flash page 对齐大小
+    
+    返回: (payload_bytes, seg_infos, num_segments)
+        payload_bytes: 含段表在内的完整 payload
+        seg_infos: [(flash_addr, data_len, payload_offset), ...]
+        num_segments: 段数
+    """
+    if not data:
+        return bytearray(), [], 0
+
+    # 1. 分组连续段（空隙 <= page_size 的合并）
+    raw_segments = group_segments(data, max_gap=page_size)
+    # 2. 对齐段边界
+    aligned_segments = align_segments(raw_segments, page_size)
+
+    # 3. 先收集每段的原始数据
+    seg_data_list = []
+    for a_start, a_end in aligned_segments:
+        seg_data = bytearray()
+        for addr in range(a_start, a_end):
+            seg_data.append(data.get(addr, 0x00))
+        
+        # 按 page_size 对齐段长度
+        raw_len = len(seg_data)
+        if raw_len % page_size != 0:
+            pad_len = page_size - (raw_len % page_size)
+            seg_data.extend(b'\x00' * pad_len)
+        
+        seg_data_list.append((a_start, seg_data))
+        print(f"[INFO]   Seg raw: addr=0x{a_start:08X}, len={len(seg_data)} bytes")
+
+    # 4. 计算 Flash 地址（offset 平移）
+    seg_infos = []
+    for i, (a_start, seg_data) in enumerate(seg_data_list):
+        flash_addr = a_start
+        if base_addr is not None:
+            flash_addr = base_addr + (a_start - aligned_segments[0][0])
+        seg_infos.append((flash_addr, len(seg_data)))
+
+    # 5. 构建 payload：data 在前，段表在后
+    # 先算 data 部分总长度
+    data_total_len = sum(len(sd) for _, sd in seg_data_list)
+    # 段表起始 offset = data 总长度
+    seg_table_offset = data_total_len
+
+    payload = bytearray()
+    
+    # 5a. 写入所有 data
+    for _, seg_data in seg_data_list:
+        payload.extend(seg_data)
+    
+    # 5b. 写入段表（SEGM 头数组）
+    current_data_offset = 0
+    for i, (flash_addr, seg_data) in enumerate(seg_data_list):
+        data_len = len(seg_data)
+        # offset = 该段数据在 payload 中的起始位置
+        seg_header = build_segment_header(current_data_offset, data_len)
+        payload.extend(seg_header)
+        # 更新 seg_infos 加入 payload_offset
+        seg_infos[i] = (flash_addr, data_len, current_data_offset)
+        current_data_offset += data_len
+        print(f"[INFO]   Seg table: flash=0x{flash_addr:08X}, len={data_len}, payload_offset={seg_infos[i][2]}")
+
+    return payload, seg_infos, len(seg_infos)
 
 
 def sign_payload(private_key_path, header, payload):
@@ -288,7 +395,7 @@ def generate_pkg(hex_path, payload_addr, sw_version, sw_version_mask,
                  base_addr=None, keep_all_segments=False,
                  write_aligned_hex=False, write_bin=False):
     """
-    主函数：HEX → .pkg
+    主函数：HEX → .pkg (PKG3 多段格式)
     
     Args:
         hex_path: 输入 HEX 文件路径
@@ -299,7 +406,7 @@ def generate_pkg(hex_path, payload_addr, sw_version, sw_version_mask,
         out_path: 输出 .pkg 路径
         build_timestamp: 构建时间戳（None=自动）
         base_addr: 基址（如 0x80020000），用于 offset 平移。None=不平移
-        keep_all_segments: True=保留所有段；False=只保留最大段（默认）
+        keep_all_segments: 保留（为兼容性，现在总是保留所有段）
         write_aligned_hex: True=生成 .aligned.hex 中间文件
         write_bin: True=生成 .bin 中间文件
     """
@@ -319,41 +426,40 @@ def generate_pkg(hex_path, payload_addr, sw_version, sw_version_mask,
         print("[ERROR] No data found in HEX file")
         sys.exit(1)
 
-    # 2. 提取 Binary（align_hex 逻辑 + 紧凑模式）
-    payload, actual_start, segments = extract_binary_compact(
-        data, base_addr=base_addr, page_size=PAGE_SIZE,
-        keep_all_segments=keep_all_segments
+    # 2. 提取多段 Binary（PKG3 格式：每段前加 SEGM 头）
+    payload, seg_infos, num_segments = extract_binary_multisegment(
+        data, base_addr=base_addr, page_size=PAGE_SIZE
     )
     payload_len = len(payload)
 
-    print(f"[INFO] Aligned segments: {len(segments)}")
-    total_raw = 0
-    for i, (s, e) in enumerate(segments, 1):
-        seg_len = e - s
-        total_raw += seg_len
-        print(f"[INFO]   Seg {i}: 0x{s:08X} - 0x{e-1:08X} ({seg_len} bytes)")
-    print(f"[INFO] Raw data: {total_raw} bytes, Aligned payload: {payload_len} bytes")
+    print(f"[INFO] Segments: {num_segments}")
+    total_raw = sum(dlen for _, dlen in seg_infos)
+    print(f"[INFO] Raw data: {total_raw} bytes, Payload with headers: {payload_len} bytes")
     if base_addr is not None:
-        print(f"[INFO] Base addr: 0x{base_addr:08X}, Offset mode: payload[0] -> 0x{base_addr:08X}")
+        print(f"[INFO] Base addr: 0x{base_addr:08X}, Offset mode")
     else:
-        print(f"[INFO] First seg addr: 0x{actual_start:08X}")
+        print(f"[INFO] First seg addr: 0x{seg_infos[0][0]:08X}")
 
     # 3. 可选：生成对齐后的 HEX 文件
     if write_aligned_hex:
+        # 提取原始对齐段用于 HEX 输出
+        raw_segments = group_segments(data, max_gap=PAGE_SIZE)
+        aligned_segments = align_segments(raw_segments, PAGE_SIZE)
         hex_out = os.path.splitext(out_path)[0] + ".aligned.hex"
-        write_intel_hex(data, segments, hex_out, page_size=PAGE_SIZE)
+        write_intel_hex(data, aligned_segments, hex_out, page_size=PAGE_SIZE)
         print(f"[INFO] Aligned HEX:   {hex_out}")
 
-    # 4. 可选：生成 BIN 文件（offset 平移后的）
+    # 4. 可选：生成 BIN 文件
     if write_bin:
         bin_out = os.path.splitext(out_path)[0] + ".bin"
         with open(bin_out, "wb") as f:
             f.write(payload)
         print(f"[INFO] BIN file:      {bin_out}")
 
-    # 5. 计算 Payload CRC
-    payload_crc = calc_crc32(payload)
-    print(f"[INFO] Payload CRC32: 0x{payload_crc:08X}")
+    # 5. 计算 Payload CRC（只对 data 部分，不含 SEGM 段表）
+    data_only = payload[0:data_total_len]
+    payload_crc = calc_crc32(data_only)
+    print(f"[INFO] Payload CRC32: 0x{payload_crc:08X} (over {data_total_len} bytes of data)")
 
     # 6. 构建 Header
     if build_timestamp is None:
@@ -367,13 +473,14 @@ def generate_pkg(hex_path, payload_addr, sw_version, sw_version_mask,
         sw_version_mask=sw_version_mask,
         build_timestamp=build_timestamp,
         payload_crc=payload_crc,
-        header_crc=0  # 内部计算
+        header_crc=0,  # 内部计算
+        num_segments=num_segments
     )
     print(f"[INFO] Header CRC32:  0x{header_crc:08X}")
 
-    # 7. 签名
+    # 7. 签名（只对 data 部分做 SHA-256 + RSA，不含 SEGM 段表）
     print(f"[INFO] Signing with:  {private_key_path}")
-    signature = sign_payload(private_key_path, header, payload)
+    signature = sign_payload(private_key_path, header, data_only)
     print(f"[INFO] Signature:     {len(signature)} bytes")
 
     if len(signature) != SIG_LEN_RSA2048:
@@ -388,7 +495,7 @@ def generate_pkg(hex_path, payload_addr, sw_version, sw_version_mask,
     print(f"[INFO] Output:        {out_path}")
     print(f"[INFO]   Total size:  {len(pkg)} bytes")
     print(f"[INFO]   Header:      {HEADER_SIZE} bytes")
-    print(f"[INFO]   Payload:     {payload_len} bytes")
+    print(f"[INFO]   Payload:     {payload_len} bytes ({num_segments} segments with SEGM headers)")
     print(f"[INFO]   Signature:   {len(signature)} bytes")
     print("[INFO] Done.")
 
@@ -475,7 +582,7 @@ def extract_public_key_for_c(pub_path, out_c_path):
 
 
 def verify_pkg(pkg_path, public_key_path):
-    """验证 .pkg 文件的签名（用于测试）"""
+    """验证 .pkg 文件的签名（用于测试），支持 PKG3 多段格式"""
     with open(public_key_path, "rb") as f:
         public_key = serialization.load_pem_public_key(f.read())
 
@@ -485,6 +592,11 @@ def verify_pkg(pkg_path, public_key_path):
     header = pkg[0:HEADER_SIZE]
     signature = pkg[-SIG_LEN_RSA2048:]
     payload = pkg[HEADER_SIZE:-SIG_LEN_RSA2048]
+
+    magic = header[0:4]
+    num_segments = struct.unpack_from("<I", header, 44)[0]
+
+    print(f"[verify] Magic: {magic}, Segments: {num_segments}")
 
     # 验证 Header CRC (不含 CRC 字段本身)
     header_crc_expected = struct.unpack_from("<I", header, 32)[0]
@@ -501,6 +613,22 @@ def verify_pkg(pkg_path, public_key_path):
         print(f"[FAIL] Payload CRC mismatch: expected 0x{payload_crc_expected:08X}, actual 0x{payload_crc_actual:08X}")
         return False
     print(f"[PASS] Payload CRC OK (0x{payload_crc_actual:08X})")
+
+    # 如果是 PKG3 多段格式，解析并显示段信息
+    if magic == b"PKG3" and num_segments > 0:
+        print(f"[verify] --- Multi-segment payload ---")
+        offset = 0
+        for i in range(num_segments):
+            if offset + SEGMENT_HEADER_SIZE > len(payload):
+                print(f"[FAIL] Segment {i+1}: truncated at offset {offset}")
+                break
+            seg_magic = payload[offset:offset+4]
+            seg_addr = struct.unpack_from("<I", payload, offset+4)[0]
+            seg_len = struct.unpack_from("<I", payload, offset+8)[0]
+            print(f"[verify]   Seg {i+1}: magic={seg_magic}, addr=0x{seg_addr:08X}, len={seg_len}")
+            if seg_magic != SEGMENT_MAGIC:
+                print(f"[WARN]   Seg {i+1}: magic mismatch, expected {SEGMENT_MAGIC}")
+            offset += SEGMENT_HEADER_SIZE + seg_len
 
     # 验证签名
     data_to_verify = payload

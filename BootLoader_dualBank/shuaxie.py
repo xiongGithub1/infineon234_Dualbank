@@ -34,7 +34,7 @@ CHANNEL = 1                # CAN 通道号
 
 # 刷写文件路径（.pkg 容器格式，绝对路径）
 # 只需要一个 .pkg，Bootloader 自动选择对区写入
-PKG_FILE = r"E:\workFiles\IEBS\tc234bootloader\App_dualBank.pkg"
+PKG_FILE = r"E:\workFiles\IEBS\tc234bootloader\tc234bootloader\App_dualBank.pkg"
 
 # 安全访问 DLL 路径（绝对路径，用于 27 服务 Seed->Key 计算）
 KEY_DLL = r"E:\visualStudioCode\ZcanProDll\Debug\ZcanProDll.dll"
@@ -91,8 +91,9 @@ def uds_request(uds, sid, data, desc="UDS"):
 
 def parse_pkg_file(pkg_path):
     """
-    解析 .pkg 容器文件。
-    返回: (payload_addr, payload_len, payload_bytes, signature_bytes, sw_version, payload_crc)
+    解析 .pkg 容器文件（支持 PKG2 单段 和 PKG3 多段）。
+    返回: (payload_addr, payload_len, payload_bytes, signature_bytes, sw_version, payload_crc, segments)
+        segments: 段信息列表 [(flash_addr, data_bytes), ...]，仅 PKG3 有效；PKG2 时为 []
     """
     with open(pkg_path, "rb") as f:
         pkg = f.read()
@@ -104,8 +105,8 @@ def parse_pkg_file(pkg_path):
 
     # Magic
     magic = header[0:4]
-    if magic != b"PKG2":
-        raise ValueError(f"Invalid .pkg magic: {magic!r}, expected b'PKG2'")
+    if magic not in (b"PKG2", b"PKG3"):
+        raise ValueError(f"Invalid .pkg magic: {magic!r}, expected b'PKG2' or b'PKG3'")
 
     # Header fields (little-endian)
     header_size = struct.unpack_from("<I", header, 4)[0]
@@ -118,9 +119,9 @@ def parse_pkg_file(pkg_path):
     header_crc = struct.unpack_from("<I", header, 32)[0]
     sig_algorithm = struct.unpack_from("<I", header, 36)[0]
     sig_len = struct.unpack_from("<I", header, 40)[0]
+    num_segments = struct.unpack_from("<I", header, 44)[0] if magic == b"PKG3" else 1
 
     # Verify header CRC (header[0:32], excludes CRC field itself)
-    import zlib
     header_crc_calc = zlib.crc32(header[0:32]) & 0xFFFFFFFF
     if header_crc != header_crc_calc:
         raise ValueError(f"Header CRC mismatch: file=0x{header_crc:08X}, calc=0x{header_crc_calc:08X}")
@@ -142,9 +143,43 @@ def parse_pkg_file(pkg_path):
     print(f"[parse_pkg] SWVersion=0x{sw_version:08X}, BuildTime={build_timestamp}")
     print(f"[parse_pkg] PayloadCRC=0x{payload_crc:08X}, HeaderCRC=0x{header_crc:08X}")
     print(f"[parse_pkg] SigAlgorithm={sig_algorithm}, SigLen={sig_len}")
+    print(f"[parse_pkg] NumSegments={num_segments}")
     print(f"[parse_pkg] Signature={len(signature)} bytes")
 
-    return payload_addr, payload_len, payload, signature, sw_version, payload_crc
+    # Parse segments for PKG3 (new format: data first, segment table at end)
+    segments = []
+    if magic == b"PKG3" and num_segments > 0:
+        seg_table_size = num_segments * 16
+        if payload_len < seg_table_size:
+            raise ValueError(f"Payload too small for segment table: {payload_len} < {seg_table_size}")
+        data_total_len = payload_len - seg_table_size
+        seg_table_offset = data_total_len
+        
+        print(f"[parse_pkg]   Data total: {data_total_len} bytes, Seg table: {seg_table_size} bytes at offset {seg_table_offset}")
+        
+        for i in range(num_segments):
+            seg_entry_offset = seg_table_offset + i * 16
+            seg_magic = payload[seg_entry_offset:seg_entry_offset+4]
+            data_offset = struct.unpack_from("<I", payload, seg_entry_offset+4)[0]
+            data_len = struct.unpack_from("<I", payload, seg_entry_offset+8)[0]
+            print(f"[parse_pkg]   Seg {i+1}: magic={seg_magic!r}, data_offset={data_offset}, data_len={data_len}")
+            
+            if seg_magic != b"SEGM":
+                print(f"[parse_pkg]   WARN: seg magic mismatch: {seg_magic!r}")
+            
+            if data_offset + data_len > data_total_len:
+                raise ValueError(f"Segment {i+1}: data range [{data_offset}:{data_offset+data_len}] exceeds data total {data_total_len}")
+            
+            seg_data = payload[data_offset : data_offset + data_len]
+            
+            # flash_addr = base_addr + data_offset (base_addr from header payload_addr)
+            # For offset mode, payload_addr=0, use 0x80020000 as default base
+            base_addr = payload_addr if payload_addr != 0 else 0x80020000
+            flash_addr = base_addr + data_offset
+            segments.append((flash_addr, seg_data))
+            print(f"[parse_pkg]     -> flash_addr=0x{flash_addr:08X}, len={len(seg_data)}")
+
+    return payload_addr, payload_len, payload, signature, sw_version, payload_crc, segments
 
 
 def session_control(uds, session_type, desc):
@@ -220,10 +255,67 @@ def erase_target_bank(uds):
     return True
 
 
+def _build_34_request(addr, length):
+    """构建 0x34 RequestDownload 请求数据 (addr=4B, len=4B)."""
+    addr_bytes = [(addr >> 24) & 0xFF, (addr >> 16) & 0xFF, (addr >> 8) & 0xFF, addr & 0xFF]
+    len_bytes = [(length >> 24) & 0xFF, (length >> 16) & 0xFF, (length >> 8) & 0xFF, length & 0xFF]
+    return [0x00, 0x44] + addr_bytes + len_bytes
+
+
+def _download_single_segment(uds, seg_offset, seg_data, desc="Seg"):
+    """
+    下载单段数据：0x34 -> 0x36(blocks) -> 0x37.
+    seg_offset: 段在目标 bank 中的偏移地址.
+    seg_data:   段数据 bytes.
+    返回 True/False.
+    """
+    # 1. RequestDownload (0x34)
+    req_34 = _build_34_request(seg_offset, len(seg_data))
+    rsp = uds_request(uds, 0x34, req_34, f"{desc} 0x34")
+    if not rsp:
+        app.log_e(f"[{desc}] 0x34 failed, abort segment")
+        return False
+
+    # Parse max block size from 0x74 response (rsp.data[1:3] = maxNumberOfBlockLength)
+    max_block = 0x80  # default 128 bytes
+    if len(rsp.data) >= 3:
+        max_block = (rsp.data[1] << 8) | rsp.data[2]
+        # Bootloader buf size = 300, actual data = max_block - 2 (SID+SN)
+        max_block = min(max_block - 2, 256)  # cap at 256 for safety
+    app.log_i(f"[{desc}] Max block size: {max_block} bytes/frame")
+
+    # 2. TransferData (0x36) - send data in blocks
+    seq_num = 1
+    total_sent = 0
+    for i in range(0, len(seg_data), max_block):
+        block = seg_data[i:i + max_block]
+        block_with_sn = bytes([seq_num]) + block
+        rsp = uds_request(uds, 0x36, list(block_with_sn), f"{desc} 0x36[{seq_num}]")
+        if not rsp:
+            app.log_e(f"[{desc}] 0x36 block {seq_num} failed, abort segment")
+            return False
+        seq_num = (seq_num + 1) & 0xFF
+        if seq_num == 0:
+            seq_num = 1
+        total_sent += len(block)
+        if total_sent % 1024 == 0 or total_sent == len(seg_data):
+            app.log_i(f"[{desc}] Progress: {total_sent}/{len(seg_data)} bytes")
+
+    # 3. RequestTransferExit (0x37)
+    rsp = uds_request(uds, 0x37, [], f"{desc} 0x37")
+    if not rsp:
+        app.log_e(f"[{desc}] 0x37 failed, abort segment")
+        return False
+
+    app.log_i(f"[{desc}] ✅ Segment complete: {len(seg_data)} bytes at offset 0x{seg_offset:08X}")
+    return True
+
+
 def file_download(uds, pkg_path):
     """
-    34/36/37 文件下载（使用 ZXDoc 内置 file_download API）。
-    从 .pkg 容器中提取 Payload，通过 ZXDoc 发送。
+    多段文件下载（PKG3 格式）。
+    每段独立 0x34/0x36/0x37，最后一段为签名（addr=0, len=256）。
+    签名段下载后发送 0x31 DFFF 进行 CRC+签名验证。
     """
     expected_sectors = set(BANK_SECTORS.get(TARGET_BANK, BANK_SECTORS["A"]))
     actual_sectors = set(_g_erased_sectors)
@@ -238,59 +330,98 @@ def file_download(uds, pkg_path):
     else:
         app.log_i(
             f"[Download] ✅ Erase check passed: {len(actual_sectors)}/{len(expected_sectors)} sectors erased. "
-            f"Proceeding to RequestDownload (0x34)."
+            f"Proceeding to multi-segment download."
         )
+
     if not os.path.exists(pkg_path):
         app.log_e(f"[Download] ❌ File not found: {pkg_path}")
         return False
 
     # 解析 .pkg
     try:
-        payload_addr, payload_len, payload_bytes, signature_bytes, sw_version, payload_crc = parse_pkg_file(pkg_path)
+        payload_addr, payload_len, payload_bytes, signature_bytes, sw_version, payload_crc, segments = parse_pkg_file(pkg_path)
     except Exception as e:
         app.log_e(f"[Download] ❌ Failed to parse .pkg: {e}")
         return False
 
-    # 将 Payload + Signature 一起保存为临时 .bin 文件供 ZXDoc 发送
-    # Bootloader 会从 PFlash 末尾读取 Signature 进行验证
-    tmp_bin = pkg_path + ".payload.bin"
-    combined = payload_bytes + signature_bytes
-    with open(tmp_bin, "wb") as f:
-        f.write(combined)
-    app.log_i(f"[Download] Payload+Sig: {payload_len}+{len(signature_bytes)}={len(combined)} bytes -> {tmp_bin}")
+    # 判断格式
+    if not segments:
+        # PKG2 fallback: use ZXDoc built-in file_download
+        app.log_w("[Download] PKG2 detected, using legacy single-segment mode")
+        tmp_bin = pkg_path + ".payload.bin"
+        combined = payload_bytes + signature_bytes
+        with open(tmp_bin, "wb") as f:
+            f.write(combined)
+        block_cfgs = [FlashDataBlockCfg(
+            startAddr=0,
+            dataLen=len(combined),
+            crc=payload_crc,
+            fillByte=0x00,
+            mappedAddr=payload_addr,
+        )]
+        dl_req = ZFileDownloadReq(
+            filePath=tmp_bin,
+            memEraseType=ZMemEraseType.NoErase,
+            srcAddr=PHY_ADDR,
+            dstAddr=TESTER_ADDR,
+            fileBlockCfgs=block_cfgs,
+            crcAlgorithm=ZCrcAlgorithm(
+                type=ZCrcType.CRC32,
+                polynomial=0x04C11DB7,
+                initValue=0xFFFFFFFF,
+                xorOutput=0xFFFFFFFF,
+                reflectInput=True,
+                reflectOutput=True,
+            ),
+            totalCheckCmd=None,
+        )
+        return uds.file_download(dl_req)
 
-    # 构造下载请求
-    block_cfg = FlashDataBlockCfg(
-        startAddr=0,
-        dataLen=len(combined),
-        crc=payload_crc,
-        fillByte=0x00,
-        mappedAddr=payload_addr,
-    )
+    # PKG3 multi-segment mode
+    app.log_i(f"[Download] PKG3 multi-segment mode: {len(segments)} data segments + 1 signature segment")
 
-    dl_req = ZFileDownloadReq(
-        filePath=tmp_bin,
-        memEraseType=ZMemEraseType.NoErase,  # 已手动擦除，禁用自动擦除
-        srcAddr=PHY_ADDR,
-        dstAddr=TESTER_ADDR,
-        fileBlockCfgs=[block_cfg],
-        crcAlgorithm=ZCrcAlgorithm(
-            type=ZCrcType.CRC32,
-            polynomial=0x04C11DB7,
-            initValue=0xFFFFFFFF,
-            xorOutput=0xFFFFFFFF,
-            reflectInput=True,
-            reflectOutput=True,
-        ),
-        totalCheckCmd=None,  # 手动发送 31 DFFF，不用 ZXDoc 内置
-    )
+    # Base address for offset calculation
+    base_addr = payload_addr if payload_addr != 0 else 0x80020000
+    app.log_i(f"[Download] Base addr: 0x{base_addr:08X}")
 
-    if uds.file_download(dl_req):
-        app.log_i("[Download] ✅ File download success")
-        return True
-    else:
-        app.log_e("[Download] ❌ File download failed")
+    # Download each data segment
+    for idx, (flash_addr, seg_data) in enumerate(segments):
+        seg_offset = flash_addr - base_addr
+        app.log_i(f"[Download] --- Segment {idx+1}/{len(segments)}: flash=0x{flash_addr:08X}, offset=0x{seg_offset:08X}, len={len(seg_data)} ---")
+        if not _download_single_segment(uds, seg_offset, seg_data, f"Seg{idx+1}"):
+            app.log_e(f"[Download] ❌ Segment {idx+1} failed, abort download")
+            return False
+
+    # Download signature segment (addr=0, len=256)
+    app.log_i(f"[Download] --- Signature segment: offset=0x00000000, len={len(signature_bytes)} ---")
+    if not _download_single_segment(uds, 0, signature_bytes, "Signature"):
+        app.log_e("[Download] ❌ Signature segment failed, abort download")
         return False
+
+    # CRC + Signature verification (0x31 01 DFFF)
+    app.log_i("[Download] --- Verifying CRC + Signature (0x31 DFFF) ---")
+    crc_be = [(payload_crc >> 24) & 0xFF, (payload_crc >> 16) & 0xFF,
+              (payload_crc >> 8) & 0xFF, payload_crc & 0xFF]
+    rsp = uds_request(uds, 0x31, [0x01, 0xDF, 0xFF] + crc_be, "Verify CRC+Sig")
+    if not rsp:
+        app.log_e("[Download] ❌ Verification request failed")
+        return False
+
+    if len(rsp.data) >= 5 and rsp.data[0] == 0x01:
+        result = rsp.data[4]
+        if result == 0x00:
+            app.log_i("[Download] ✅ Verification passed! Bank marked valid.")
+            return True
+        elif result == 0x01:
+            app.log_e("[Download] ❌ CRC mismatch!")
+        elif result == 0x02:
+            app.log_e("[Download] ❌ Signature verification failed!")
+        else:
+            app.log_e(f"[Download] ❌ Unknown verification result: 0x{result:02X}")
+    else:
+        app.log_w(f"[Download] ⚠️ Unexpected verification response: {rsp.data.hex()}")
+
+    return False
 
 
 
@@ -446,7 +577,7 @@ def do_flash_process(pkg_path=None):
         #     31 DFFF 只传 CRC(4B)，Bootloader 从 PFlash 末尾读 Sig 验证。
         # ------------------------------------------------------------
         try:
-            _, payload_len, _, _, _, payload_crc = parse_pkg_file(pkg_path)
+            _, payload_len, _, _, _, payload_crc, _ = parse_pkg_file(pkg_path)
             # 31 01 DF FF + CRC(4B, big-endian)
             # PayloadLen is not needed: Bootloader knows it from 0x34 DataLen - SigLen.
             dfff_data = bytes([0x01, 0xDF, 0xFF])

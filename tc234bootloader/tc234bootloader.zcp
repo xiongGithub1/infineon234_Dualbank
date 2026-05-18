@@ -9262,20 +9262,28 @@
             "details": {
                 "subWindows": [
                     {
-                        "height": 566,
+                        "height": 564,
                         "index": 1,
-                        "uuid": "{d11a6eb2-481b-45cd-90dd-8cc7de406359}",
-                        "width": 857,
-                        "x": 742,
-                        "y": -23
+                        "uuid": "{361ee376-21ba-4c44-82c2-180091cb1b51}",
+                        "width": 979,
+                        "x": 0,
+                        "y": 2
                     },
                     {
-                        "height": 564,
+                        "height": 566,
                         "index": 2,
-                        "uuid": "{361ee376-21ba-4c44-82c2-180091cb1b51}",
-                        "width": 743,
-                        "x": 0,
-                        "y": -21
+                        "uuid": "{d11a6eb2-481b-45cd-90dd-8cc7de406359}",
+                        "width": 857,
+                        "x": 989,
+                        "y": 3
+                    },
+                    {
+                        "height": 480,
+                        "index": 3,
+                        "uuid": "{98395ccf-45c1-4f98-a29e-81d88bfaf244}",
+                        "width": 800,
+                        "x": 653,
+                        "y": -1
                     }
                 ]
             },
@@ -9288,33 +9296,36 @@
             "details": {
                 "subWindows": [
                     {
-                        "index": 1,
-                        "minimized": true,
-                        "uuid": "{9fad5f9a-1043-439f-993c-152078c1a25c}"
-                    },
-                    {
                         "height": 600,
-                        "index": 2,
+                        "index": 1,
                         "uuid": "{e10fad03-46d4-4d76-8152-b5a4d09bb8ce}",
                         "width": 800,
                         "x": 866,
                         "y": 43
                     },
                     {
-                        "height": 600,
-                        "index": 3,
-                        "uuid": "{91bdec0c-3ad8-42bc-99b1-d0d2a3e25965}",
-                        "width": 800,
-                        "x": 780,
-                        "y": 0
-                    },
-                    {
                         "height": 594,
-                        "index": 4,
+                        "index": 2,
                         "uuid": "{a782bbe6-9d7b-42f8-a4b3-930770317e77}",
                         "width": 774,
                         "x": 0,
                         "y": 4
+                    },
+                    {
+                        "height": 400,
+                        "index": 3,
+                        "uuid": "{9fad5f9a-1043-439f-993c-152078c1a25c}",
+                        "width": 800,
+                        "x": 0,
+                        "y": 0
+                    },
+                    {
+                        "height": 600,
+                        "index": 4,
+                        "uuid": "{91bdec0c-3ad8-42bc-99b1-d0d2a3e25965}",
+                        "width": 800,
+                        "x": 780,
+                        "y": 0
                     }
                 ]
             },
@@ -9331,20 +9342,20 @@
                         "uuid": "{9fad5f9a-1043-439f-993c-152078c1a25c}"
                     },
                     {
-                        "height": 596,
-                        "index": 1,
-                        "uuid": "{6f043236-1508-4edb-8539-1a36256eb861}",
-                        "width": 828,
-                        "x": 0,
-                        "y": -41
-                    },
-                    {
                         "height": 600,
-                        "index": 2,
+                        "index": 1,
                         "uuid": "{ba587331-6b70-4362-9af0-3715ef2995d0}",
                         "width": 786,
                         "x": 823,
                         "y": -50
+                    },
+                    {
+                        "height": 596,
+                        "index": 2,
+                        "uuid": "{6f043236-1508-4edb-8539-1a36256eb861}",
+                        "width": 828,
+                        "x": 0,
+                        "y": -41
                     }
                 ]
             },
@@ -9359,26 +9370,26 @@
                     {
                         "height": 480,
                         "index": 1,
-                        "uuid": "{f05f5e66-ffa7-486f-ac2c-19d854402505}",
+                        "uuid": "{9fffdb3b-a5d1-4964-8b3e-9a7868bf93cb}",
                         "width": 800,
-                        "x": -1,
-                        "y": -405
+                        "x": 804,
+                        "y": 491
                     },
                     {
                         "height": 480,
                         "index": 2,
-                        "uuid": "{479aee6f-a1ed-44df-a879-c1ed16c9af3a}",
+                        "uuid": "{f05f5e66-ffa7-486f-ac2c-19d854402505}",
                         "width": 800,
-                        "x": 801,
-                        "y": -418
+                        "x": -1,
+                        "y": 13
                     },
                     {
                         "height": 480,
                         "index": 3,
-                        "uuid": "{9fffdb3b-a5d1-4964-8b3e-9a7868bf93cb}",
+                        "uuid": "{479aee6f-a1ed-44df-a879-c1ed16c9af3a}",
                         "width": 800,
-                        "x": 804,
-                        "y": 73
+                        "x": 801,
+                        "y": 0
                     },
                     {
                         "height": 480,
@@ -9386,7 +9397,7 @@
                         "uuid": "{0861e26d-1a6d-4290-b926-8e87c48994a9}",
                         "width": 800,
                         "x": -3,
-                        "y": 75
+                        "y": 493
                     }
                 ]
             },
@@ -9401,7 +9412,7 @@
             "details": {
                 "args": "",
                 "isAutoStart": false,
-                "lastModified": 1778831926969,
+                "lastModified": 1778933862020,
                 "scriptFile": "E:/workFiles/IEBS/tc234bootloader/BootLoader_dualBank/shuaxie.py"
             },
             "index": 1,
@@ -11755,97 +11766,16 @@
                         "desc": "文件下载",
                         "erase_ecu_memory_mode": 3,
                         "ever_file_block_delay": 0,
-                        "file": "E:/workFiles/IEBS/tc234bootloader/App_dualBank/Debug/App_dualBank.hex",
+                        "file": "E:/workFiles/IEBS/tc234bootloader/tc234bootloader/App_dualBank.bin",
                         "file_blocks": [
                             {
-                                "address": "0x80020000",
-                                "crc": "0x3359EAFD",
+                                "address": "0x0",
+                                "crc": "0x5721C70",
                                 "enabled": true,
                                 "fillByte": "0x0",
-                                "mappedAddress": "0x80020000",
-                                "mappedSize": "18",
-                                "size": "18"
-                            },
-                            {
-                                "address": "0x80020020",
-                                "crc": "0x8303BBFF",
-                                "enabled": true,
-                                "fillByte": "0x0",
-                                "mappedAddress": "0x80020020",
-                                "mappedSize": "12",
-                                "size": "12"
-                            },
-                            {
-                                "address": "0x80020030",
-                                "crc": "0xD2E8B89",
-                                "enabled": true,
-                                "fillByte": "0x0",
-                                "mappedAddress": "0x80020030",
-                                "mappedSize": "44334",
-                                "size": "44334"
-                            },
-                            {
-                                "address": "0x8002AD60",
-                                "crc": "0xE14DFEBF",
-                                "enabled": true,
-                                "fillByte": "0x0",
-                                "mappedAddress": "0x8002AD60",
-                                "mappedSize": "3973",
-                                "size": "3973"
-                            },
-                            {
-                                "address": "0x8002BCE8",
-                                "crc": "0x6D653F6F",
-                                "enabled": true,
-                                "fillByte": "0x0",
-                                "mappedAddress": "0x8002BCE8",
-                                "mappedSize": "1837",
-                                "size": "1837"
-                            },
-                            {
-                                "address": "0x8002C418",
-                                "crc": "0xDBC677F",
-                                "enabled": true,
-                                "fillByte": "0x0",
-                                "mappedAddress": "0x8002C418",
-                                "mappedSize": "688",
-                                "size": "688"
-                            },
-                            {
-                                "address": "0x80090500",
-                                "crc": "0x157ED6DC",
-                                "enabled": true,
-                                "fillByte": "0x0",
-                                "mappedAddress": "0x80090500",
-                                "mappedSize": "10",
-                                "size": "10"
-                            },
-                            {
-                                "address": "0x80090540",
-                                "crc": "0xA7535417",
-                                "enabled": true,
-                                "fillByte": "0x0",
-                                "mappedAddress": "0x80090540",
-                                "mappedSize": "10",
-                                "size": "10"
-                            },
-                            {
-                                "address": "0x80090C80",
-                                "crc": "0xFAF8F481",
-                                "enabled": true,
-                                "fillByte": "0x0",
-                                "mappedAddress": "0x80090C80",
-                                "mappedSize": "10",
-                                "size": "10"
-                            },
-                            {
-                                "address": "0x80098000",
-                                "crc": "0xB558FB58",
-                                "enabled": true,
-                                "fillByte": "0x0",
-                                "mappedAddress": "0x80098000",
-                                "mappedSize": "242",
-                                "size": "242"
+                                "mappedAddress": "0x0",
+                                "mappedSize": "50912",
+                                "size": "50912"
                             }
                         ],
                         "functionaddr": false,
@@ -12586,13 +12516,6 @@
                         "field": 5,
                         "field_name": "E_Identifier",
                         "filter": {
-                            "conditions": [
-                                {
-                                    "relation": 0,
-                                    "type": 1,
-                                    "value": "75c"
-                                }
-                            ],
                             "format": 0,
                             "or": true
                         },
@@ -13387,7 +13310,7 @@
                     }
                 ],
                 "layout": {
-                    "frame": "AAAA/wAAAAAAAAABAAAAAQAAAAAAAAAAAAAAAAAAAAALAAYAAAACAAAACgAAAGQAAAAJAAAAZAAAAxAAAAALAQAAAQAAAAAAAAAAAAAAAGT/////AAAAgQAAAAAAAAALAAAAPAAAAAEAAAAAAAAAeAAAAAEAAAAAAAAAPAAAAAEAAAAAAAAAWgAAAAEAAAAAAAAAoAAAAAEAAAAAAAAALQAAAAEAAAAAAAAASwAAAAEAAAAAAAAARgAAAAEAAAAAAAAAaAAAAAEAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAEAAAAAAAAD6AAAAABk",
+                    "frame": "AAAA/wAAAAAAAAABAAAAAQAAAAAAAAAAAAAAAAAAAAALAAYAAAACAAAACQAAAGQAAAAKAAAAZAAAAxAAAAALAQAAAQAAAAAAAAAAAAAAAGT/////AAAAgQAAAAAAAAALAAAAPAAAAAEAAAAAAAAAeAAAAAEAAAAAAAAAPAAAAAEAAAAAAAAAWgAAAAEAAAAAAAAAoAAAAAEAAAAAAAAALQAAAAEAAAAAAAAASwAAAAEAAAAAAAAARgAAAAEAAAAAAAAAaAAAAAEAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAEAAAAAAAAD6AAAAABk",
                     "signals": "AAAA/wAAAAAAAAABAAAAAP////8BAAAAAAAAAAAAAAAJAAEAAAABAAAACAAAAGQAAALzAAAACQEBAAEAAAAAAAAAAAAAAABk/////wAAAIEAAAAAAAAACQAAAK8AAAABAAAAAAAAAFUAAAABAAAAAAAAAHgAAAABAAAAAAAAAEsAAAABAAAAAAAAAEsAAAABAAAAAAAAAEsAAAABAAAAAAAAADIAAAABAAAAAAAAAGQAAAABAAAAAAAAAAAAAAABAAAAAAAAA+gAAAAAZA==",
                     "splitter": "AAAA/wAAAAEAAAACAAAAwAAAAOIA/////wEAAAACAA=="
                 },
@@ -13398,7 +13321,7 @@
                 "retryInterval": 10,
                 "showAddress": true,
                 "showAscii": true,
-                "showStatus": true,
+                "showStatus": false,
                 "template": {
                     "channel": 1,
                     "data": "00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
@@ -13650,7 +13573,7 @@
             "details": {
                 "args": "",
                 "isAutoStart": false,
-                "lastModified": 1778831222667,
+                "lastModified": 1778912663980,
                 "scriptFile": "E:/workFiles/IEBS/tc234bootloader/BootLoader_dualBank/zxdoc_gen_pkg_A.py"
             },
             "index": 11,
@@ -13664,7 +13587,7 @@
             "details": {
                 "args": "",
                 "isAutoStart": false,
-                "lastModified": 1778831239191,
+                "lastModified": 1778912682140,
                 "scriptFile": "E:/workFiles/IEBS/tc234bootloader/BootLoader_dualBank/zxdoc_gen_pkg_B.py"
             },
             "index": 12,
@@ -13672,17 +13595,31 @@
             "userData": "",
             "uuid": "{9fffdb3b-a5d1-4964-8b3e-9a7868bf93cb}",
             "windowType": "Scripting"
+        },
+        {
+            "comment": "",
+            "details": {
+                "args": "",
+                "isAutoStart": false,
+                "lastModified": 1778934030746,
+                "scriptFile": "E:/workFiles/IEBS/tc234bootloader/tc234bootloader/alignHex.py"
+            },
+            "index": 13,
+            "name": "脚本",
+            "userData": "",
+            "uuid": "{98395ccf-45c1-4f98-a29e-81d88bfaf244}",
+            "windowType": "Scripting"
         }
     ],
     "symbolExplorer": {
         "area": 1,
-        "visible": true
+        "visible": false
     },
     "synchronizeEnabled": false,
     "tabsOnTop": true,
     "trigger": false,
     "windowManagerArea": {
-        "areaState": "AAAA/wAAAAD9AAAAAAAABlgAAAJbAAAABAAAAAQAAAAIAAAACPwAAAAA",
+        "areaState": "AAAA/wAAAAD9AAAAAAAAB4AAAAJsAAAABAAAAAQAAAAIAAAACPwAAAAA",
         "manager": {
             "docks": [
             ],

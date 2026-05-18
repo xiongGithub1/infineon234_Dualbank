@@ -1571,8 +1571,9 @@ static uint8  gs_bCrcActive = FALSE;
 #define RSA2048_SIG_LEN (256u)
 
 /* Download session tracking for payload/signature separation.
- * gs_downloadStartAddr: uncached base address set at 0x34.
- * gs_downloadPayloadLen: payload length excluding trailing RSA signature.
+ * gs_downloadStartAddr: uncached base address of the first data segment (bank base).
+ * gs_downloadPayloadLen: accumulated payload length across all data segments.
+ * For multi-segment download, this accumulates the total data length.
  */
 static uint32 gs_downloadStartAddr = 0u;
 static uint32 gs_downloadPayloadLen = 0u;
@@ -1614,11 +1615,13 @@ static void RequestDownload0x34(struct UDSServiceInfo* i_pstUDSServiceInfo,
 			rawAddr |= m_pstPDUMsg->aDataBuf[Index + 3u];
 		}
 
-		/* Offset mode: rawAddr < 0x10000 means "auto-select opposite bank"
+		/* Offset mode: rawAddr < 0x100000 means "auto-select opposite bank"
 		 * Bootloader ignores the address and writes to the inactive bank.
-		 * This supports single-HEX workflow where the .pkg has PayloadAddr=0.
+		 * This supports multi-segment PKG3 workflow where segments are spaced
+		 * by large offsets (e.g., 0x70500) within the same bank.
+		 * Threshold = BANK_APP_SIZE (896KB) to cover all offsets within a bank.
 		 */
-		if (rawAddr < 0x00010000u)
+		if (rawAddr < 0x00100000u)
 		{
 			activeBank = Boot_DualBank_GetActiveBank();
 			targetBank = (activeBank == BANK_A) ? BANK_B : BANK_A;
@@ -1686,29 +1689,40 @@ static void RequestDownload0x34(struct UDSServiceInfo* i_pstUDSServiceInfo,
 		/*set wait transfer data step(0x34 service)*/
 		Flash_SetNextDownloadStep(FL_TRANSFER_STEP);
 
-		/* Initialise streaming CRC at the start of a new download sequence */
+		/* Initialise streaming CRC at the start of a new download session.
+		 * For multi-segment download (PKG3), CRC is NOT reset between segments
+		 * so that it accumulates over the entire payload across multiple 0x34/0x36/0x37.
+		 */
 		if (FALSE == gs_bCrcActive)
 		{
 			gs_DownloadCRC = 0xFFFFFFFFu;
 			gs_bCrcActive  = TRUE;
 		}
 
-		Flash_SaveDownloadDataInfo(gs_stDowloadDataInfo.StartAddr, gs_stDowloadDataInfo.DataLen);
-
-		/* Save base address and payload length for CRC boundary control.
-		 * The trailing RSA-2048 signature is part of the download but must
-		 * not participate in the CRC so that tester-side CRC (over payload
-		 * only) still matches.
+		/* Detect signature segment: offset=0, len=256 (RSA2048_SIG_LEN).
+		 * For multi-segment download (PKG3), the signature segment is the
+		 * last segment, identified by offset=0 and length=256.
+		 * Normal data segments are typically much larger, so this is safe.
 		 */
-		gs_downloadStartAddr = gs_stDowloadDataInfo.StartAddr;
-		if (gs_stDowloadDataInfo.DataLen > RSA2048_SIG_LEN)
+		if ((rawAddr == 0u) && (gs_stDowloadDataInfo.DataLen == RSA2048_SIG_LEN))
 		{
-			gs_downloadPayloadLen = gs_stDowloadDataInfo.DataLen - RSA2048_SIG_LEN;
+			gs_bIsSignatureSegment = TRUE;
+			/* Write signature right after accumulated payload data */
+			gs_stDowloadDataInfo.StartAddr = gs_downloadStartAddr + gs_downloadPayloadLen;
 		}
 		else
 		{
-			gs_downloadPayloadLen = 0u;
+			gs_bIsSignatureSegment = FALSE;
+			/* On first data segment, save the bank base address */
+			if (gs_downloadStartAddr == 0u)
+			{
+				gs_downloadStartAddr = gs_stDowloadDataInfo.StartAddr;
+			}
+			/* Accumulate total payload length across all data segments */
+			gs_downloadPayloadLen += gs_stDowloadDataInfo.DataLen;
 		}
+
+		Flash_SaveDownloadDataInfo(gs_stDowloadDataInfo.StartAddr, gs_stDowloadDataInfo.DataLen);
 
 		m_pstPDUMsg->aDataBuf[0u] = i_pstUDSServiceInfo->SerNum + 0x40u;
 		m_pstPDUMsg->aDataBuf[1u] = 0x10u;
@@ -1725,8 +1739,16 @@ static void RequestDownload0x34(struct UDSServiceInfo* i_pstUDSServiceInfo,
 		Flash_SetNextDownloadStep(FL_REQUEST_STEP);
 		gs_DownloadCRC = 0xFFFFFFFFu;
 		gs_bCrcActive  = FALSE;
+		gs_downloadStartAddr = 0u;
+		gs_downloadPayloadLen = 0u;
+		gs_bIsSignatureSegment = FALSE;
 	}
 }
+
+/* Signature segment detection: if addr=0 and len=0 in 0x34, this segment is the RSA-2048 signature.
+ * The signature is downloaded but does NOT participate in CRC.
+ */
+static uint8 gs_bIsSignatureSegment = FALSE;
 
 static void TransferData0x36(struct UDSServiceInfo* i_pstUDSServiceInfo, tUdsAppMsgInfo* m_pstPDUMsg)
 {
@@ -1777,32 +1799,14 @@ static void TransferData0x36(struct UDSServiceInfo* i_pstUDSServiceInfo, tUdsApp
 	}
 	else
 	{
-		/* Accumulate CRC over the received payload only (signature excluded).
-		 * The trailing RSA-2048 signature is written to Flash but must not
-		 * participate in the CRC so that the tester-side CRC (computed over
-		 * payload only) still matches.
+		/* Accumulate CRC over payload segments only.
+		 * Signature segments (marked by gs_bIsSignatureSegment) do NOT participate in CRC.
 		 */
-		if (gs_bCrcActive != FALSE)
+		if ((gs_bCrcActive != FALSE) && (gs_bIsSignatureSegment == FALSE))
 		{
-			uint32 offset = gs_stDowloadDataInfo.StartAddr - gs_downloadStartAddr;
-			uint32 crcLen = actualDataLen;
-			if ((offset + actualDataLen) > gs_downloadPayloadLen)
-			{
-				if (offset < gs_downloadPayloadLen)
-				{
-					crcLen = gs_downloadPayloadLen - offset;
-				}
-				else
-				{
-					crcLen = 0u;
-				}
-			}
-			if (crcLen > 0u)
-			{
-				gs_DownloadCRC = Boot_CRC32_Update(gs_DownloadCRC,
-					&m_pstPDUMsg->aDataBuf[2],
-					crcLen);
-			}
+			gs_DownloadCRC = Boot_CRC32_Update(gs_DownloadCRC,
+				&m_pstPDUMsg->aDataBuf[2],
+				actualDataLen);
 		}
 
 		gs_stDowloadDataInfo.StartAddr += actualDataLen;
@@ -1833,6 +1837,9 @@ static void TransferData0x36(struct UDSServiceInfo* i_pstUDSServiceInfo, tUdsApp
 		gs_RxBlockNum = 0u;
 		gs_DownloadCRC = 0xFFFFFFFFu;
 		gs_bCrcActive  = FALSE;
+		gs_downloadStartAddr = 0u;
+		gs_downloadPayloadLen = 0u;
+		gs_bIsSignatureSegment = FALSE;
 	}
 }
 
@@ -2108,16 +2115,20 @@ static void RoutineControl0x31(struct UDSServiceInfo* i_pstUDSServiceInfo, tUdsA
 									break;
 								}
 
-								/* CRC OK: read RSA signature from PFlash and verify */
+								/* CRC OK: read RSA signature from PFlash and verify.
+								 * For multi-segment download (PKG3), use accumulated CRC from
+								 * gs_DownloadCRC (which was NOT reset between segments).
+								 */
 								targetBank = Boot_DualBank_GetTargetWriteBank();
 								signature = (const uint8 *)(gs_downloadStartAddr + gs_downloadPayloadLen);
-
-								verifyStatus = Boot_DualBank_VerifyBankWithSignature(
+	
+								verifyStatus = Boot_DualBank_VerifyBankWithSignature_CrcProvided(
 									targetBank,
 									expectedCRC,
-									gs_downloadPayloadLen,
+									gs_DownloadCRC ^ 0xFFFFFFFFu,
 									signature,
-									RSA2048_SIG_LEN);
+									RSA2048_SIG_LEN,
+									gs_downloadPayloadLen);
 
 								if (verifyStatus != BANK_STATUS_VALID)
 								{
@@ -2140,6 +2151,9 @@ static void RoutineControl0x31(struct UDSServiceInfo* i_pstUDSServiceInfo, tUdsA
 								routineResult = 0x00;
 								gs_DownloadCRC = 0xFFFFFFFFu;
 								gs_bCrcActive  = FALSE;
+								gs_downloadStartAddr = 0u;
+								gs_downloadPayloadLen = 0u;
+								gs_bIsSignatureSegment = FALSE;
 
 								m_pstPDUMsg->aDataBuf[0] = 0x71;
 								m_pstPDUMsg->aDataBuf[1] = 0x01;

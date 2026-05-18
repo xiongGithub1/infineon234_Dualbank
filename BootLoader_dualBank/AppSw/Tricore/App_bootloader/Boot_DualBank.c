@@ -521,6 +521,61 @@ BankStatus_t Boot_DualBank_VerifyBankWithSignature(uint32 bank, uint32 expectedC
 }
 
 /**
+ * @brief Verify bank with RSA-2048 signature + SHA-256, using provided CRC.
+ * @param bank        Target bank (BANK_A or BANK_B).
+ * @param expectedCrc CRC32 value calculated by the host.
+ * @param actualCrc   CRC32 accumulated during download (for multi-segment download).
+ * @param signature   256-byte RSA signature (big-endian).
+ * @param sigLen      Signature length (must be 256).
+ * @param codeSize    Total payload size to verify (all data segments excluding signature).
+ * @return BANK_STATUS_VALID if both CRC and signature match.
+ */
+BankStatus_t Boot_DualBank_VerifyBankWithSignature_CrcProvided(uint32 bank, uint32 expectedCrc,
+                                                                uint32 actualCrc, const uint8 *signature,
+                                                                uint32 sigLen, uint32 codeSize)
+{
+    uint32 startAddr;
+    uint8  hash[SHA256_HASH_SIZE];
+
+    if (bank == BANK_A)
+    {
+        startAddr = BANK_A_START_ADDR;
+    }
+    else if (bank == BANK_B)
+    {
+        startAddr = BANK_B_START_ADDR;
+    }
+    else
+    {
+        return BANK_STATUS_UNKNOWN;
+    }
+
+    /* Step 1: CRC verification using the accumulated CRC from host */
+    if (actualCrc != expectedCrc)
+    {
+        return BANK_STATUS_INVALID;
+    }
+
+    /* Step 2: SHA-256 over actual downloaded payload (uncached to avoid DCache staleness) */
+    uint32 uncachedAddr = (startAddr & 0x00FFFFFFu) | 0xA0000000u;
+    __dsync();
+    sha256((const uint8 *)uncachedAddr, codeSize, hash);
+
+    /* Step 3: RSA-2048 signature verification */
+    if (sigLen != RSA2048_SIG_LEN)
+    {
+        return BANK_STATUS_INVALID;
+    }
+
+    if (rsa2048_verify(signature, hash, rsa_public_modulus, rsa_public_exponent) != 1)
+    {
+        return BANK_STATUS_INVALID;
+    }
+
+    return BANK_STATUS_VALID;
+}
+
+/**
  * @brief Invalidate a bank (clear its valid flag and CRC).
  */
 void Boot_DualBank_InvalidateBank(uint32 bank)

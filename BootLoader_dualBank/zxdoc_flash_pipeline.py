@@ -38,20 +38,20 @@ from pkg_generator import generate_pkg
 # ============================================================================
 
 # 编译器原始 HEX（绝对路径，只需一份，不区分 Bank A/B）
-HEX_IN        = r"E:\workFiles\IEBS\App_dualBank\Debug\App_dualBank.hex"
+HEX_IN        = r"E:\workFiles\IEBS\tc234bootloader\App_dualBank\Debug\App_dualBank.hex"
 
 # 对齐后的 HEX 输出路径（绝对路径）
-HEX_OUT       = r"E:\workFiles\IEBS\tc234bootloader\App_dualBank.aligned.hex"
+HEX_OUT       = r"E:\workFiles\IEBS\tc234bootloader\tc234bootloader\App_dualBank.aligned.hex"
 
 # .pkg 输出路径（绝对路径）
-PKG_OUT       = r"E:\workFiles\IEBS\tc234bootloader\App_dualBank.pkg"
+PKG_OUT       = r"E:\workFiles\IEBS\tc234bootloader\tc234bootloader\App_dualBank.pkg"
 
 # HEX 编译基址，用于 pkg_generator 的 offset 平移
 # 必须与 APP 工程的 LSL 链接基址一致
 BASE_ADDR     = 0x80020000
 
 # RSA 私钥路径（绝对路径）
-PRIV_KEY      = r"E:\workFiles\IEBS\BootLoader_dualBank\keys\private.pem"
+PRIV_KEY      = r"E:\workFiles\IEBS\tc234bootloader\BootLoader_dualBank\keys\private.pem"
 
 # 软件版本号（写入 .pkg Header）
 SW_VERSION    = 0x00010002

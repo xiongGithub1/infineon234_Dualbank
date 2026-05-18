@@ -1,0 +1,1369 @@
+<!--
+ * @Author: qinXiong
+ * @Date: 2026-05-18 11:01:09
+ * @LastEditors: Qxiong&&2307975018@qq.com
+ * @LastEditTime: 2026-05-18 11:01:13
+ * @Description: 
+-->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TC234 Bootloader 工具箱</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', Consolas, monospace;
+    background: #1e1e1e;
+    color: #d4d4d4;
+    padding: 16px;
+    min-height: 100vh;
+    font-size: 13px;
+  }
+  h1 {
+    color: #569cd6;
+    margin-bottom: 12px;
+    font-size: 20px;
+  }
+  .tab-bar {
+    display: flex;
+    gap: 2px;
+    margin-bottom: 12px;
+    border-bottom: 2px solid #0e639c;
+  }
+  .tab-btn {
+    background: #2d2d30;
+    color: #d4d4d4;
+    border: none;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-size: 13px;
+    border-radius: 4px 4px 0 0;
+    transition: background 0.2s;
+  }
+  .tab-btn:hover { background: #3c3c3c; }
+  .tab-btn.active {
+    background: #0e639c;
+    color: white;
+  }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  .panel {
+    background: #252526;
+    border: 1px solid #3c3c3c;
+    border-radius: 6px;
+    padding: 14px;
+    margin-bottom: 12px;
+  }
+  .panel h2 {
+    color: #ce9178;
+    font-size: 15px;
+    margin-bottom: 10px;
+  }
+  .panel h3 {
+    color: #569cd6;
+    font-size: 13px;
+    margin: 10px 0 6px;
+  }
+  label {
+    display: block;
+    margin-bottom: 8px;
+    color: #9cdcfe;
+  }
+  input[type="file"], input[type="number"], input[type="text"] {
+    margin-top: 4px;
+    color: #d4d4d4;
+    font-size: 13px;
+  }
+  input[type="number"], input[type="text"] {
+    background: #3c3c3c;
+    border: 1px solid #555;
+    padding: 4px 8px;
+    border-radius: 3px;
+    width: 200px;
+  }
+  button {
+    background: #0e639c;
+    color: white;
+    border: none;
+    padding: 6px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+    margin-right: 8px;
+    margin-top: 4px;
+  }
+  button:hover { background: #1177bb; }
+  button:disabled { background: #555; cursor: not-allowed; }
+  button.secondary { background: #37373d; }
+  button.secondary:hover { background: #4a4a4a; }
+
+  .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 10px;
+    margin-top: 8px;
+  }
+  .summary-item {
+    background: #2d2d30;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+  }
+  .summary-item .label { color: #858585; display: block; }
+  .summary-item .value { color: #dcdcaa; font-weight: bold; font-size: 14px; }
+  .pass { color: #4ec9b0 !important; }
+  .fail { color: #f44747 !important; }
+  .warn { color: #dcdcaa !important; }
+
+  .hex-view {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 10px;
+  }
+  .hex-col {
+    background: #1e1e1e;
+    border: 1px solid #3c3c3c;
+    border-radius: 4px;
+    padding: 6px;
+    max-height: 400px;
+    overflow-y: auto;
+    font-family: Consolas, monospace;
+    font-size: 11px;
+    line-height: 1.6;
+  }
+  .hex-col h4 {
+    color: #569cd6;
+    font-size: 12px;
+    margin-bottom: 6px;
+    position: sticky;
+    top: 0;
+    background: #1e1e1e;
+    padding: 3px 0;
+    border-bottom: 1px solid #3c3c3c;
+  }
+  .hex-line {
+    display: flex;
+    gap: 6px;
+    padding: 1px 3px;
+    white-space: pre;
+  }
+  .hex-line:hover { background: #2a2a2a; }
+  .addr { color: #858585; min-width: 72px; }
+  .bytes { display: flex; gap: 2px; }
+  .byte {
+    min-width: 20px;
+    text-align: center;
+    border-radius: 2px;
+    padding: 0 1px;
+  }
+  .byte-match { color: #d4d4d4; }
+  .byte-diff { background: #5a1e1e; color: #f44747; font-weight: bold; }
+  .byte-missing { background: #3c3c00; color: #dcdcaa; }
+  .byte-extra { background: #1e3c1e; color: #4ec9b0; }
+
+  .status-bar {
+    margin-top: 10px;
+    padding: 8px;
+    border-radius: 4px;
+    font-size: 13px;
+    text-align: center;
+  }
+  .status-ok { background: #1e3c1e; color: #4ec9b0; }
+  .status-fail { background: #3c1e1e; color: #f44747; }
+  .status-info { background: #1e3c3c; color: #4ec9b0; }
+
+  .legend {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    font-size: 11px;
+    margin: 8px 0;
+  }
+  .legend span { display: flex; align-items: center; gap: 3px; }
+  .legend-dot { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
+
+  .stats-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    margin-top: 6px;
+  }
+  .stats-table th, .stats-table td {
+    padding: 5px 8px;
+    text-align: left;
+    border-bottom: 1px solid #3c3c3c;
+  }
+  .stats-table th { color: #ce9178; background: #2d2d30; }
+
+  textarea {
+    width: 100%;
+    min-height: 200px;
+    background: #1e1e1e;
+    color: #d4d4d4;
+    border: 1px solid #3c3c3c;
+    border-radius: 4px;
+    padding: 8px;
+    font-family: Consolas, monospace;
+    font-size: 12px;
+    resize: vertical;
+  }
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .progress { margin-top: 8px; color: #dcdcaa; }
+  .hidden { display: none; }
+  .seg-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    margin-top: 8px;
+  }
+  .seg-table th, .seg-table td {
+    padding: 6px 10px;
+    text-align: left;
+    border-bottom: 1px solid #3c3c3c;
+  }
+  .seg-table th { color: #ce9178; background: #2d2d30; }
+  .note { color: #858585; font-size: 12px; margin-bottom: 10px; }
+</style>
+</head>
+<body>
+
+<h1>TC234 Bootloader 工具箱</h1>
+
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="showTab('tab-verify')">PKG 解析验证</button>
+  <button class="tab-btn" onclick="showTab('tab-pkghex')">PKG vs HEX</button>
+  <button class="tab-btn" onclick="showTab('tab-genpkg')">HEX 生成 PKG</button>
+  <button class="tab-btn" onclick="showTab('tab-align')">HEX 对齐</button>
+  <button class="tab-btn" onclick="showTab('tab-pubkey')">公钥提取</button>
+  <button class="tab-btn" onclick="showTab('tab-genkey')">密钥生成</button>
+</div>
+
+<!-- ================================================================ -->
+<!-- TAB 1: PKG 解析验证 -->
+<!-- ================================================================ -->
+<div id="tab-verify" class="tab-panel active">
+  <div class="panel">
+    <h2>PKG 文件解析</h2>
+    <p class="note">支持 PKG2（单段）和 PKG3（多段）格式。显示 Header、段信息、CRC 验证。</p>
+    <label>
+      .pkg 文件
+      <input type="file" id="v2-pkgFile" accept=".pkg">
+    </label>
+    <button id="v2-btn" onclick="doPkgInspect()">解析</button>
+    <div class="progress" id="v2-progress"></div>
+  </div>
+
+  <div class="panel hidden" id="v2-headerPanel">
+    <h2>Header 信息</h2>
+    <table class="stats-table" id="v2-headerTable"></table>
+  </div>
+
+  <div class="panel hidden" id="v2-segPanel">
+    <h2>段信息</h2>
+    <table class="seg-table" id="v2-segTable"></table>
+  </div>
+
+  <div class="panel hidden" id="v2-crcPanel">
+    <h2>CRC 验证</h2>
+    <div id="v2-crcResult"></div>
+  </div>
+</div>
+
+<!-- ================================================================ -->
+<!-- TAB: HEX 生成 PKG -->
+<!-- ================================================================ -->
+<div id="tab-genpkg" class="tab-panel">
+  <div class="panel">
+    <h2>HEX 生成 PKG (PKG3 多段格式)</h2>
+    <p class="note">选择 Intel HEX 文件和 RSA 私钥，在浏览器中生成签名的 .pkg 文件。</p>
+    <label>
+      HEX 文件
+      <input type="file" id="gp-hexFile" accept=".hex">
+    </label>
+    <label>
+      RSA 私钥 (PKCS#8 PEM)
+      <input type="file" id="gp-privFile" accept=".pem">
+    </label>
+    <label>
+      Payload 地址 (offset 模式填 0)
+      <input type="text" id="gp-payloadAddr" value="0" placeholder="0x00000000">
+    </label>
+    <label>
+      SW 版本
+      <input type="text" id="gp-swVersion" value="0x00010000" placeholder="0x00010000">
+    </label>
+    <label>
+      SW 版本掩码
+      <input type="text" id="gp-swMask" value="0xFFFFFFFF" placeholder="0xFFFFFFFF">
+    </label>
+    <button id="gp-btn" onclick="doGenPkg()">生成 PKG</button>
+    <div class="progress" id="gp-progress"></div>
+  </div>
+
+  <div class="panel hidden" id="gp-resultPanel">
+    <h2>生成结果</h2>
+    <div class="summary-grid" id="gp-summary"></div>
+    <button onclick="downloadPkg()">下载 .pkg</button>
+  </div>
+</div>
+
+<!-- ================================================================ -->
+<!-- TAB 2: PKG vs HEX -->
+<!-- ================================================================ -->
+<div id="tab-pkghex" class="tab-panel">
+  <div class="panel">
+    <h2>选择文件</h2>
+    <label>
+      .pkg 文件
+      <input type="file" id="v-pkgFile" accept=".pkg">
+    </label>
+    <label>
+      .aligned.hex 文件
+      <input type="file" id="v-hexFile" accept=".hex">
+    </label>
+    <button id="v-btn" onclick="doVerify()">开始对比</button>
+  </div>
+
+  <div class="panel hidden" id="v-summaryPanel">
+    <h2>概览</h2>
+    <div class="summary-grid" id="v-summary"></div>
+  </div>
+
+  <div class="panel hidden" id="v-statsPanel">
+    <h2>统计</h2>
+    <table class="stats-table" id="v-statsTable"></table>
+  </div>
+
+  <div class="panel hidden" id="v-diffPanel">
+    <h2>差异详情</h2>
+    <div class="legend">
+      <span><span class="legend-dot" style="background:#5a1e1e"></span> 字节不匹配</span>
+      <span><span class="legend-dot" style="background:#3c3c00"></span> HEX有但PKG缺失</span>
+      <span><span class="legend-dot" style="background:#1e3c1e"></span> PKG有但HEX缺失</span>
+      <span><span class="legend-dot" style="background:#2d2d30;border:1px solid #555"></span> 匹配</span>
+    </div>
+    <div style="display:flex;gap:8px;margin-bottom:8px;">
+      <label>最大行: <input type="number" id="v-maxLines" value="100" min="10" max="2000" style="width:70px"></label>
+      <label>起始偏移: <input type="text" id="v-startOffset" value="0" placeholder="hex/dec" style="width:100px"></label>
+      <button onclick="renderVerifyDiff()">刷新</button>
+    </div>
+    <div class="hex-view" id="v-hexView"></div>
+    <div id="v-statusBar"></div>
+  </div>
+</div>
+
+<!-- ================================================================ -->
+<!-- TAB 3: HEX 对齐 -->
+<!-- ================================================================ -->
+<div id="tab-align" class="tab-panel">
+  <div class="panel">
+    <h2>Intel HEX 对齐工具</h2>
+    <p class="note">将 HEX 文件中的数据段对齐到指定边界，空隙用 0x00 填充（AURIX PFlash 擦除状态）。</p>
+    <label>
+      输入 HEX 文件
+      <input type="file" id="a-inFile" accept=".hex">
+    </label>
+    <label>
+      对齐边界 (字节)
+      <input type="number" id="a-align" value="32" min="1" max="1024">
+    </label>
+    <label>
+      填充字节 (0x00 - 0xFF)
+      <input type="text" id="a-fill" value="00" maxlength="2" style="width:60px">
+    </label>
+    <button id="a-btn" onclick="doAlign()">生成对齐 HEX</button>
+    <div class="progress" id="a-progress"></div>
+  </div>
+
+  <div class="panel hidden" id="a-resultPanel">
+    <h2>结果</h2>
+    <div class="summary-grid" id="a-summary"></div>
+    <button onclick="downloadAlignedHex()">下载 .aligned.hex</button>
+  </div>
+</div>
+
+<!-- ================================================================ -->
+<!-- TAB 4: 公钥提取 -->
+<!-- ================================================================ -->
+<div id="tab-pubkey" class="tab-panel">
+  <div class="panel">
+    <h2>PEM 公钥 -> C Header</h2>
+    <p class="note">从 PEM 格式公钥提取 modulus + exponent，生成 C 头文件。</p>
+    <label>
+      PEM 公钥文件
+      <input type="file" id="p-pubFile" accept=".pem">
+    </label>
+    <button id="p-btn" onclick="doExtractPub()">提取并生成</button>
+    <div class="progress" id="p-progress"></div>
+  </div>
+
+  <div class="panel hidden" id="p-resultPanel">
+    <h2>public_key.h</h2>
+    <textarea id="p-output" readonly></textarea>
+    <button onclick="downloadPubHeader()">下载 public_key.h</button>
+  </div>
+</div>
+
+<!-- ================================================================ -->
+<!-- TAB 5: 密钥生成 -->
+<!-- ================================================================ -->
+<div id="tab-genkey" class="tab-panel">
+  <div class="panel">
+    <h2>RSA-2048 密钥对生成</h2>
+    <p class="note">在浏览器中生成 RSA-2048 密钥对，导出为 PEM 格式。</p>
+    <button id="g-btn" onclick="doGenKey()">生成密钥对</button>
+    <div class="progress" id="g-progress"></div>
+  </div>
+
+  <div class="panel hidden" id="g-resultPanel">
+    <h2>生成结果</h2>
+    <div class="two-col">
+      <div>
+        <h3>私钥 (private.pem)</h3>
+        <textarea id="g-privKey" readonly style="min-height:300px"></textarea>
+        <button onclick="downloadFile('g-privKey','private.pem')">下载</button>
+      </div>
+      <div>
+        <h3>公钥 (public.pem)</h3>
+        <textarea id="g-pubKey" readonly style="min-height:300px"></textarea>
+        <button onclick="downloadFile('g-pubKey','public.pem')">下载</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============================================================================
+// Tabs
+// ============================================================================
+function showTab(id) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// ============================================================================
+// Utilities
+// ============================================================================
+function fmtAddr(a) {
+  return '0x' + (a >>> 0).toString(16).toUpperCase().padStart(8, '0');
+}
+function fmtByte(b) {
+  return b === null || b === undefined ? '  ' : (b & 0xFF).toString(16).toUpperCase().padStart(2, '0');
+}
+function parseHexInput(str) {
+  str = str.trim();
+  if (str.toLowerCase().startsWith('0x')) return parseInt(str, 16);
+  return parseInt(str, 10);
+}
+
+// ============================================================================
+// Intel HEX Parser
+// ============================================================================
+function parseIntelHex(text) {
+  const data = new Map();
+  let baseAddr = 0;
+  for (const raw of text.split(/\r?\n/)) {
+    const line = raw.trim();
+    if (!line || line[0] !== ':') continue;
+    if (line.length < 11) continue;
+    const bc = parseInt(line.substring(1, 3), 16);
+    const addr = parseInt(line.substring(3, 7), 16);
+    const rt = parseInt(line.substring(7, 9), 16);
+    if (rt === 0x04) {
+      baseAddr = parseInt(line.substring(9, 13), 16) << 16;
+    } else if (rt === 0x02) {
+      baseAddr = parseInt(line.substring(9, 13), 16) << 4;
+    } else if (rt === 0x00) {
+      const abs = baseAddr + addr;
+      for (let i = 0; i < bc; i++) {
+        data.set(abs + i, parseInt(line.substring(9 + i * 2, 11 + i * 2), 16));
+      }
+    } else if (rt === 0x01) break;
+  }
+  return data;
+}
+
+function writeIntelHex(data, segments, pageSize, fillByte) {
+  const lines = [];
+  let currentBase = -1;
+  for (const [segStart, segEnd] of segments) {
+    const aStart = segStart & ~(pageSize - 1);
+    const aEnd = (segEnd + pageSize - 1) & ~(pageSize - 1);
+    let addr = aStart;
+    while (addr < aEnd) {
+      const base = addr >>> 16;
+      if (base !== currentBase) {
+        currentBase = base;
+        const cs = ((-((2 + 0 + 4 + ((base >>> 8) & 0xFF) + (base & 0xFF)) & 0xFF)) & 0xFF);
+        lines.push(`:02000004${(base & 0xFFFF).toString(16).toUpperCase().padStart(4, '0')}${cs.toString(16).toUpperCase().padStart(2, '0')}`);
+      }
+      const offset = addr & 0xFFFF;
+      const bytes = [];
+      let cs = pageSize + ((offset >>> 8) & 0xFF) + (offset & 0xFF);
+      for (let i = 0; i < pageSize; i++) {
+        const b = data.get(addr + i);
+        const val = b !== undefined ? b : fillByte;
+        bytes.push(val);
+        cs += val;
+      }
+      cs = ((-cs) & 0xFF);
+      const hexStr = bytes.map(b => (b & 0xFF).toString(16).toUpperCase().padStart(2, '0')).join('');
+      lines.push(`:${pageSize.toString(16).toUpperCase().padStart(2, '0')}${offset.toString(16).toUpperCase().padStart(4, '0')}00${hexStr}${cs.toString(16).toUpperCase().padStart(2, '0')}`);
+      addr += pageSize;
+    }
+  }
+  lines.push(':00000001FF');
+  return lines.join('\n') + '\n';
+}
+
+function groupSegments(data, maxGap) {
+  const addrs = Array.from(data.keys()).sort((a, b) => a - b);
+  if (!addrs.length) return [];
+  const segs = [];
+  let s = addrs[0], e = addrs[0] + 1, prev = addrs[0];
+  for (let i = 1; i < addrs.length; i++) {
+    const a = addrs[i];
+    if (a <= prev + maxGap) {
+      e = Math.max(e, a + 1);
+    } else {
+      segs.push([s, e]);
+      s = a; e = a + 1;
+    }
+    prev = a;
+  }
+  segs.push([s, e]);
+  return segs;
+}
+
+// ============================================================================
+// PKG Parser
+// ============================================================================
+function parsePkg(buffer) {
+  const view = new DataView(buffer);
+  const magic = new TextDecoder().decode(new Uint8Array(buffer, 0, 4));
+  const headerSize = view.getUint32(4, true);
+  const payloadAddr = view.getUint32(8, true);
+  const payloadLen = view.getUint32(12, true);
+  const swVersion = view.getUint32(16, true);
+  const swVersionMask = view.getUint32(20, true);
+  const buildTimestamp = view.getUint32(24, true);
+  const payloadCrc = view.getUint32(28, true);
+  const headerCrc = view.getUint32(32, true);
+  const sigAlgorithm = view.getUint32(36, true);
+  const sigLen = view.getUint32(40, true);
+  const numSegments = view.getUint32(44, true);
+
+  const totalSize = buffer.byteLength;
+  if (totalSize < 128 + 256) {
+    throw new Error('PKG file too small');
+  }
+  const payload = new Uint8Array(buffer, 128, payloadLen);
+  const signature = new Uint8Array(buffer, 128 + payloadLen, sigLen);
+
+  // Parse segments for PKG3
+  const segments = [];
+  if (magic === 'PKG3' && numSegments > 0) {
+    let offset = 0;
+    for (let i = 0; i < numSegments; i++) {
+      if (offset + 16 > payloadLen) break;
+      const segMagic = new TextDecoder().decode(payload.slice(offset, offset + 4));
+      const segAddr = new DataView(payload.buffer, payload.byteOffset + offset + 4, 4).getUint32(0, true);
+      const segLen = new DataView(payload.buffer, payload.byteOffset + offset + 8, 4).getUint32(0, true);
+      segments.push({ magic: segMagic, addr: segAddr, len: segLen, headerOffset: offset, dataOffset: offset + 16 });
+      offset += 16 + segLen;
+    }
+  }
+
+  return {
+    magic, headerSize, payloadAddr, payloadLen, swVersion, swVersionMask,
+    buildTimestamp, payloadCrc, headerCrc, sigAlgorithm, sigLen, numSegments,
+    payload, signature, totalSize, segments
+  };
+}
+
+// ============================================================================
+// CRC32
+// ============================================================================
+const CRC32_TABLE = new Uint32Array(256);
+for (let i = 0; i < 256; i++) {
+  let c = i;
+  for (let j = 0; j < 8; j++) {
+    c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1);
+  }
+  CRC32_TABLE[i] = c >>> 0;
+}
+function crc32(data) {
+  let crc = 0xFFFFFFFF;
+  for (let i = 0; i < data.length; i++) {
+    crc = (CRC32_TABLE[(crc ^ data[i]) & 0xFF] ^ (crc >>> 8)) >>> 0;
+  }
+  return (~crc) >>> 0;
+}
+
+// ============================================================================
+// Download helper
+// ============================================================================
+function downloadText(filename, text) {
+  const blob = new Blob([text], { type: 'text/plain' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+function downloadFile(textareaId, filename) {
+  const text = document.getElementById(textareaId).value;
+  downloadText(filename, text);
+}
+
+// ============================================================================
+// TAB 1: PKG Inspect (NEW)
+// ============================================================================
+let gInspect_pkg = null;
+
+async function doPkgInspect() {
+  const file = document.getElementById('v2-pkgFile');
+  const btn = document.getElementById('v2-btn');
+  const prog = document.getElementById('v2-progress');
+  if (!file.files.length) { alert('请选择 .pkg 文件'); return; }
+
+  btn.disabled = true;
+  prog.textContent = '解析中...';
+  try {
+    const buf = await file.files[0].arrayBuffer();
+    gInspect_pkg = parsePkg(buf);
+
+    // Header table
+    const ht = document.getElementById('v2-headerTable');
+    const ts = gInspect_pkg.buildTimestamp;
+    const tsStr = ts > 0 ? new Date(ts * 1000).toLocaleString() : 'N/A';
+    ht.innerHTML = `
+      <tr><th>字段</th><th>偏移</th><th>值</th></tr>
+      <tr><td>Magic</td><td>0x00</td><td>${gInspect_pkg.magic}</td></tr>
+      <tr><td>Header Size</td><td>0x04</td><td>${gInspect_pkg.headerSize}</td></tr>
+      <tr><td>Payload Addr</td><td>0x08</td><td>${fmtAddr(gInspect_pkg.payloadAddr)}</td></tr>
+      <tr><td>Payload Len</td><td>0x0C</td><td>${gInspect_pkg.payloadLen}</td></tr>
+      <tr><td>SW Version</td><td>0x10</td><td>0x${gInspect_pkg.swVersion.toString(16).toUpperCase().padStart(8,'0')}</td></tr>
+      <tr><td>SW Version Mask</td><td>0x14</td><td>0x${gInspect_pkg.swVersionMask.toString(16).toUpperCase().padStart(8,'0')}</td></tr>
+      <tr><td>Build Timestamp</td><td>0x18</td><td>${ts} (${tsStr})</td></tr>
+      <tr><td>Payload CRC32</td><td>0x1C</td><td>0x${gInspect_pkg.payloadCrc.toString(16).toUpperCase().padStart(8,'0')}</td></tr>
+      <tr><td>Header CRC32</td><td>0x20</td><td>0x${gInspect_pkg.headerCrc.toString(16).toUpperCase().padStart(8,'0')}</td></tr>
+      <tr><td>Sig Algorithm</td><td>0x24</td><td>${gInspect_pkg.sigAlgorithm} (RSA-2048)</td></tr>
+      <tr><td>Sig Length</td><td>0x28</td><td>${gInspect_pkg.sigLen}</td></tr>
+      <tr><td>Num Segments</td><td>0x2C</td><td>${gInspect_pkg.numSegments}</td></tr>
+      <tr><td>Total Size</td><td>-</td><td>${gInspect_pkg.totalSize}</td></tr>
+    `;
+    document.getElementById('v2-headerPanel').classList.remove('hidden');
+
+    // Segments
+    if (gInspect_pkg.segments.length > 0) {
+      const st = document.getElementById('v2-segTable');
+      let html = '<tr><th>#</th><th>Magic</th><th>Flash Address</th><th>Data Length</th><th>Payload Offset</th></tr>';
+      for (let i = 0; i < gInspect_pkg.segments.length; i++) {
+        const s = gInspect_pkg.segments[i];
+        html += `<tr><td>${i+1}</td><td>${s.magic}</td><td>${fmtAddr(s.addr)}</td><td>${s.len}</td><td>${s.dataOffset}</td></tr>`;
+      }
+      st.innerHTML = html;
+      document.getElementById('v2-segPanel').classList.remove('hidden');
+    } else {
+      document.getElementById('v2-segPanel').classList.add('hidden');
+    }
+
+    // CRC
+    const payloadCrcCalc = crc32(gInspect_pkg.payload);
+    const headerCrcCalc = crc32(new Uint8Array(buf, 0, 32));
+    const crcDiv = document.getElementById('v2-crcResult');
+    const payloadOk = payloadCrcCalc === gInspect_pkg.payloadCrc;
+    const headerOk = headerCrcCalc === gInspect_pkg.headerCrc;
+    crcDiv.innerHTML = `
+      <div class="summary-grid">
+        <div class="summary-item">
+          <span class="label">Header CRC</span>
+          <span class="value ${headerOk ? 'pass' : 'fail'}">${headerOk ? 'OK' : 'FAIL'} (calc=0x${headerCrcCalc.toString(16).toUpperCase().padStart(8,'0')})</span>
+        </div>
+        <div class="summary-item">
+          <span class="label">Payload CRC</span>
+          <span class="value ${payloadOk ? 'pass' : 'fail'}">${payloadOk ? 'OK' : 'FAIL'} (calc=0x${payloadCrcCalc.toString(16).toUpperCase().padStart(8,'0')})</span>
+        </div>
+      </div>
+    `;
+    document.getElementById('v2-crcPanel').classList.remove('hidden');
+    prog.textContent = '完成';
+  } catch (e) {
+    prog.textContent = '错误: ' + e.message;
+    console.error(e);
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+// ============================================================================
+// TAB 2: PKG vs HEX Verify
+// ============================================================================
+let gV_hexData = null;
+let gV_pkg = null;
+let gV_diff = null;
+
+async function doVerify() {
+  const pkgInput = document.getElementById('v-pkgFile');
+  const hexInput = document.getElementById('v-hexFile');
+  const btn = document.getElementById('v-btn');
+  if (!pkgInput.files.length || !hexInput.files.length) {
+    alert('请先选择 .pkg 和 .aligned.hex 文件');
+    return;
+  }
+  btn.disabled = true;
+  btn.textContent = '解析中...';
+
+  try {
+    const hexText = await hexInput.files[0].text();
+    gV_hexData = parseIntelHex(hexText);
+
+    const pkgBuffer = await pkgInput.files[0].arrayBuffer();
+    gV_pkg = parsePkg(pkgBuffer);
+
+    const hexAddrs = Array.from(gV_hexData.keys()).sort((a, b) => a - b);
+    const hexMin = hexAddrs[0];
+    const hexMax = hexAddrs[hexAddrs.length - 1];
+
+    let payloadAddr = gV_pkg.payloadAddr;
+    if (payloadAddr === 0) {
+      payloadAddr = hexMin;
+    }
+
+    // For PKG3 multi-segment, compare each segment's data with HEX
+    gV_diff = [];
+    if (gV_pkg.magic === 'PKG3' && gV_pkg.segments.length > 0) {
+      for (const seg of gV_pkg.segments) {
+        if (seg.magic !== 'SEGM') continue;
+        const segData = gV_pkg.payload.slice(seg.dataOffset, seg.dataOffset + seg.len);
+        for (let i = 0; i < seg.len; i++) {
+          const flashAddr = seg.addr + i;
+          const pkgVal = segData[i];
+          const hexVal = gV_hexData.get(flashAddr);
+          if (hexVal !== undefined) {
+            if (hexVal !== pkgVal) {
+              gV_diff.push({ addr: flashAddr, hexVal, pkgVal, type: 'diff' });
+            }
+          } else {
+            gV_diff.push({ addr: flashAddr, hexVal: null, pkgVal, type: 'extra_in_pkg' });
+          }
+        }
+      }
+      // Check HEX bytes not in any segment
+      for (const addr of hexAddrs) {
+        let found = false;
+        for (const seg of gV_pkg.segments) {
+          if (addr >= seg.addr && addr < seg.addr + seg.len) {
+            found = true; break;
+          }
+        }
+        if (!found) {
+          gV_diff.push({ addr, hexVal: gV_hexData.get(addr), pkgVal: null, type: 'missing_in_pkg' });
+        }
+      }
+    } else {
+      // PKG2 single segment - old logic
+      const checkStart = Math.max(hexMin, payloadAddr);
+      const checkEnd = Math.min(hexMax, payloadAddr + gV_pkg.payloadLen - 1);
+      if (checkStart <= checkEnd) {
+        for (let addr = checkStart; addr <= checkEnd; addr++) {
+          const hexVal = gV_hexData.get(addr);
+          const pkgIdx = addr - payloadAddr;
+          const pkgVal = (pkgIdx >= 0 && pkgIdx < gV_pkg.payloadLen) ? gV_pkg.payload[pkgIdx] : undefined;
+          const hasHex = gV_hexData.has(addr);
+          const hasPkg = pkgIdx >= 0 && pkgIdx < gV_pkg.payloadLen;
+          if (hasHex && hasPkg) {
+            if (hexVal !== pkgVal) gV_diff.push({ addr, hexVal, pkgVal, type: 'diff' });
+          } else if (hasHex && !hasPkg) {
+            gV_diff.push({ addr, hexVal, pkgVal: null, type: 'missing_in_pkg' });
+          } else if (!hasHex && hasPkg) {
+            gV_diff.push({ addr, hexVal: null, pkgVal, type: 'extra_in_pkg' });
+          }
+        }
+      }
+    }
+
+    // Render summary
+    const hexCount = gV_hexData.size;
+    const effectiveAddr = gV_pkg.payloadAddr === 0 ? hexMin : gV_pkg.payloadAddr;
+    let segInfo = '';
+    if (gV_pkg.magic === 'PKG3' && gV_pkg.segments.length > 0) {
+      segInfo = `<div class="summary-item"><span class="label">段数</span><span class="value">${gV_pkg.segments.length}</span></div>`;
+    }
+    document.getElementById('v-summary').innerHTML = `
+      <div class="summary-item"><span class="label">HEX 总字节</span><span class="value">${hexCount}</span></div>
+      <div class="summary-item"><span class="label">HEX 地址范围</span><span class="value">${fmtAddr(hexMin)} - ${fmtAddr(hexMax)}</span></div>
+      <div class="summary-item"><span class="label">PKG 格式</span><span class="value">${gV_pkg.magic}</span></div>
+      <div class="summary-item"><span class="label">PKG Payload</span><span class="value">${gV_pkg.payloadLen} bytes</span></div>
+      ${segInfo}
+    `;
+    document.getElementById('v-summaryPanel').classList.remove('hidden');
+
+    // Stats
+    const diffBytes = gV_diff.filter(d => d.type === 'diff').length;
+    const missing = gV_diff.filter(d => d.type === 'missing_in_pkg').length;
+    const extra = gV_diff.filter(d => d.type === 'extra_in_pkg').length;
+    const total = gV_diff.length;
+
+    document.getElementById('v-statsTable').innerHTML = `
+      <tr><th>项目</th><th>数值</th><th>说明</th></tr>
+      <tr><td>字节不匹配</td><td class="${diffBytes>0?'fail':'pass'}">${diffBytes}</td><td>相同地址但值不同</td></tr>
+      <tr><td>HEX有但PKG缺失</td><td class="${missing>0?'fail':'pass'}">${missing}</td><td>HEX数据不在任何段中</td></tr>
+      <tr><td>PKG有但HEX缺失</td><td class="${extra>0?'warn':'pass'}">${extra}</td><td>段数据HEX中没有</td></tr>
+      <tr><td>差异总数</td><td class="${total>0?'fail':'pass'}">${total}</td><td>所有差异项</td></tr>
+      <tr><td>结论</td><td class="${total===0?'pass':'fail'}">${total===0?'PASS - 完全匹配':'FAIL - 存在差异'}</td><td>完整性判断</td></tr>
+    `;
+    document.getElementById('v-statsPanel').classList.remove('hidden');
+    document.getElementById('v-diffPanel').classList.remove('hidden');
+    renderVerifyDiff();
+
+  } catch (e) {
+    alert('解析失败: ' + e.message);
+    console.error(e);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '开始对比';
+  }
+}
+
+function renderVerifyDiff() {
+  const maxLines = parseInt(document.getElementById('v-maxLines').value, 10) || 100;
+  let startOff = parseHexInput(document.getElementById('v-startOffset').value);
+  if (isNaN(startOff)) startOff = 0;
+
+  const container = document.getElementById('v-hexView');
+  container.innerHTML = '';
+
+  if (!gV_diff || gV_diff.length === 0) {
+    container.innerHTML = '<div style="color:#4ec9b0;padding:20px;text-align:center;grid-column:1/-1">无差异！PKG 完全匹配 aligned.hex</div>';
+    document.getElementById('v-statusBar').className = 'status-bar status-ok';
+    document.getElementById('v-statusBar').textContent = 'V PASS: PKG payload completely matches aligned.hex';
+    return;
+  }
+
+  const lines = new Map();
+  for (const d of gV_diff) {
+    const lineAddr = d.addr & ~0xF;
+    if (!lines.has(lineAddr)) {
+      lines.set(lineAddr, { hexBytes: new Array(16).fill(undefined), pkgBytes: new Array(16).fill(undefined) });
+    }
+    const col = d.addr & 0xF;
+    const line = lines.get(lineAddr);
+    line.hexBytes[col] = d.hexVal;
+    line.pkgBytes[col] = d.pkgVal;
+  }
+
+  const sortedAddrs = Array.from(lines.keys()).sort((a, b) => a - b);
+  const displayAddrs = new Set();
+  for (const addr of sortedAddrs) {
+    displayAddrs.add(addr);
+    displayAddrs.add(addr - 16);
+    displayAddrs.add(addr + 16);
+  }
+  let allAddrs = Array.from(displayAddrs).sort((a, b) => a - b);
+  let startIdx = 0;
+  for (let i = 0; i < allAddrs.length; i++) {
+    if (allAddrs[i] >= startOff) { startIdx = i; break; }
+  }
+  allAddrs = allAddrs.slice(startIdx, startIdx + maxLines);
+
+  // Determine which segment each addr belongs to
+  function findSeg(addr) {
+    if (gV_pkg.magic !== 'PKG3' || !gV_pkg.segments.length) return null;
+    for (const seg of gV_pkg.segments) {
+      if (addr >= seg.addr && addr < seg.addr + seg.len) return seg;
+    }
+    return null;
+  }
+
+  const hexCol = document.createElement('div');
+  hexCol.className = 'hex-col';
+  hexCol.innerHTML = '<h4>Aligned.HEX</h4>';
+  const pkgCol = document.createElement('div');
+  pkgCol.className = 'hex-col';
+  pkgCol.innerHTML = '<h4>PKG Payload</h4>';
+
+  for (const lineAddr of allAddrs) {
+    const lineData = lines.get(lineAddr) || { hexBytes: new Array(16).fill(undefined), pkgBytes: new Array(16).fill(undefined) };
+
+    const hLine = document.createElement('div');
+    hLine.className = 'hex-line';
+    hLine.innerHTML = `<span class="addr">${fmtAddr(lineAddr)}</span>`;
+    const hBytes = document.createElement('span');
+    hBytes.className = 'bytes';
+    for (let i = 0; i < 16; i++) {
+      const addr = lineAddr + i;
+      const val = lineData.hexBytes[i] !== undefined ? lineData.hexBytes[i] : gV_hexData.get(addr);
+      const span = document.createElement('span');
+      span.className = 'byte ';
+      const hexHas = lineData.hexBytes[i] !== undefined;
+      const pkgHas = lineData.pkgBytes[i] !== undefined;
+      if (hexHas && pkgHas && lineData.hexBytes[i] !== lineData.pkgBytes[i]) {
+        span.className += 'byte-diff';
+      } else if (hexHas && !pkgHas) {
+        span.className += 'byte-missing';
+      } else if (val !== undefined) {
+        span.className += 'byte-match';
+      } else {
+        span.className += 'byte-match';
+        span.style.opacity = '0.3';
+      }
+      span.textContent = fmtByte(val);
+      hBytes.appendChild(span);
+    }
+    hLine.appendChild(hBytes);
+    hexCol.appendChild(hLine);
+
+    const pLine = document.createElement('div');
+    pLine.className = 'hex-line';
+    pLine.innerHTML = `<span class="addr">${fmtAddr(lineAddr)}</span>`;
+    const pBytes = document.createElement('span');
+    pBytes.className = 'bytes';
+    for (let i = 0; i < 16; i++) {
+      const addr = lineAddr + i;
+      let val = undefined;
+      const seg = findSeg(addr);
+      if (seg) {
+        const idx = addr - seg.addr;
+        val = gV_pkg.payload[seg.dataOffset + idx];
+      }
+      if (lineData.pkgBytes[i] !== undefined) val = lineData.pkgBytes[i];
+
+      const span = document.createElement('span');
+      span.className = 'byte ';
+      const hexHas = lineData.hexBytes[i] !== undefined;
+      const pkgHas = lineData.pkgBytes[i] !== undefined;
+      if (hexHas && pkgHas && lineData.hexBytes[i] !== lineData.pkgBytes[i]) {
+        span.className += 'byte-diff';
+      } else if (!hexHas && pkgHas) {
+        span.className += 'byte-extra';
+      } else if (val !== undefined) {
+        span.className += 'byte-match';
+      } else {
+        span.className += 'byte-match';
+        span.style.opacity = '0.3';
+      }
+      span.textContent = fmtByte(val);
+      pBytes.appendChild(span);
+    }
+    pLine.appendChild(pBytes);
+    pkgCol.appendChild(pLine);
+  }
+
+  container.appendChild(hexCol);
+  container.appendChild(pkgCol);
+
+  const diffBytes = gV_diff.filter(d => d.type === 'diff').length;
+  const missing = gV_diff.filter(d => d.type === 'missing_in_pkg').length;
+  const extra = gV_diff.filter(d => d.type === 'extra_in_pkg').length;
+  const sb = document.getElementById('v-statusBar');
+  sb.className = 'status-bar status-fail';
+  sb.textContent = `X FAIL: 不匹配 ${diffBytes} 字节, HEX缺失 ${missing} 字节, PKG额外 ${extra} 字节`;
+}
+
+// ============================================================================
+// TAB 3: HEX Align
+// ============================================================================
+let gA_alignedHex = '';
+let gA_filename = '';
+
+async function doAlign() {
+  const inFile = document.getElementById('a-inFile');
+  const align = parseInt(document.getElementById('a-align').value, 10) || 32;
+  const fillStr = document.getElementById('a-fill').value.trim();
+  const fillByte = fillStr ? parseInt(fillStr, 16) : 0;
+  const prog = document.getElementById('a-progress');
+
+  if (!inFile.files.length) { alert('请选择 HEX 文件'); return; }
+  if (isNaN(fillByte) || fillByte < 0 || fillByte > 255) { alert('填充字节无效'); return; }
+
+  prog.textContent = '解析中...';
+  try {
+    const text = await inFile.files[0].text();
+    const data = parseIntelHex(text);
+    if (data.size === 0) { prog.textContent = '错误: HEX 文件无数据'; return; }
+
+    const segs = groupSegments(data, align);
+    const alignedSegs = segs.map(([s, e]) => {
+      return [s & ~(align - 1), (e + align - 1) & ~(align - 1)];
+    });
+
+    const merged = [];
+    for (const [s, e] of alignedSegs) {
+      if (merged.length && s <= merged[merged.length - 1][1]) {
+        merged[merged.length - 1][1] = Math.max(merged[merged.length - 1][1], e);
+      } else {
+        merged.push([s, e]);
+      }
+    }
+
+    const alignedTotal = merged.reduce((sum, [s, e]) => sum + (e - s), 0);
+    const added = alignedTotal - data.size;
+
+    gA_alignedHex = writeIntelHex(data, merged, align, fillByte);
+    gA_filename = inFile.files[0].name.replace(/\.hex$/i, '') + '.aligned.hex';
+
+    const s = document.getElementById('a-summary');
+    s.innerHTML = `
+      <div class="summary-item"><span class="label">原始数据字节</span><span class="value">${data.size}</span></div>
+      <div class="summary-item"><span class="label">对齐后总字节</span><span class="value">${alignedTotal}</span></div>
+      <div class="summary-item"><span class="label">添加填充字节</span><span class="value">${added} (${(added/data.size*100).toFixed(1)}%)</span></div>
+      <div class="summary-item"><span class="label">对齐边界</span><span class="value">${align} 字节</span></div>
+      <div class="summary-item"><span class="label">填充字节</span><span class="value">0x${(fillByte&0xFF).toString(16).toUpperCase().padStart(2,'0')}</span></div>
+      <div class="summary-item"><span class="label">段数</span><span class="value">${merged.length}</span></div>
+    `;
+    document.getElementById('a-resultPanel').classList.remove('hidden');
+    prog.textContent = '完成';
+  } catch (e) {
+    prog.textContent = '错误: ' + e.message;
+    console.error(e);
+  }
+}
+
+function downloadAlignedHex() {
+  if (!gA_alignedHex) return;
+  downloadText(gA_filename, gA_alignedHex);
+}
+
+// ============================================================================
+// TAB 4: Public Key Extract
+// ============================================================================
+let gP_header = '';
+
+async function doExtractPub() {
+  const file = document.getElementById('p-pubFile');
+  const prog = document.getElementById('p-progress');
+  if (!file.files.length) { alert('请选择 PEM 公钥文件'); return; }
+
+  prog.textContent = '解析中...';
+  try {
+    const text = await file.files[0].text();
+    const { modulus, exponent } = extractRsaFromSpki(text);
+
+    if (modulus.length !== 256) {
+      prog.textContent = `警告: modulus 长度 ${modulus.length} 字节，期望 256 字节`;
+    }
+
+    const modLines = [];
+    for (let i = 0; i < modulus.length; i += 8) {
+      const row = [];
+      for (let j = i; j < Math.min(i + 8, modulus.length); j++) {
+        row.push(`0x${(modulus[j] & 0xFF).toString(16).toUpperCase().padStart(2, '0')}`);
+      }
+      const comma = i + 8 < modulus.length ? ',' : '';
+      modLines.push('    ' + row.join(', ') + comma);
+    }
+
+    const expLines = [];
+    for (let j = 0; j < exponent.length; j++) {
+      expLines.push(`0x${(exponent[j] & 0xFF).toString(16).toUpperCase().padStart(2, '0')}`);
+    }
+
+    gP_header = `/* Auto-generated public key header for RSA-2048 verification */
+#ifndef CRYPTO_PUBLIC_KEY_H_
+#define CRYPTO_PUBLIC_KEY_H_
+
+#define RSA_MODULUS_LEN   (256u)
+#define RSA_EXPONENT_LEN  (${exponent.length}u)
+
+static const uint8 rsa_public_modulus[RSA_MODULUS_LEN] =
+{
+${modLines.join('\n')}
+};
+
+static const uint8 rsa_public_exponent[RSA_EXPONENT_LEN] =
+{
+    ${expLines.join(', ')}
+};
+
+#endif /* CRYPTO_PUBLIC_KEY_H_ */
+`;
+
+    document.getElementById('p-output').value = gP_header;
+    document.getElementById('p-resultPanel').classList.remove('hidden');
+    prog.textContent = '完成';
+  } catch (e) {
+    prog.textContent = '错误: ' + e.message;
+    console.error(e);
+  }
+}
+
+function downloadPubHeader() {
+  if (!gP_header) return;
+  downloadText('public_key.h', gP_header);
+}
+
+// ============================================================================
+// ASN.1 Parser (simple TLV)
+// ============================================================================
+function parseAsn1(bytes, offset = 0) {
+  const tag = bytes[offset];
+  let len = bytes[offset + 1];
+  let lenBytes = 1;
+  if (len & 0x80) {
+    const numLenBytes = len & 0x7F;
+    len = 0;
+    for (let i = 0; i < numLenBytes; i++) {
+      len = (len << 8) | bytes[offset + 2 + i];
+    }
+    lenBytes = 1 + numLenBytes;
+  }
+  const valueStart = offset + 1 + lenBytes;
+  const value = bytes.slice(valueStart, valueStart + len);
+
+  if (tag === 0x30) {
+    const children = [];
+    let childOffset = 0;
+    while (childOffset < value.length) {
+      const child = parseAsn1(value, childOffset);
+      children.push(child);
+      childOffset = child.end;
+    }
+    return { tag, len, value, children, end: valueStart + len };
+  }
+  return { tag, len, value, end: valueStart + len };
+}
+
+function extractRsaFromSpki(pemText) {
+  const b64 = pemText.replace(/-----BEGIN PUBLIC KEY-----/g, '')
+                     .replace(/-----END PUBLIC KEY-----/g, '')
+                     .replace(/\s/g, '');
+  const binary = Uint8Array.from(atob(b64), c => c.charCodeAt(0));
+  const spki = parseAsn1(binary, 0);
+  const bitString = spki.children[1];
+  const keyBytes = bitString.value.slice(1);
+  const rsaKey = parseAsn1(keyBytes, 0);
+  const modulusNode = rsaKey.children[0];
+  const exponentNode = rsaKey.children[1];
+  const modBytes = modulusNode.value[0] === 0 ? modulusNode.value.slice(1) : modulusNode.value;
+  const expBytes = exponentNode.value[0] === 0 ? exponentNode.value.slice(1) : exponentNode.value;
+  return { modulus: modBytes, exponent: expBytes };
+}
+
+// ============================================================================
+// TAB: HEX -> PKG Generator
+// ============================================================================
+let gPkg_bytes = null;
+let gPkg_filename = '';
+
+function pemToArrayBuffer(pemText) {
+  const b64 = pemText.replace(/-----BEGIN.*?-----/g, '')
+                     .replace(/-----END.*?-----/g, '')
+                     .replace(/\s/g, '');
+  return Uint8Array.from(atob(b64), c => c.charCodeAt(0)).buffer;
+}
+
+async function doGenPkg() {
+  const hexFile = document.getElementById('gp-hexFile');
+  const privFile = document.getElementById('gp-privFile');
+  const btn = document.getElementById('gp-btn');
+  const prog = document.getElementById('gp-progress');
+
+  if (!hexFile.files.length) { alert('请选择 HEX 文件'); return; }
+  if (!privFile.files.length) { alert('请选择 RSA 私钥文件'); return; }
+
+  btn.disabled = true;
+  prog.textContent = '解析 HEX...';
+
+  try {
+    // Parse HEX
+    const hexText = await hexFile.files[0].text();
+    const data = parseIntelHex(hexText);
+    if (data.size === 0) { prog.textContent = 'HEX 文件无数据'; btn.disabled = false; return; }
+
+    // Parse params
+    let payloadAddr = parseHexInput(document.getElementById('gp-payloadAddr').value);
+    let swVersion = parseHexInput(document.getElementById('gp-swVersion').value);
+    let swMask = parseHexInput(document.getElementById('gp-swMask').value);
+    if (isNaN(payloadAddr)) payloadAddr = 0;
+    if (isNaN(swVersion)) swVersion = 0x00010000;
+    if (isNaN(swMask)) swMask = 0xFFFFFFFF;
+
+    // Group segments
+    const PAGE_SIZE = 32;
+    const rawSegments = groupSegments(data, PAGE_SIZE);
+    const alignedSegments = rawSegments.map(([s, e]) => {
+      return [s & ~(PAGE_SIZE - 1), (e + PAGE_SIZE - 1) & ~(PAGE_SIZE - 1)];
+    });
+
+    // Build payload with SEGM headers
+    const SEGMENT_HEADER_SIZE = 16;
+    const SEGMENT_MAGIC = new TextEncoder().encode('SEGM');
+    const payload = [];
+    const segInfos = [];
+
+    for (const [aStart, aEnd] of alignedSegments) {
+      const segData = [];
+      for (let addr = aStart; addr < aEnd; addr++) {
+        segData.push(data.get(addr) || 0);
+      }
+      const rawLen = segData.length;
+      const padLen = rawLen % PAGE_SIZE ? (PAGE_SIZE - (rawLen % PAGE_SIZE)) : 0;
+      for (let i = 0; i < padLen; i++) segData.push(0);
+
+      const segHeader = new Uint8Array(SEGMENT_HEADER_SIZE);
+      segHeader.set(SEGMENT_MAGIC, 0);
+      new DataView(segHeader.buffer).setUint32(4, aStart, true);
+      new DataView(segHeader.buffer).setUint32(8, segData.length, true);
+      new DataView(segHeader.buffer).setUint32(12, 0, true);
+
+      payload.push(...segHeader);
+      payload.push(...segData);
+      segInfos.push({ addr: aStart, len: segData.length });
+    }
+
+    const payloadBytes = new Uint8Array(payload);
+    const payloadLen = payloadBytes.length;
+    const numSegments = segInfos.length;
+
+    prog.textContent = '计算 CRC...';
+
+    // CRC32
+    const payloadCrc = crc32(payloadBytes);
+
+    // Build header
+    const HEADER_SIZE = 128;
+    const header = new Uint8Array(HEADER_SIZE);
+    header.set(new TextEncoder().encode('PKG3'), 0);
+    const hv = new DataView(header.buffer);
+    hv.setUint32(4, HEADER_SIZE, true);
+    hv.setUint32(8, payloadAddr, true);
+    hv.setUint32(12, payloadLen, true);
+    hv.setUint32(16, swVersion, true);
+    hv.setUint32(20, swMask, true);
+    hv.setUint32(24, Math.floor(Date.now() / 1000), true);
+    hv.setUint32(28, payloadCrc, true);
+    // header crc at 32 - compute over [0:32)
+    const headerCrc = crc32(header.slice(0, 32));
+    hv.setUint32(32, headerCrc, true);
+    hv.setUint32(36, 1, true);  // RSA-2048
+    hv.setUint32(40, 256, true); // sig len
+    hv.setUint32(44, numSegments, true);
+
+    prog.textContent = '签名中...';
+
+    // Import private key and sign payload
+    const privPem = await privFile.files[0].text();
+    const privKeyData = pemToArrayBuffer(privPem);
+    const privKey = await crypto.subtle.importKey(
+      'pkcs8', privKeyData,
+      { name: 'RSASSA-PKCS1-v1_5', hash: 'SHA-256' },
+      false, ['sign']
+    );
+    const signature = new Uint8Array(await crypto.subtle.sign(
+      'RSASSA-PKCS1-v1_5', privKey, payloadBytes
+    ));
+
+    // Assemble pkg
+    const pkg = new Uint8Array(HEADER_SIZE + payloadLen + signature.length);
+    pkg.set(header, 0);
+    pkg.set(payloadBytes, HEADER_SIZE);
+    pkg.set(signature, HEADER_SIZE + payloadLen);
+
+    gPkg_bytes = pkg;
+    gPkg_filename = hexFile.files[0].name.replace(/\.hex$/i, '') + '.pkg';
+
+    // Show summary
+    const s = document.getElementById('gp-summary');
+    let segHtml = '';
+    for (let i = 0; i < segInfos.length; i++) {
+      segHtml += `<div class="summary-item"><span class="label">段 ${i+1}</span><span class="value">${fmtAddr(segInfos[i].addr)} / ${segInfos[i].len} bytes</span></div>`;
+    }
+    s.innerHTML = `
+      <div class="summary-item"><span class="label">格式</span><span class="value">PKG3</span></div>
+      <div class="summary-item"><span class="label">段数</span><span class="value">${numSegments}</span></div>
+      <div class="summary-item"><span class="label">Payload</span><span class="value">${payloadLen} bytes</span></div>
+      <div class="summary-item"><span class="label">Payload CRC</span><span class="value">0x${payloadCrc.toString(16).toUpperCase().padStart(8,'0')}</span></div>
+      <div class="summary-item"><span class="label">签名</span><span class="value">${signature.length} bytes</span></div>
+      <div class="summary-item"><span class="label">总大小</span><span class="value">${pkg.length} bytes</span></div>
+      ${segHtml}
+    `;
+    document.getElementById('gp-resultPanel').classList.remove('hidden');
+    prog.textContent = '完成';
+  } catch (e) {
+    prog.textContent = '错误: ' + e.message;
+    console.error(e);
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+function downloadPkg() {
+  if (!gPkg_bytes) return;
+  const blob = new Blob([gPkg_bytes], { type: 'application/octet-stream' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = gPkg_filename;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ============================================================================
+// TAB 5: Key Generation
+// ============================================================================
+function arrayBufferToBase64(buffer) {
+  const bytes = new Uint8Array(buffer);
+  let binary = '';
+  for (let i = 0; i < bytes.byteLength; i++) {
+    binary += String.fromCharCode(bytes[i]);
+  }
+  return btoa(binary);
+}
+function toPem(binary, label) {
+  const base64 = arrayBufferToBase64(binary);
+  const lines = base64.match(/.{1,64}/g).join('\n');
+  return `-----BEGIN ${label}-----\n${lines}\n-----END ${label}-----\n`;
+}
+
+async function doGenKey() {
+  const btn = document.getElementById('g-btn');
+  const prog = document.getElementById('g-progress');
+  btn.disabled = true;
+  prog.textContent = '生成中（可能需要几秒钟）...';
+
+  try {
+    const keyPair = await crypto.subtle.generateKey(
+      {
+        name: 'RSASSA-PKCS1-v1_5',
+        modulusLength: 2048,
+        publicExponent: new Uint8Array([1, 0, 1]),
+        hash: 'SHA-256'
+      },
+      true,
+      ['sign', 'verify']
+    );
+
+    const pkcs8 = await crypto.subtle.exportKey('pkcs8', keyPair.privateKey);
+    const spki = await crypto.subtle.exportKey('spki', keyPair.publicKey);
+
+    const privatePem = toPem(pkcs8, 'PRIVATE KEY');
+    const publicPem = toPem(spki, 'PUBLIC KEY');
+
+    document.getElementById('g-privKey').value = privatePem;
+    document.getElementById('g-pubKey').value = publicPem;
+    document.getElementById('g-resultPanel').classList.remove('hidden');
+    prog.textContent = '完成';
+  } catch (e) {
+    prog.textContent = '错误: ' + e.message;
+    console.error(e);
+  } finally {
+    btn.disabled = false;
+  }
+}
+</script>
+
+</body>
+</html>
